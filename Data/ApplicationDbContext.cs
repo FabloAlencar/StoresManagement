@@ -12,5 +12,6 @@ namespace StoreManagement.Data
         }
 
         public DbSet<Entity> Entities { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
     }
 }
