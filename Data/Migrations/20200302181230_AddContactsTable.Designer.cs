@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StoreManagement.Data;
+using StoresManagement.Data;
 
-namespace StoreManagement.Data.Migrations
+namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20200302181230_AddContactsTable")]
@@ -221,7 +221,7 @@ namespace StoreManagement.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("StoreManagement.Models.Contact", b =>
+            modelBuilder.Entity("StoresManagement.Models.Contact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -269,7 +269,7 @@ namespace StoreManagement.Data.Migrations
                     b.ToTable("Contacts");
                 });
 
-            modelBuilder.Entity("StoreManagement.Models.Entity", b =>
+            modelBuilder.Entity("StoresManagement.Models.Entity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

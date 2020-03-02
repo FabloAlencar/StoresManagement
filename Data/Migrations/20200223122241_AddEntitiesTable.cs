@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace StoreManagement.Data.Migrations
+namespace StoresManagement.Data.Migrations
 {
     public partial class AddEntitiesTable : Migration
     {

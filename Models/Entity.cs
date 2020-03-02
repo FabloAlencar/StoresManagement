@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace StoreManagement.Models
+namespace StoresManagement.Models
 {
     public class Entity
     {
@@ -8,5 +9,7 @@ namespace StoreManagement.Models
 
         [Display(Name = "Entity Name")]
         public string Name { get; set; }
+
+        public virtual ICollection<Branch> Branches { get; set; }
     }
 }

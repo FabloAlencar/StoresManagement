@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StoreManagement.Data;
-using StoreManagement.Models;
-using StoreManagement.ViewModels;
+using StoresManagement.Data;
+using StoresManagement.Models;
+using StoresManagement.ViewModels;
 
-namespace StoreManagement.Controllers
+namespace StoresManagement.Controllers
 {
     public class EntitiesController : Controller
     {
@@ -25,13 +25,13 @@ namespace StoreManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var entities = await _context.Entities.ToListAsync();
-            var entitiesVM = new List<EntityFormViewlModel>();
+            var entitiesVM = new List<EntityFormViewModel>();
 
             foreach (var entity in entities)
             {
-                var entityVM = new EntityFormViewlModel();
+                var entityVM = new EntityFormViewModel();
 
-                entityVM = _mapper.Map<EntityFormViewlModel>(entity);
+                entityVM = _mapper.Map<EntityFormViewModel>(entity);
                 //entityVM.Id = entity.Id;
                 //entityVM.Name = entity.Name;
 
@@ -56,9 +56,9 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
+            var entityVM = new EntityFormViewModel();
 
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
+            entityVM = _mapper.Map<EntityFormViewModel>(entity);
 
             return View(entityVM);
         }
@@ -72,7 +72,7 @@ namespace StoreManagement.Controllers
         // POST: Entities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EntityFormViewlModel entityVM)
+        public async Task<IActionResult> Create(EntityFormViewModel entityVM)
         {
             if (ModelState.IsValid)
             {
@@ -100,9 +100,9 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
+            var entityVM = new EntityFormViewModel();
 
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
+            entityVM = _mapper.Map<EntityFormViewModel>(entity);
 
             return View(entityVM);
         }
@@ -110,7 +110,7 @@ namespace StoreManagement.Controllers
         // POST: Entities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EntityFormViewlModel entityVM)
+        public async Task<IActionResult> Edit(int id, EntityFormViewModel entityVM)
         {
             if (id != entityVM.Id)
             {
@@ -159,9 +159,9 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
+            var entityVM = new EntityFormViewModel();
 
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
+            entityVM = _mapper.Map<EntityFormViewModel>(entity);
 
             return View(entityVM);
         }

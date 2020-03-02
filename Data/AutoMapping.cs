@@ -1,18 +1,20 @@
 ﻿using AutoMapper;
-using StoreManagement.Models;
-using StoreManagement.ViewModels;
+using StoresManagement.Models;
+using StoresManagement.ViewModels;
 
-namespace StoreManagement.Data
+namespace StoresManagement.Data
 {
     public class AutoMapping : Profile
     {
         public AutoMapping()
         {
             // Domain to ViewModel
-            CreateMap<Entity, EntityFormViewlModel>();
+            CreateMap<Entity, EntityFormViewModel>();
+            CreateMap<Branch, BranchFormViewModel>();
 
             // ViewModel to Domain
-            CreateMap<EntityFormViewlModel, Entity>();
+            CreateMap<EntityFormViewModel, Entity>();
+            CreateMap<EntityFormViewModel, Branch>();
         }
     }
 }

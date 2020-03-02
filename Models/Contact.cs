@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StoreManagement.Models
+namespace StoresManagement.Models
 {
     public class Contact
     {
@@ -40,5 +40,7 @@ namespace StoreManagement.Models
 
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public virtual Branch Branch { get; set; }
     }
 }
