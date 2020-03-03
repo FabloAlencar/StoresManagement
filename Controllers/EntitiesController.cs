@@ -32,8 +32,6 @@ namespace StoresManagement.Controllers
                 var entityVM = new EntityFormViewModel();
 
                 entityVM = _mapper.Map<EntityFormViewModel>(entity);
-                //entityVM.Id = entity.Id;
-                //entityVM.Name = entity.Name;
 
                 entitiesVM.Add(entityVM);
             }
@@ -76,8 +74,7 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                var entity = new Entity();
-                entity.Name = entityVM.Name;
+                var entity = _mapper.Map<Entity>(entityVM);
 
                 _context.Add(entity);
                 await _context.SaveChangesAsync();

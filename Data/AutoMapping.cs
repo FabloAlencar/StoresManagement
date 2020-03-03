@@ -14,7 +14,7 @@ namespace StoresManagement.Data
 
             // ViewModel to Domain
             CreateMap<EntityFormViewModel, Entity>();
-            CreateMap<EntityFormViewModel, Branch>();
+            CreateMap<BranchFormViewModel, Branch>();
         }
     }
 }

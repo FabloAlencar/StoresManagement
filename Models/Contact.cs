@@ -8,6 +8,12 @@ namespace StoresManagement.Models
 
         public int Id { get; set; }
 
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
         [Display(Name = "Address Type")]
         public char? AddressType { get; set; }
 
@@ -34,12 +40,6 @@ namespace StoresManagement.Models
 
         [Display(Name = "Owner Address Type")]
         public char? OwnerAddressType { get; set; }
-
-        [Display(Name = "Phone Number")]
-        public string PhoneNumber { get; set; }
-
-        [Display(Name = "Email")]
-        public string Email { get; set; }
 
         public virtual Branch Branch { get; set; }
     }

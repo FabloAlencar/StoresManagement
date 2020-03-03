@@ -1,0 +1,99 @@
+﻿@model StoresManagement.ViewModels.BranchFormViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Branch</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EntityId" class="control-label"></label>
+                <select asp-for="EntityId" class="form-control" asp-items="ViewBag.EntityId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Identification" class="control-label"></label>
+                <input asp-for="Identification" class="form-control" />
+                <span asp-validation-for="Identification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Contact.PhoneNumber" class="control-label"></label>
+                <input asp-for="Contact.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Contact.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.Email" class="control-label"></label>
+                <input asp-for="Contact.Email" class="form-control" />
+                <span asp-validation-for="Contact.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressType" class="control-label"></label>
+                <input asp-for="Contact.AddressType" class="form-control" />
+                <span asp-validation-for="Contact.AddressType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressCountry" class="control-label"></label>
+                <input asp-for="Contact.AddressCountry" class="form-control" />
+                <span asp-validation-for="Contact.AddressCountry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressPostalCode" class="control-label"></label>
+                <input asp-for="Contact.AddressPostalCode" class="form-control" />
+                <span asp-validation-for="Contact.AddressPostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressState" class="control-label"></label>
+                <input asp-for="Contact.AddressState" class="form-control" />
+                <span asp-validation-for="Contact.AddressState" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressCity" class="control-label"></label>
+                <input asp-for="Contact.AddressCity" class="form-control" />
+                <span asp-validation-for="Contact.AddressCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressStreet" class="control-label"></label>
+                <input asp-for="Contact.AddressStreet" class="form-control" />
+                <span asp-validation-for="Contact.AddressStreet" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressNumber" class="control-label"></label>
+                <input asp-for="Contact.AddressNumber" class="form-control" />
+                <span asp-validation-for="Contact.AddressNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.AddressComplement" class="control-label"></label>
+                <input asp-for="Contact.AddressComplement" class="form-control" />
+                <span asp-validation-for="Contact.AddressComplement" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Contact.OwnerAddressType" class="control-label"></label>
+                <input asp-for="Contact.OwnerAddressType" class="form-control" />
+                <span asp-validation-for="Contact.OwnerAddressType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
