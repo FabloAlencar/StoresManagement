@@ -28,7 +28,7 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-action="ListBranches" asp-route-id="@item.Id">List branches</a>
+                    <a asp-controller="Branches" asp-action="ListBranches" asp-route-id="@item.Id">List branches</a>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
