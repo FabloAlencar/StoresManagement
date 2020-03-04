@@ -13,9 +13,6 @@ namespace StoresManagement.Models
         [Display(Name = "Branch Identification")]
         public string Identification { get; set; }
 
-        [Display(Name = "Branch Type")]
-        public char? Type { get; set; }
-
         [Display(Name = "Branch Name")]
         public string Name { get; set; }
 

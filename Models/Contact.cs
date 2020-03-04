@@ -14,9 +14,6 @@ namespace StoresManagement.Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Display(Name = "Address Type")]
-        public char? AddressType { get; set; }
-
         [Display(Name = "Address Country")]
         public string AddressCountry { get; set; }
 
@@ -37,9 +34,6 @@ namespace StoresManagement.Models
 
         [Display(Name = "Address Complement")]
         public string AddressComplement { get; set; }
-
-        [Display(Name = "Owner Address Type")]
-        public char? OwnerAddressType { get; set; }
 
         public virtual Branch Branch { get; set; }
     }

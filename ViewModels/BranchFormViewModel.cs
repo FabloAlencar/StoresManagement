@@ -17,5 +17,10 @@ namespace StoresManagement.ViewModels
         public string Name { get; set; }
 
         public virtual Contact Contact { get; set; }
+
+        public string Address
+        {
+            get { return Contact.AddressStreet + ", " + Contact.AddressCity + ", " + Contact.AddressState; }
+        }
     }
 }
