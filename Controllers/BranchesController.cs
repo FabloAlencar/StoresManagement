@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -98,7 +97,13 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var branch = await _context.Branches.FindAsync(id);
+            var branch = await _context.Branches
+                .Include(b => b.Contact)
+                .Include(b => b.Entity)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            //var branch = await _context.Branches.FindAsync(id);
+
             if (branch == null)
             {
                 return NotFound();
