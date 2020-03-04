@@ -39,6 +39,29 @@ namespace StoresManagement.Controllers
             return View(entitiesVM);
         }
 
+        // GET: Entities
+        public async Task<IActionResult> ListBranches(int? id)
+        {
+            var applicationDbContext = _context.Branches
+                .Include(b => b.Entity)
+                .Include(b => b.Contact)
+                .Where(m => m.EntityId == id);
+
+            var branches = await applicationDbContext.ToListAsync();
+            var branchesVM = new List<BranchFormViewModel>();
+
+            foreach (var branch in branches)
+            {
+                var branchVM = new BranchFormViewModel();
+
+                branchVM = _mapper.Map<BranchFormViewModel>(branch);
+
+                branchesVM.Add(branchVM);
+            }
+
+            return View(branchesVM);
+        }
+
         // GET: Entities/Details/5
         public async Task<IActionResult> Details(int? id)
         {
