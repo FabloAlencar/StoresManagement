@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
 using StoresManagement.Models;
@@ -25,18 +24,16 @@ namespace StoresManagement.Controllers
         // GET: Branches
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Branches.Include(b => b.Contact).Include(b => b.Entity);
+            var branches = await _context.Branches
+                .Include(b => b.Contact)
+                .Include(b => b.Entity)
+                .ToListAsync();
 
-            var branches = await applicationDbContext.ToListAsync();
             var branchesVM = new List<BranchFormViewModel>();
 
             foreach (var branch in branches)
             {
-                var branchVM = new BranchFormViewModel();
-
-                branchVM = _mapper.Map<BranchFormViewModel>(branch);
-
-                branchesVM.Add(branchVM);
+                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
             }
 
             return View(branchesVM);
@@ -45,21 +42,17 @@ namespace StoresManagement.Controllers
         // GET: Entities
         public async Task<IActionResult> ListBranches(int? id)
         {
-            var applicationDbContext = _context.Branches
+            var branches = await _context.Branches
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
-                .Where(m => m.EntityId == id);
+                .Where(m => m.EntityId == id)
+                .ToListAsync();
 
-            var branches = await applicationDbContext.ToListAsync();
             var branchesVM = new List<BranchFormViewModel>();
 
             foreach (var branch in branches)
             {
-                var branchVM = new BranchFormViewModel();
-
-                branchVM = _mapper.Map<BranchFormViewModel>(branch);
-
-                branchesVM.Add(branchVM);
+                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
             }
 
             return View(branchesVM);
@@ -77,21 +70,24 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (branch == null)
             {
                 return NotFound();
             }
 
-            var branchVM = _mapper.Map<BranchFormViewModel>(branch);
-
-            return View(branchVM);
+            return View(_mapper.Map<BranchFormViewModel>(branch));
         }
 
         // GET: Branches/Create
         public IActionResult Create()
         {
-            ViewData[nameof(Branch.EntityId)] = new SelectList(_context.Entities, nameof(Entity.Id), nameof(Entity.Name));
-            return View();
+            var branchVM = new BranchFormViewModel
+            {
+                Entities = _context.Entities.ToList()
+            };
+
+            return View(branchVM);
         }
 
         // POST: Branches/Create
@@ -107,7 +103,7 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData[nameof(Branch.EntityId)] = new SelectList(_context.Entities, nameof(Entity.Id), nameof(Entity.Name));
+            branchVM.Entities = _context.Entities.ToList();
 
             return View(branchVM);
         }
@@ -125,15 +121,14 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            //var branch = await _context.Branches.FindAsync(id);
-
             if (branch == null)
             {
                 return NotFound();
             }
-            ViewData[nameof(Branch.EntityId)] = new SelectList(_context.Entities, nameof(Entity.Id), nameof(Entity.Name));
 
             var branchVM = _mapper.Map<BranchFormViewModel>(branch);
+
+            branchVM.Entities = _context.Entities.ToList();
 
             return View(branchVM);
         }
@@ -169,7 +164,8 @@ namespace StoresManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData[nameof(Branch.EntityId)] = new SelectList(_context.Entities, nameof(Entity.Id), nameof(Entity.Name));
+
+            branchVM.Entities = _context.Entities.ToList();
 
             return View(branchVM);
         }
@@ -191,13 +187,12 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var branchVM = _mapper.Map<BranchFormViewModel>(branch);
-
-            return View(branchVM);
+            return View(_mapper.Map<BranchFormViewModel>(branch));
         }
 
         // POST: Branches/Delete/5
         [HttpPost, ActionName("Delete")]
+        [HttpDelete]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
