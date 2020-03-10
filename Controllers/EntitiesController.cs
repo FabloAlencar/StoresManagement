@@ -29,11 +29,7 @@ namespace StoresManagement.Controllers
 
             foreach (var entity in entities)
             {
-                var entityVM = new EntityFormViewModel();
-
-                entityVM = _mapper.Map<EntityFormViewModel>(entity);
-
-                entitiesVM.Add(entityVM);
+                entitiesVM.Add(_mapper.Map<EntityFormViewModel>(entity));
             }
 
             return View(entitiesVM);
@@ -54,11 +50,7 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewModel();
-
-            entityVM = _mapper.Map<EntityFormViewModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // GET: Entities/Create
@@ -97,11 +89,7 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewModel();
-
-            entityVM = _mapper.Map<EntityFormViewModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // POST: Entities/Edit/5
@@ -118,9 +106,7 @@ namespace StoresManagement.Controllers
             {
                 try
                 {
-                    var entity = new Entity();
-
-                    entity = _mapper.Map<Entity>(entityVM);
+                    var entity = _mapper.Map<Entity>(entityVM);
 
                     _context.Update(entity);
                     await _context.SaveChangesAsync();
@@ -156,11 +142,7 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewModel();
-
-            entityVM = _mapper.Map<EntityFormViewModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // POST: Entities/Delete/5

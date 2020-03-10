@@ -19,17 +19,9 @@ namespace StoresManagement.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration.Add(new BranchConfiguration());
-            //modelBuilder.Configurations.Add(new BranchConfiguration());
-            //modelBuilder.ApplyConfiguration.Add(new BranchConfiguration());
-            //            modelBuilder.Configurations.Add(new BranchConfiguration());
-
-            //            modelBuilder.ApplyConfiguration.Add<Branch>(new BranchConfiguration<Branch>());
-
             modelBuilder.ApplyConfiguration(new BranchConfiguration());
 
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

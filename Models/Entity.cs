@@ -5,6 +5,11 @@ namespace StoresManagement.Models
 {
     public class Entity
     {
+        public Entity()
+        {
+            Branches = new List<Branch>();
+        }
+
         public int Id { get; set; }
 
         [Display(Name = "Entity Name")]
