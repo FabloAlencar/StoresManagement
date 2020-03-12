@@ -104,24 +104,11 @@ namespace StoresManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var entity = _mapper.Map<Entity>(entityVM);
+                var entity = _mapper.Map<Entity>(entityVM);
 
-                    _context.Update(entity);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EntityExists(entityVM.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var rc = _context.Update(entity);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(entityVM);
@@ -154,11 +141,6 @@ namespace StoresManagement.Controllers
             _context.Entities.Remove(entity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool EntityExists(int id)
-        {
-            return _context.Entities.Any(e => e.Id == id);
         }
     }
 }
