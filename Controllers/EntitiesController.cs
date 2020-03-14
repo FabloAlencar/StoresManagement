@@ -113,9 +113,14 @@ namespace StoresManagement.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-
-                    return NotFound();
-                 
+                    if (!await EntityExists(entityVM.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -149,6 +154,11 @@ namespace StoresManagement.Controllers
             _context.Entities.Remove(entity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> EntityExists(int id)
+        {
+            return await _context.Entities.AnyAsync(e => e.Id == id);
         }
     }
 }

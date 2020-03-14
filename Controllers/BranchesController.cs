@@ -145,13 +145,24 @@ namespace StoresManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                var branch = _mapper.Map<Branch>(branchVM);
-                _context.Update(branch);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var branch = _mapper.Map<Branch>(branchVM);
+                    _context.Update(branch);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await BranchExists(branchVM.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
             }
-
             branchVM.Entities = _context.Entities.ToList();
 
             return View(branchVM);
@@ -186,6 +197,11 @@ namespace StoresManagement.Controllers
             _context.Branches.Remove(branch);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> BranchExists(int id)
+        {
+            return await _context.Branches.AnyAsync(e => e.Id == id);
         }
     }
 }
