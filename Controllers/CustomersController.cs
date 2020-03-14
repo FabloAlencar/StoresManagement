@@ -10,55 +10,55 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    public class BranchesController : Controller
+    public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public BranchesController(ApplicationDbContext context, IMapper mapper)
+        public CustomersController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        // GET: Branches
+        // GET: Customers
         public async Task<IActionResult> Index()
         {
-            var branches = await _context.Branches
+            var Customers = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .ToListAsync();
 
-            var branchesVM = new List<BranchFormViewModel>();
+            var customersVM = new List<CustomerFormViewModel>();
 
-            foreach (var branch in branches)
+            foreach (var customer in Customers)
             {
-                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
+                customersVM.Add(_mapper.Map<CustomerFormViewModel>(customer));
             }
 
-            return View(branchesVM);
+            return View(customersVM);
         }
 
-        // GET: Branches by Entity Id
-        public async Task<IActionResult> ListBranches(int? id)
+        // GET: Customers by Entity Id
+        public async Task<IActionResult> ListCustomers(int? id)
         {
-            var branches = await _context.Branches
+            var Customers = await _context.Customers
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .Where(m => m.EntityId == id)
                 .ToListAsync();
 
-            var branchesVM = new List<BranchFormViewModel>();
+            var customersVM = new List<CustomerFormViewModel>();
 
-            foreach (var branch in branches)
+            foreach (var customer in Customers)
             {
-                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
+                customersVM.Add(_mapper.Map<CustomerFormViewModel>(customer));
             }
 
-            return View(branchesVM);
+            return View(customersVM);
         }
 
-        // GET: Branches/Details/5
+        // GET: Customers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -66,49 +66,49 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var branch = await _context.Branches
+            var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (branch == null)
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(_mapper.Map<BranchFormViewModel>(branch));
+            return View(_mapper.Map<CustomerFormViewModel>(customer));
         }
 
-        // GET: Branches/Create
+        // GET: Customers/Create
         public IActionResult Create()
         {
-            var branchVM = new BranchFormViewModel
+            var customerVM = new CustomerFormViewModel
             {
                 Entities = _context.Entities.ToList()
             };
 
-            return View(branchVM);
+            return View(customerVM);
         }
 
-        // POST: Branches/Create
+        // POST: Customers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BranchFormViewModel branchVM)
+        public async Task<IActionResult> Create(CustomerFormViewModel customerVM)
         {
             if (ModelState.IsValid)
             {
-                var branch = _mapper.Map<Branch>(branchVM);
+                var customer = _mapper.Map<Customer>(customerVM);
 
-                _context.Add(branch);
+                _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            branchVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities.ToList();
 
-            return View(branchVM);
+            return View(customerVM);
         }
 
-        // GET: Branches/Edit/5
+        // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -116,29 +116,29 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var branch = await _context.Branches
+            var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (branch == null)
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            var branchVM = _mapper.Map<BranchFormViewModel>(branch);
+            var customerVM = _mapper.Map<CustomerFormViewModel>(customer);
 
-            branchVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities.ToList();
 
-            return View(branchVM);
+            return View(customerVM);
         }
 
-        // POST: Branches/Edit/5
+        // POST: Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, BranchFormViewModel branchVM)
+        public async Task<IActionResult> Edit(int id, CustomerFormViewModel customerVM)
         {
-            if (id != branchVM.Id)
+            if (id != customerVM.Id)
             {
                 return NotFound();
             }
@@ -147,13 +147,13 @@ namespace StoresManagement.Controllers
             {
                 try
                 {
-                    var branch = _mapper.Map<Branch>(branchVM);
-                    _context.Update(branch);
+                    var customer = _mapper.Map<Customer>(customerVM);
+                    _context.Update(customer);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await BranchExists(branchVM.Id))
+                    if (!await BranchExists(customerVM.Id))
                     {
                         return NotFound();
                     }
@@ -164,12 +164,12 @@ namespace StoresManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            branchVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities.ToList();
 
-            return View(branchVM);
+            return View(customerVM);
         }
 
-        // GET: Branches/Delete/5
+        // GET: Customers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -177,32 +177,32 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var branch = await _context.Branches
+            var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (branch == null)
+            if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(_mapper.Map<BranchFormViewModel>(branch));
+            return View(_mapper.Map<CustomerFormViewModel>(customer));
         }
 
-        // POST: Branches/Delete/5
+        // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var branch = await _context.Branches.FindAsync(id);
-            _context.Branches.Remove(branch);
+            var customer = await _context.Customers.FindAsync(id);
+            _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> BranchExists(int id)
         {
-            return await _context.Branches.AnyAsync(e => e.Id == id);
+            return await _context.Customers.AnyAsync(e => e.Id == id);
         }
     }
 }

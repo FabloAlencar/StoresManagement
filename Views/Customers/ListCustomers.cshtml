@@ -1,23 +1,27 @@
-﻿@model IEnumerable<StoresManagement.ViewModels.EntityFormViewModel>
+﻿@model IEnumerable<StoresManagement.ViewModels.CustomerFormViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "List Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>List of the customers in this entity</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Entity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Identification)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>See the branches of the entity: </th>
-            <th>See the customers of the entity: </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -26,13 +30,16 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Entity.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Identification)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    <a asp-controller="Branches" asp-action="ListBranches" asp-route-id="@item.Id">List branches</a>
-                </td>
-                <td>
-                    <a asp-controller="Customers" asp-action="ListCustomers" asp-route-id="@item.Id">List customers</a>
+                    @Html.DisplayFor(modelItem => item.Address)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
