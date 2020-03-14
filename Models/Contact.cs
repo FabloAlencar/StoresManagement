@@ -36,5 +36,7 @@ namespace StoresManagement.Models
         public string AddressComplement { get; set; }
 
         public virtual Branch Branch { get; set; }
+
+        public virtual Customer Customer { get; set; }
     }
 }

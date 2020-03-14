@@ -16,5 +16,7 @@ namespace StoresManagement.Models
         public string Name { get; set; }
 
         public virtual ICollection<Branch> Branches { get; set; }
+
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }

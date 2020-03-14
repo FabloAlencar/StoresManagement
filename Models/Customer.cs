@@ -1,8 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace StoresManagement.Models
 {
-    public class Branch
+    public class Customer
     {
         public int EntityId { get; set; }
 
@@ -10,10 +14,10 @@ namespace StoresManagement.Models
 
         public int Id { get; set; }
 
-        [Display(Name = "Branch Identification")]
+        [Display(Name = "Customer Identification")]
         public string Identification { get; set; }
 
-        [Display(Name = "Branch Name")]
+        [Display(Name = "Customer Name")]
         public string Name { get; set; }
 
         public int ContactId { get; set; }
