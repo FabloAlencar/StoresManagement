@@ -104,11 +104,19 @@ namespace StoresManagement.Controllers
 
             if (ModelState.IsValid)
             {
-                var entity = _mapper.Map<Entity>(entityVM);
+                try
+                {
+                    var entity = _mapper.Map<Entity>(entityVM);
 
-                var rc = _context.Update(entity);
-                await _context.SaveChangesAsync();
+                    _context.Update(entity);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
 
+                    return NotFound();
+                 
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(entityVM);
