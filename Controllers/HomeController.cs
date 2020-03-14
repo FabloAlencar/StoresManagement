@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using StoreManagement.Models;
+using StoresManagement.Models;
 
-namespace StoreManagement.Controllers
+namespace StoresManagement.Controllers
 {
     public class HomeController : Controller
     {

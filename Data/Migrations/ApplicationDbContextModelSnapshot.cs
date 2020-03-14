@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using StoreManagement.Data;
+using StoresManagement.Data;
 
-namespace StoreManagement.Data.Migrations
+namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -219,7 +219,78 @@ namespace StoreManagement.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("StoreManagement.Models.Entity", b =>
+            modelBuilder.Entity("StoresManagement.Models.Branch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Identification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId")
+                        .IsUnique();
+
+                    b.HasIndex("EntityId");
+
+                    b.ToTable("Branches");
+                });
+
+            modelBuilder.Entity("StoresManagement.Models.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AddressCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressComplement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressCountry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AddressNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AddressPostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressState")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressStreet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
+                });
+
+            modelBuilder.Entity("StoresManagement.Models.Entity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -281,6 +352,21 @@ namespace StoreManagement.Data.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StoresManagement.Models.Branch", b =>
+                {
+                    b.HasOne("StoresManagement.Models.Contact", "Contact")
+                        .WithOne("Branch")
+                        .HasForeignKey("StoresManagement.Models.Branch", "ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoresManagement.Models.Entity", "Entity")
+                        .WithMany("Branches")
+                        .HasForeignKey("EntityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

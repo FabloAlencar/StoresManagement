@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StoreManagement.Data;
-using StoreManagement.Models;
-using StoreManagement.ViewModels;
+using StoresManagement.Data;
+using StoresManagement.Models;
+using StoresManagement.ViewModels;
 
-namespace StoreManagement.Controllers
+namespace StoresManagement.Controllers
 {
     public class EntitiesController : Controller
     {
@@ -25,17 +25,11 @@ namespace StoreManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var entities = await _context.Entities.ToListAsync();
-            var entitiesVM = new List<EntityFormViewlModel>();
+            var entitiesVM = new List<EntityFormViewModel>();
 
             foreach (var entity in entities)
             {
-                var entityVM = new EntityFormViewlModel();
-
-                entityVM = _mapper.Map<EntityFormViewlModel>(entity);
-                //entityVM.Id = entity.Id;
-                //entityVM.Name = entity.Name;
-
-                entitiesVM.Add(entityVM);
+                entitiesVM.Add(_mapper.Map<EntityFormViewModel>(entity));
             }
 
             return View(entitiesVM);
@@ -56,11 +50,7 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
-
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // GET: Entities/Create
@@ -72,12 +62,11 @@ namespace StoreManagement.Controllers
         // POST: Entities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EntityFormViewlModel entityVM)
+        public async Task<IActionResult> Create(EntityFormViewModel entityVM)
         {
             if (ModelState.IsValid)
             {
-                var entity = new Entity();
-                entity.Name = entityVM.Name;
+                var entity = _mapper.Map<Entity>(entityVM);
 
                 _context.Add(entity);
                 await _context.SaveChangesAsync();
@@ -100,17 +89,13 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
-
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // POST: Entities/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EntityFormViewlModel entityVM)
+        public async Task<IActionResult> Edit(int id, EntityFormViewModel entityVM)
         {
             if (id != entityVM.Id)
             {
@@ -121,16 +106,14 @@ namespace StoreManagement.Controllers
             {
                 try
                 {
-                    var entity = new Entity();
-
-                    entity = _mapper.Map<Entity>(entityVM);
+                    var entity = _mapper.Map<Entity>(entityVM);
 
                     _context.Update(entity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EntityExists(entityVM.Id))
+                    if (!await EntityExists(entityVM.Id))
                     {
                         return NotFound();
                     }
@@ -159,11 +142,7 @@ namespace StoreManagement.Controllers
                 return NotFound();
             }
 
-            var entityVM = new EntityFormViewlModel();
-
-            entityVM = _mapper.Map<EntityFormViewlModel>(entity);
-
-            return View(entityVM);
+            return View(_mapper.Map<EntityFormViewModel>(entity));
         }
 
         // POST: Entities/Delete/5
@@ -177,9 +156,9 @@ namespace StoreManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EntityExists(int id)
+        private async Task<bool> EntityExists(int id)
         {
-            return _context.Entities.Any(e => e.Id == id);
+            return await _context.Entities.AnyAsync(e => e.Id == id);
         }
     }
 }

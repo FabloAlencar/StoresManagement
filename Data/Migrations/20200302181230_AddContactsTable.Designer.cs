@@ -10,8 +10,8 @@ using StoresManagement.Data;
 namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200223122241_AddEntitiesTable")]
-    partial class AddEntitiesTable
+    [Migration("20200302181230_AddContactsTable")]
+    partial class AddContactsTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -219,6 +219,54 @@ namespace StoresManagement.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("StoresManagement.Models.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AddressCity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressComplement")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressCountry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("AddressNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AddressPostalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressState")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressStreet")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressType")
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OwnerAddressType")
+                        .HasColumnType("nvarchar(1)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("StoresManagement.Models.Entity", b =>

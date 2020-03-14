@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>aspnet-StoreManagement-EEC6AE1A-FBE9-47D5-B22A-58BB0D20CDAC</UserSecretsId>
+    <UserSecretsId>aspnet-StoresManagement-EEC6AE1A-FBE9-47D5-B22A-58BB0D20CDAC</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

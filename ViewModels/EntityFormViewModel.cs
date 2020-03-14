@@ -1,6 +1,6 @@
-﻿namespace StoreManagement.ViewModels
+﻿namespace StoresManagement.ViewModels
 {
-    public class EntityFormViewlModel
+    public class EntityFormViewModel
     {
         public string PageTitle { get; set; }
 

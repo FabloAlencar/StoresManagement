@@ -1,16 +1,27 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using StoreManagement.Models;
+using StoresManagement.Migrations.EntityConfigurations;
+using StoresManagement.Models;
+using System.Reflection;
 
-namespace StoreManagement.Data
+namespace StoresManagement.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
+        public DbSet<Entity> Entities { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Branch> Branches { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+                : base(options)
         {
         }
 
-        public DbSet<Entity> Entities { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new BranchConfiguration());
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
