@@ -12,6 +12,7 @@ namespace StoresManagement.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                 : base(options)

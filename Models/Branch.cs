@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoresManagement.Models
 {
@@ -19,5 +20,7 @@ namespace StoresManagement.Models
         public int ContactId { get; set; }
 
         public virtual Contact Contact { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
     }
 }
