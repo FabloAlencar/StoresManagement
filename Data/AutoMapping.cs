@@ -12,11 +12,13 @@ namespace StoresManagement.Data
             CreateMap<Entity, EntityFormViewModel>();
             CreateMap<Branch, BranchFormViewModel>();
             CreateMap<Customer, CustomerFormViewModel>();
+            CreateMap<Product, ProductFormViewModel>();
 
             // ViewModel to Domain
             CreateMap<EntityFormViewModel, Entity>();
             CreateMap<BranchFormViewModel, Branch>();
             CreateMap<CustomerFormViewModel, Customer>();
+            CreateMap<ProductFormViewModel, Product>();
         }
     }
 }
