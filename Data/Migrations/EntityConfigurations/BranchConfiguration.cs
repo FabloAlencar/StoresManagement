@@ -17,7 +17,10 @@ namespace StoresManagement.Migrations.EntityConfigurations
 
             modelBuilder.HasMany(b => b.Products)
                 .WithOne(p => p.Branch);
-            // .HasForeignKey<Product>(b => b.BranchId);
+
+            modelBuilder.HasMany(b => b.Purchases)
+                .WithOne(p => p.Branch)
+            .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

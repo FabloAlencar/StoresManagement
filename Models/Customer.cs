@@ -1,4 +1,6 @@
-﻿namespace StoresManagement.Models
+﻿using System.Collections.Generic;
+
+namespace StoresManagement.Models
 {
     public class Customer
     {
@@ -15,5 +17,7 @@
         public int ContactId { get; set; }
 
         public virtual Contact Contact { get; set; }
+
+        public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }

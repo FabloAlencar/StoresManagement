@@ -8,6 +8,12 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20200316191512_AddProductsTable.cs" />
     <Compile Remove="Data\Migrations\20200316191512_AddProductsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317184813_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317184813_AddPurchasesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317185128_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317185128_AddPurchasesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317185943_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317185943_AddPurchasesTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -26,7 +26,6 @@ namespace StoresManagement.ViewModels
 
         public float? Price { get; set; }
 
-        [Display(Name = "Expiry Date")]
         public DateTime? ExpiryDate { get; set; }
 
         public float? Weight { get; set; }
@@ -40,5 +39,8 @@ namespace StoresManagement.ViewModels
         {
             get { return Branch.Entity.Name + ", " + Branch.Name; }
         }
+
+        [Display(Name = "Expiry Date")]
+        public string ExpiryDay => String.Format("{0:dd/MM/yyyy}", ExpiryDate);
     }
 }

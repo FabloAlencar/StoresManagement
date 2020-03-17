@@ -14,6 +14,10 @@ namespace StoresManagement.Migrations.EntityConfigurations
             modelBuilder.HasOne(b => b.Contact)
                 .WithOne(c => c.Customer)
                 .HasForeignKey<Customer>(b => b.ContactId);
+
+            modelBuilder.HasMany(c => c.Purchases)
+                .WithOne(p => p.Customer)
+            .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -19,5 +19,7 @@ namespace StoresManagement.Models
         public virtual Contact Contact { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
+
+        public virtual ICollection<Purchase> Purchases { get; set; }
     }
 }
