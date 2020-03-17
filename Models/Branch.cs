@@ -4,6 +4,11 @@ namespace StoresManagement.Models
 {
     public class Branch
     {
+        public Branch()
+        {
+            Purchases = new HashSet<Purchase>();
+        }
+
         public int EntityId { get; set; }
 
         public virtual Entity Entity { get; set; }

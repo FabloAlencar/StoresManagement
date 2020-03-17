@@ -4,6 +4,11 @@ namespace StoresManagement.Models
 {
     public class Customer
     {
+        public Customer()
+        {
+            Purchases = new HashSet<Purchase>();
+        }
+
         public int EntityId { get; set; }
 
         public virtual Entity Entity { get; set; }

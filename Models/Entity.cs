@@ -7,6 +7,7 @@ namespace StoresManagement.Models
         public Entity()
         {
             Branches = new HashSet<Branch>();
+            Customers = new HashSet<Customer>();
         }
 
         public int Id { get; set; }
