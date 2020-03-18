@@ -1,11 +1,11 @@
-﻿@model IEnumerable<StoresManagement.ViewModels.CustomerFormViewModel>
+﻿@model IEnumerable<StoresManagement.ViewModels.PurchaseFormViewModel>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>List of the purchases</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -14,18 +14,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Entity)
+                @Html.DisplayNameFor(model => model.Branch)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Identification)
+                @Html.DisplayNameFor(model => model.Customer)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Discount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Address)
+                @Html.DisplayNameFor(model => model.Total)
             </th>
-            <th>See the purchases of the customer: </th>
             <th></th>
         </tr>
     </thead>
@@ -34,19 +33,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Entity.Name)
+                    @Html.DisplayFor(modelItem => item.BranchTitle)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Identification)
+                    @Html.DisplayFor(modelItem => item.Customer.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Discount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Address)
-                </td>
-                <td>
-                    <a asp-controller="Purchases" asp-action="ListPurchases" asp-route-id="@item.Id">List Purchases</a>
+                    @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
