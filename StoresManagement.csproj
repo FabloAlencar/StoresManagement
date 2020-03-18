@@ -16,6 +16,8 @@
     <Compile Remove="Data\Migrations\20200317185943_AddPurchasesTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200318130310_teste.cs" />
     <Compile Remove="Data\Migrations\20200318130310_teste.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.cs" />
+    <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

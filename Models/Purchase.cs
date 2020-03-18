@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace StoresManagement.Models
 {
     public class Purchase
     {
+        public Purchase()
+        {
+            PurchaseItems = new HashSet<PurchaseItem>();
+        }
+
         public int EntityId { get; set; }
 
         public int? BranchId { get; set; }
@@ -22,5 +24,7 @@ namespace StoresManagement.Models
         public float? Discount { get; set; }
 
         public float? Total { get; set; }
+
+        public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
     }
 }

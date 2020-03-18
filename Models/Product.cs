@@ -25,5 +25,7 @@ namespace StoresManagement.Models
         public float? Width { get; set; }
 
         public float? Height { get; set; }
+
+        public virtual PurchaseItem PurchaseItem { get; set; }
     }
 }
