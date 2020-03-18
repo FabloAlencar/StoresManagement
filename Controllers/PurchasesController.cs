@@ -101,8 +101,11 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                var branch = await _context.Branches
+            .FirstOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+                purchaseVM.EntityId = branch.EntityId;
+
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
-                purchase.EntityId = purchaseVM.Branch.EntityId;
                 _context.Add(purchase);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -154,8 +157,11 @@ namespace StoresManagement.Controllers
             {
                 try
                 {
+                    var branch = await _context.Branches
+                .FirstOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+                    purchaseVM.EntityId = branch.EntityId;
+
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
-                    purchase.EntityId = purchaseVM.Branch.EntityId;
                     _context.Update(purchase);
                     await _context.SaveChangesAsync();
                 }

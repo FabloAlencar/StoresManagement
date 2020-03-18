@@ -97,6 +97,10 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                var branch = await _context.Branches
+            .FirstOrDefaultAsync(m => m.Id == productVM.BranchId);
+                productVM.EntityId = branch.EntityId;
+
                 var product = _mapper.Map<Product>(productVM);
 
                 _context.Add(product);
@@ -147,7 +151,12 @@ namespace StoresManagement.Controllers
             {
                 try
                 {
+                    var branch = await _context.Branches
+                .FirstOrDefaultAsync(m => m.Id == productVM.BranchId);
+                    productVM.EntityId = branch.EntityId;
+
                     var product = _mapper.Map<Product>(productVM);
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
