@@ -17,10 +17,14 @@ namespace StoresManagement.ViewModels
         [Display(Name = "Customer Identification")]
         public string Identification { get; set; }
 
-        [Display(Name = "Customer Name")]
         public string Name { get; set; }
 
+        public string Surname { get; set; }
+
         public virtual Contact Contact { get; set; }
+
+        [Display(Name = "Customer Name")]
+        public string FullName { get; set; }
 
         public string Address
         {
