@@ -27,9 +27,6 @@ namespace StoresManagement.ViewModels
         public float? Total { get; set; }
 
         [Display(Name = "Branch")]
-        public string BranchTitle
-        {
-            get { return Branch.Entity.Name + ", " + Branch.Name; }
-        }
+        public string BranchTitle { get; set; }
     }
 }

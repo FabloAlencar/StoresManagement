@@ -37,5 +37,10 @@ namespace StoresManagement.Models
         public virtual Branch Branch { get; set; }
 
         public virtual Customer Customer { get; set; }
+
+        public string Address
+        {
+            get { return AddressStreet + ", " + AddressCity + ", " + AddressState; }
+        }
     }
 }

@@ -43,7 +43,7 @@
                     @Html.DisplayFor(modelItem => item.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Address)
+                    @Html.DisplayFor(modelItem => item.Contact.Address)
                 </td>
                 <td>
                     <a asp-controller="Purchases" asp-action="ListPurchases" asp-route-id="@item.Id">List Purchases</a>

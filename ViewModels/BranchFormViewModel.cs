@@ -24,9 +24,6 @@ namespace StoresManagement.ViewModels
 
         public virtual Contact Contact { get; set; }
 
-        public string Address
-        {
-            get { return Contact.AddressStreet + ", " + Contact.AddressCity + ", " + Contact.AddressState; }
-        }
+        public string Address { get; set; }
     }
 }

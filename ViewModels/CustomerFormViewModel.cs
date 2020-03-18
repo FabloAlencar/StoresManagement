@@ -26,9 +26,6 @@ namespace StoresManagement.ViewModels
         [Display(Name = "Customer Name")]
         public string FullName { get; set; }
 
-        public string Address
-        {
-            get { return Contact.AddressStreet + ", " + Contact.AddressCity + ", " + Contact.AddressState; }
-        }
+        public string Address { get; set; }
     }
 }

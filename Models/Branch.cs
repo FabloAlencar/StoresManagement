@@ -6,6 +6,7 @@ namespace StoresManagement.Models
     {
         public Branch()
         {
+            Products = new HashSet<Product>();
             Purchases = new HashSet<Purchase>();
         }
 
@@ -26,5 +27,10 @@ namespace StoresManagement.Models
         public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<Purchase> Purchases { get; set; }
+
+        public string BranchTitle
+        {
+            get { return Entity.Name + ", " + Name; }
+        }
     }
 }
