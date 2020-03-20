@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Migrations.EntityConfigurations;
 using StoresManagement.Models;
-using System.Reflection;
 
 namespace StoresManagement.Data
 {
@@ -24,6 +23,8 @@ namespace StoresManagement.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BranchConfiguration());
+            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new PurchaseItemConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

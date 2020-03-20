@@ -29,13 +29,7 @@ namespace StoresManagement.Models
 
         public string FullName
         {
-            get
-            {
-                if (Surname == null)
-                    return Name;
-                else
-                    return Surname + ", " + Name;
-            }
+            get { return Surname + ", " + Name; }
         }
     }
 }

@@ -24,14 +24,8 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var entities = await _context.Entities.ToListAsync();
-            var entitiesVM = new List<EntityFormViewModel>();
 
-            foreach (var entity in entities)
-            {
-                entitiesVM.Add(_mapper.Map<EntityFormViewModel>(entity));
-            }
-
-            return View(entitiesVM);
+            return View(_mapper.Map<IEnumerable<EntityFormViewModel>>(entities));
         }
 
         // GET: Entities/Details/5
@@ -98,7 +92,7 @@ namespace StoresManagement.Controllers
         {
             if (id != entityVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)

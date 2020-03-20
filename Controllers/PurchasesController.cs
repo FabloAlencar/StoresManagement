@@ -24,40 +24,26 @@ namespace StoresManagement.Controllers
         // GET: Purchases
         public async Task<IActionResult> Index()
         {
-            var Purchases = await _context.Purchases
+            var purchases = await _context.Purchases
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
                 .ToListAsync();
 
-            var branchesVM = new List<PurchaseFormViewModel>();
-
-            foreach (var purchase in Purchases)
-            {
-                branchesVM.Add(_mapper.Map<PurchaseFormViewModel>(purchase));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
-        // GET: Purchase by Product Id
+        // GET: Purchases/ListPurchases/5
         public async Task<IActionResult> ListPurchases(int? id)
         {
-            var Purchases = await _context.Purchases
+            var purchases = await _context.Purchases
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
                 .Where(m => m.BranchId == id || m.CustomerId == id)
                 .ToListAsync();
 
-            var branchesVM = new List<PurchaseFormViewModel>();
-
-            foreach (var purchase in Purchases)
-            {
-                branchesVM.Add(_mapper.Map<PurchaseFormViewModel>(purchase));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
         // GET: Purchases/Details/5
@@ -150,7 +136,7 @@ namespace StoresManagement.Controllers
         {
             if (id != purchaseVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StoresManagement.Models;
 
-namespace StoresManagement.Data.Migrations.EntityConfigurations
+namespace StoresManagement.Migrations.EntityConfigurations
 {
     public class PurchaseItemConfiguration : IEntityTypeConfiguration<PurchaseItem>
     {

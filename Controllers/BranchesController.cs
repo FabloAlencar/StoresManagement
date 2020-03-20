@@ -29,17 +29,10 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Entity)
                 .ToListAsync();
 
-            var branchesVM = new List<BranchFormViewModel>();
-
-            foreach (var branch in branches)
-            {
-                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
         }
 
-        // GET: Branches by Entity Id
+        // GET: Branches/ListBranches/5
         public async Task<IActionResult> ListBranches(int? id)
         {
             var branches = await _context.Branches
@@ -48,14 +41,7 @@ namespace StoresManagement.Controllers
                 .Where(m => m.EntityId == id)
                 .ToListAsync();
 
-            var branchesVM = new List<BranchFormViewModel>();
-
-            foreach (var branch in branches)
-            {
-                branchesVM.Add(_mapper.Map<BranchFormViewModel>(branch));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
         }
 
         // GET: Branches/Details/5
@@ -140,7 +126,7 @@ namespace StoresManagement.Controllers
         {
             if (id != branchVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)

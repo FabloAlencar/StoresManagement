@@ -22,6 +22,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
+            <th>See the producs of the branch: </th>
+            <th>See the purchases of the branch: </th>
             <th></th>
         </tr>
     </thead>
@@ -40,6 +42,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Contact.Address)
+                </td>
+                <td>
+                    <a asp-controller="Products" asp-action="ListProducts" asp-route-id="@item.Id">List products</a>
+                </td>
+                <td>
+                    <a asp-controller="Purchases" asp-action="ListPurchases" asp-route-id="@item.Id">List Purchases</a>
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

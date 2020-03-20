@@ -20,7 +20,7 @@ namespace StoresManagement.Migrations.EntityConfigurations
 
             modelBuilder.HasMany(b => b.Purchases)
                 .WithOne(p => p.Branch)
-            .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

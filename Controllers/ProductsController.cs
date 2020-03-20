@@ -24,38 +24,24 @@ namespace StoresManagement.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var Products = await _context.Products
+            var products = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .ToListAsync();
 
-            var branchesVM = new List<ProductFormViewModel>();
-
-            foreach (var product in Products)
-            {
-                branchesVM.Add(_mapper.Map<ProductFormViewModel>(product));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
         }
 
-        // GET: Products by product Id
+        // GET: Products/ListProducts/5
         public async Task<IActionResult> ListProducts(int? id)
         {
-            var Products = await _context.Products
+            var products = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Where(m => m.BranchId == id)
                 .ToListAsync();
 
-            var branchesVM = new List<ProductFormViewModel>();
-
-            foreach (var product in Products)
-            {
-                branchesVM.Add(_mapper.Map<ProductFormViewModel>(product));
-            }
-
-            return View(branchesVM);
+            return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
         }
 
         // GET: Products/Details/5
@@ -144,7 +130,7 @@ namespace StoresManagement.Controllers
         {
             if (id != productVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)

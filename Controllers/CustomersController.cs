@@ -24,38 +24,24 @@ namespace StoresManagement.Controllers
         // GET: Customers
         public async Task<IActionResult> Index()
         {
-            var Customers = await _context.Customers
+            var customers = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .ToListAsync();
 
-            var customersVM = new List<CustomerFormViewModel>();
-
-            foreach (var customer in Customers)
-            {
-                customersVM.Add(_mapper.Map<CustomerFormViewModel>(customer));
-            }
-
-            return View(customersVM);
+            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
         }
 
-        // GET: Customers by Entity Id
+        // GET: Customers/ListCustomers/5
         public async Task<IActionResult> ListCustomers(int? id)
         {
-            var Customers = await _context.Customers
+            var customers = await _context.Customers
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .Where(m => m.EntityId == id)
                 .ToListAsync();
 
-            var customersVM = new List<CustomerFormViewModel>();
-
-            foreach (var customer in Customers)
-            {
-                customersVM.Add(_mapper.Map<CustomerFormViewModel>(customer));
-            }
-
-            return View(customersVM);
+            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
         }
 
         // GET: Customers/Details/5
@@ -140,7 +126,7 @@ namespace StoresManagement.Controllers
         {
             if (id != customerVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)
