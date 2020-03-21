@@ -33,17 +33,30 @@ namespace StoresManagement.Controllers
             return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
-        // GET: Purchases/ListPurchases/5
-        public async Task<IActionResult> ListPurchases(int? id)
+        // GET: Purchases/BranchListOfPurchases/5
+        public async Task<IActionResult> BranchListOfPurchases(int? id)
         {
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
-                .Where(m => m.BranchId == id || m.CustomerId == id)
+                .Where(m => m.BranchId == id)
                 .ToListAsync();
 
-            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
+            return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
+        }
+
+        // GET: Purchases/CustomerListOfPurchases/5
+        public async Task<IActionResult> CustomerListOfPurchases(int? id)
+        {
+            var purchases = await _context.Purchases
+                .Include(b => b.Branch)
+                .Include(b => b.Branch.Entity)
+                .Include(b => b.Customer)
+                .Where(m => m.CustomerId == id)
+                .ToListAsync();
+
+            return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
         // GET: Purchases/Details/5
@@ -58,7 +71,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (purchase == null)
             {
@@ -88,7 +101,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var branch = await _context.Branches
-            .FirstOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+                    .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
                 purchaseVM.EntityId = branch.EntityId;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
@@ -114,7 +127,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (purchase == null)
             {
@@ -144,7 +157,7 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = await _context.Branches
-                .FirstOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+                        .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
                     purchaseVM.EntityId = branch.EntityId;
 
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
@@ -182,7 +195,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (purchase == null)
             {
                 return NotFound();

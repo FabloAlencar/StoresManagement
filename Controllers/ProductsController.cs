@@ -55,7 +55,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
             {
@@ -84,7 +84,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var branch = await _context.Branches
-            .FirstOrDefaultAsync(m => m.Id == productVM.BranchId);
+                    .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
                 productVM.EntityId = branch.EntityId;
 
                 var product = _mapper.Map<Product>(productVM);
@@ -109,7 +109,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
             {
@@ -138,7 +138,7 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = await _context.Branches
-                .FirstOrDefaultAsync(m => m.Id == productVM.BranchId);
+                        .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
                     productVM.EntityId = branch.EntityId;
 
                     var product = _mapper.Map<Product>(productVM);
@@ -175,7 +175,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
                 return NotFound();

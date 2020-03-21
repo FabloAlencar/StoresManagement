@@ -55,7 +55,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (branch == null)
             {
@@ -105,7 +105,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (branch == null)
             {
@@ -166,7 +166,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (branch == null)
             {
                 return NotFound();

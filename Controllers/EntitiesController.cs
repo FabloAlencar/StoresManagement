@@ -37,7 +37,7 @@ namespace StoresManagement.Controllers
             }
 
             var entity = await _context.Entities
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (entity == null)
             {
                 return NotFound();
@@ -129,7 +129,7 @@ namespace StoresManagement.Controllers
             }
 
             var entity = await _context.Entities
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (entity == null)
             {
                 return NotFound();

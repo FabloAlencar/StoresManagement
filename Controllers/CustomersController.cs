@@ -55,7 +55,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (customer == null)
             {
@@ -105,7 +105,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (customer == null)
             {
@@ -166,7 +166,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (customer == null)
             {
                 return NotFound();
