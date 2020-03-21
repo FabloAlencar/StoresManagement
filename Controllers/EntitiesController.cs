@@ -103,6 +103,8 @@ namespace StoresManagement.Controllers
 
                     _context.Update(entity);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -115,7 +117,6 @@ namespace StoresManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(entityVM);
         }

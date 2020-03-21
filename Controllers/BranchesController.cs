@@ -134,8 +134,11 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = _mapper.Map<Branch>(branchVM);
+
                     _context.Update(branch);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -148,7 +151,6 @@ namespace StoresManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             branchVM.Entities = _context.Entities.ToList();
 

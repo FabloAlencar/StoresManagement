@@ -163,6 +163,8 @@ namespace StoresManagement.Controllers
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
                     _context.Update(purchase);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -175,7 +177,6 @@ namespace StoresManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();

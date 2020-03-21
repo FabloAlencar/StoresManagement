@@ -145,6 +145,8 @@ namespace StoresManagement.Controllers
 
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -157,7 +159,6 @@ namespace StoresManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             productVM.Branches = _context.Branches.ToList();
 
