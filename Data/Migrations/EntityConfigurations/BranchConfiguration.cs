@@ -14,6 +14,13 @@ namespace StoresManagement.Migrations.EntityConfigurations
             modelBuilder.HasOne(b => b.Contact)
                 .WithOne(c => c.Branch)
                 .HasForeignKey<Branch>(b => b.ContactId);
+
+            modelBuilder.HasMany(b => b.Products)
+                .WithOne(p => p.Branch);
+
+            modelBuilder.HasMany(b => b.Purchases)
+                .WithOne(p => p.Branch)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

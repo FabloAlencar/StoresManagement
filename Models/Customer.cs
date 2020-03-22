@@ -2,11 +2,10 @@
 
 namespace StoresManagement.Models
 {
-    public class Branch
+    public class Customer
     {
-        public Branch()
+        public Customer()
         {
-            Products = new HashSet<Product>();
             Purchases = new HashSet<Purchase>();
         }
 
@@ -20,17 +19,17 @@ namespace StoresManagement.Models
 
         public string Name { get; set; }
 
+        public string Surname { get; set; }
+
         public int ContactId { get; set; }
 
         public virtual Contact Contact { get; set; }
 
-        public virtual ICollection<Product> Products { get; set; }
-
         public virtual ICollection<Purchase> Purchases { get; set; }
 
-        public string BranchTitle
+        public string FullName
         {
-            get { return Entity.Name + ", " + Name; }
+            get { return Surname + ", " + Name; }
         }
     }
 }

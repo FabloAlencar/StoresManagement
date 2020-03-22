@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -25,14 +24,8 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var entities = await _context.Entities.ToListAsync();
-            var entitiesVM = new List<EntityFormViewModel>();
 
-            foreach (var entity in entities)
-            {
-                entitiesVM.Add(_mapper.Map<EntityFormViewModel>(entity));
-            }
-
-            return View(entitiesVM);
+            return View(_mapper.Map<IEnumerable<EntityFormViewModel>>(entities));
         }
 
         // GET: Entities/Details/5
@@ -44,7 +37,7 @@ namespace StoresManagement.Controllers
             }
 
             var entity = await _context.Entities
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (entity == null)
             {
                 return NotFound();
@@ -99,7 +92,7 @@ namespace StoresManagement.Controllers
         {
             if (id != entityVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (ModelState.IsValid)
@@ -110,6 +103,8 @@ namespace StoresManagement.Controllers
 
                     _context.Update(entity);
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,7 +117,6 @@ namespace StoresManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(entityVM);
         }
@@ -136,7 +130,7 @@ namespace StoresManagement.Controllers
             }
 
             var entity = await _context.Entities
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (entity == null)
             {
                 return NotFound();

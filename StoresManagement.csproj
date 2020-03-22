@@ -6,14 +6,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20200316191512_AddProductsTable.cs" />
+    <Compile Remove="Data\Migrations\20200316191512_AddProductsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317184813_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317184813_AddPurchasesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317185128_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317185128_AddPurchasesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200317185943_AddPurchasesTable.cs" />
+    <Compile Remove="Data\Migrations\20200317185943_AddPurchasesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200318130310_teste.cs" />
+    <Compile Remove="Data\Migrations\20200318130310_teste.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.cs" />
+    <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="automapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
   </ItemGroup>
 </Project>

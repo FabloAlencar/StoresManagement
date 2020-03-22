@@ -1,15 +1,15 @@
-﻿@model IEnumerable<StoresManagement.ViewModels.BranchFormViewModel>
+﻿@model IEnumerable<StoresManagement.ViewModels.CustomerFormViewModel>
 
 @{
-    ViewData["Title"] = "List Branches";
+    ViewData["Title"] = "List Customers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>List of the branches in this entity</h1>
+<h1>List of the customers in this entity</h1>
 
 @if (!Model.Any())
 {
-    <p>We don't have any branches yet.</p>
+    <p>We don't have any customers yet.</p>
 }
 else
 {
@@ -24,13 +24,12 @@ else
                     @Html.DisplayNameFor(model => model.Identification)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.FullName)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Address)
                 </th>
-                <th>See the producs of the branch: </th>
-                <th>See the purchases of the branch: </th>
+                <th>See the purchases of the customer: </th>
                 <th></th>
             </tr>
         </thead>
@@ -45,16 +44,13 @@ else
                         @Html.DisplayFor(modelItem => item.Identification)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.FullName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Contact.Address)
                     </td>
                     <td>
-                        <a asp-controller="Products" asp-action="ListProducts" asp-route-id="@item.Id">List products</a>
-                    </td>
-                    <td>
-                        <a asp-controller="Purchases" asp-action="BranchListOfPurchases" asp-route-id="@item.Id">List Purchases</a>
+                        <a asp-controller="Purchases" asp-action="CustomerListOfPurchases" asp-route-id="@item.Id">List Purchases</a>
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -65,4 +61,5 @@ else
             }
         </tbody>
     </table>
+
 }

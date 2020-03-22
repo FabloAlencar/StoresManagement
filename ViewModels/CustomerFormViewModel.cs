@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace StoresManagement.ViewModels
 {
-    public class BranchFormViewModel
+    public class CustomerFormViewModel
     {
         public IEnumerable<Entity> Entities { get; set; }
 
@@ -14,15 +14,17 @@ namespace StoresManagement.ViewModels
 
         public int Id { get; set; }
 
-        [Display(Name = "Branch Identification")]
+        [Display(Name = "Customer Identification")]
         public string Identification { get; set; }
 
-        public char? Type { get; set; }
-
-        [Display(Name = "Branch Name")]
         public string Name { get; set; }
 
+        public string Surname { get; set; }
+
         public virtual Contact Contact { get; set; }
+
+        [Display(Name = "Customer Name")]
+        public string FullName { get; set; }
 
         public string Address { get; set; }
     }

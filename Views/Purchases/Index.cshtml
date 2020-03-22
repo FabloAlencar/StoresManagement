@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StoresManagement.ViewModels.EntityFormViewModel>
+﻿@model IEnumerable<StoresManagement.ViewModels.PurchaseFormViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -14,10 +14,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Branch)
             </th>
-            <th>See the branches of the entity: </th>
-            <th>See the customers of the entity: </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Total)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -26,13 +33,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Branch.BranchTitle)
                 </td>
                 <td>
-                    <a asp-controller="Branches" asp-action="ListBranches" asp-route-id="@item.Id">List branches</a>
+                    @Html.DisplayFor(modelItem => item.Customer.FullName)
                 </td>
                 <td>
-                    <a asp-controller="Customers" asp-action="ListCustomers" asp-route-id="@item.Id">List customers</a>
+                    @Html.DisplayFor(modelItem => item.Discount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

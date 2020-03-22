@@ -11,13 +11,12 @@ namespace StoresManagement.Models
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Display(Name = "Address Country")]
         public string AddressCountry { get; set; }
 
-        [Display(Name = "Address PostalCode")]
+        [Display(Name = "Address Postal Code")]
         public string AddressPostalCode { get; set; }
 
         [Display(Name = "Address State")]
@@ -36,5 +35,12 @@ namespace StoresManagement.Models
         public string AddressComplement { get; set; }
 
         public virtual Branch Branch { get; set; }
+
+        public virtual Customer Customer { get; set; }
+
+        public string Address
+        {
+            get { return AddressStreet + ", " + AddressCity + ", " + AddressState; }
+        }
     }
 }

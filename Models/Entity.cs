@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace StoresManagement.Models
 {
@@ -8,13 +7,15 @@ namespace StoresManagement.Models
         public Entity()
         {
             Branches = new HashSet<Branch>();
+            Customers = new HashSet<Customer>();
         }
 
         public int Id { get; set; }
 
-        [Display(Name = "Entity Name")]
         public string Name { get; set; }
 
         public virtual ICollection<Branch> Branches { get; set; }
+
+        public virtual ICollection<Customer> Customers { get; set; }
     }
 }
