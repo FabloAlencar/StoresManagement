@@ -35,6 +35,11 @@ namespace StoresManagement.Controllers
         // GET: Products/ListProducts/5
         public async Task<IActionResult> ListProducts(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var products = await _context.Products
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)

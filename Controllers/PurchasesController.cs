@@ -36,6 +36,11 @@ namespace StoresManagement.Controllers
         // GET: Purchases/BranchListOfPurchases/5
         public async Task<IActionResult> BranchListOfPurchases(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
@@ -49,6 +54,11 @@ namespace StoresManagement.Controllers
         // GET: Purchases/CustomerListOfPurchases/5
         public async Task<IActionResult> CustomerListOfPurchases(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)

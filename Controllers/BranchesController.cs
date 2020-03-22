@@ -35,6 +35,11 @@ namespace StoresManagement.Controllers
         // GET: Branches/ListBranches/5
         public async Task<IActionResult> ListBranches(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var branches = await _context.Branches
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)

@@ -35,6 +35,11 @@ namespace StoresManagement.Controllers
         // GET: Customers/ListCustomers/5
         public async Task<IActionResult> ListCustomers(int? id)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var customers = await _context.Customers
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
