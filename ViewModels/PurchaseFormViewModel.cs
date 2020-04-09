@@ -10,6 +10,8 @@ namespace StoresManagement.ViewModels
 
         public IEnumerable<Customer> Customers { get; set; }
 
+        public IEnumerable<Product> Products { get; set; }
+
         public int EntityId { get; set; }
 
         public int? BranchId { get; set; }
@@ -20,6 +22,10 @@ namespace StoresManagement.ViewModels
 
         public virtual Customer Customer { get; set; }
 
+        public int? ProductId { get; set; }
+
+        public virtual Product Product { get; set; }
+
         public int Id { get; set; }
 
         public float? Discount { get; set; }
@@ -28,5 +34,7 @@ namespace StoresManagement.ViewModels
 
         [Display(Name = "Branch")]
         public string BranchTitle { get; set; }
+
+        public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
     }
 }

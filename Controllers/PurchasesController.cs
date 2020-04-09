@@ -97,7 +97,8 @@ namespace StoresManagement.Controllers
             var purchaseVM = new PurchaseFormViewModel
             {
                 Branches = _context.Branches.ToList(),
-                Customers = _context.Customers.ToList()
+                Customers = _context.Customers.ToList(),
+                Products = _context.Products.ToList()
             };
 
             return View(purchaseVM);
@@ -121,6 +122,7 @@ namespace StoresManagement.Controllers
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();
+            purchaseVM.Products = _context.Products.ToList();
 
             return View(purchaseVM);
         }

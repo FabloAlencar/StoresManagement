@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StoresManagement.Models
 {
@@ -27,6 +28,7 @@ namespace StoresManagement.Models
 
         public virtual ICollection<Purchase> Purchases { get; set; }
 
+        [Display(Name = "Customer Name")]
         public string FullName
         {
             get { return Surname + ", " + Name; }

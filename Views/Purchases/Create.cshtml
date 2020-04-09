@@ -21,16 +21,58 @@
                 @Html.LabelFor(m => m.Customer.FullName)
                 @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
             </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
+
+            <!-- Recent Sales -->
+            <div class="container py-3">
+                <div class="d-flex flex-row justify-content-between pb-3">
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
+                        <span class="oi oi-plus pr-2"></span>Add Sale
+                    </button>
+                </div>
+                <div class="graphSec">
+                    <h3 class="text-right pt-3">Purchase Total</h3>
+                    <h1 class="text-right pb-3 totalNum" id="purchaseTotal"></h1>
+                </div>
+                <!-- New Sale Entry -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">NEW ITEM</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                @*<form>*@
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Product.Name)
+                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
+                                    <input type="email" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                                           placeholder="Enter Price">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
+                                    <input type="email" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                                           placeholder="Enter Quantity">
+                                </div>
+                                @*</form>*@
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="addSale()">Add Item</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -44,4 +86,36 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        // Values from the form
+
+        let purchaseTotalLabel = document.getElementById('purchaseTotal');
+        let newQuantity = document.getElementById('itemQuantity');
+        let newPrice = document.getElementById('itemPrice');
+
+        let purchaseTotal = 0;
+
+        const quantities = new Set();
+        const prices = new Set();
+
+        function addSale() {
+            quantities.add(parseInt(newQuantity.value));
+            prices.add(parseInt(newPrice.value));
+
+            let quantity = parseInt(newQuantity.value);
+
+            for (let amount of prices) {
+                purchaseTotal = purchaseTotal + (quantity * amount);
+                purchaseTotalLabel.innerHTML = purchaseTotal;
+
+            }
+
+            console.log(quantities);
+            console.log(prices);
+
+        }
+    </script>
+
 }
