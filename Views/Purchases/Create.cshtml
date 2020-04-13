@@ -15,11 +15,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Branch.Name)
-                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control", @required = "Required" })
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Customer.FullName)
-                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
+                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control", @required = "Required" })
+            </div>
+
+            <div class="form-group">
+                <table id="purchasesTable">
+                    <tr>
+                        <td>Product Id</td>
+                        <td>Product Price</td>
+                        <td>Quantity</td>
+                    </tr>
+                </table>
             </div>
 
             <!-- Recent Sales -->
@@ -48,18 +58,18 @@
                                 @*<form>*@
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.Product.Name)
-                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control", @required = "Required" })
                                 </div>
 
                                 <div class="form-group">
                                     <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                    <input type="email" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                                    <input type="number" class="form-control" id="itemPrice"
                                            placeholder="Enter Price">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                    <input type="email" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                                    <input type="number" class="form-control" id="itemQuantity"
                                            placeholder="Enter Quantity">
                                 </div>
                                 @*</form>*@
@@ -90,19 +100,23 @@
     <script>
 
         // Values from the form
-
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
-        let newQuantity = document.getElementById('itemQuantity');
+
+        let newProduct = document.getElementById('Product');
         let newPrice = document.getElementById('itemPrice');
+        let newQuantity = document.getElementById('itemQuantity');
+
+        const products = Array.of();
+        const quantities = Array.of();
+        const prices = Array.of();
 
         let purchaseTotal = 0;
 
-        const quantities = new Set();
-        const prices = new Set();
-
         function addSale() {
-            quantities.add(parseInt(newQuantity.value));
-            prices.add(parseInt(newPrice.value));
+
+            products.push(parseInt(newProduct.value));
+            quantities.push(parseInt(newQuantity.value));
+            prices.push(parseInt(newPrice.value));
 
             let quantity = parseInt(newQuantity.value);
 
@@ -112,8 +126,22 @@
 
             }
 
-            console.log(quantities);
-            console.log(prices);
+            // Values for purchases table
+            var table = document.getElementById("purchasesTable");
+            var row = table.insertRow();
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            cell1.innerHTML = newProduct.value;
+            cell2.innerHTML = newPrice.value;
+            cell3.innerHTML = newQuantity.value;
+
+            console.log(products);
+            console.log("Products : " + products);
+            console.log("Quantities : " + quantities);
+            console.log("Prices : " + prices);
 
         }
     </script>

@@ -6,6 +6,10 @@ namespace StoresManagement.ViewModels
 {
     public class PurchaseFormViewModel
     {
+        public PurchaseFormViewModel()
+        {
+            PurchaseItems = new HashSet<PurchaseItem>();
+        }
         public IEnumerable<Branch> Branches { get; set; }
 
         public IEnumerable<Customer> Customers { get; set; }
