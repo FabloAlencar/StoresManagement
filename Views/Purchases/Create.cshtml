@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form id="newPurchase" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Branch.Name)
@@ -53,13 +53,13 @@
 
                                 <div class="form-group">
                                     <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                    <input type="email" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
                                            placeholder="Enter Price">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                    <input type="email" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
                                            placeholder="Enter Quantity">
                                 </div>
                                 @*</form>*@
@@ -92,15 +92,18 @@
         // Values from the form
 
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
+        let newpurchaseId = document.getElementById('Product');
         let newQuantity = document.getElementById('itemQuantity');
         let newPrice = document.getElementById('itemPrice');
 
         let purchaseTotal = 0;
 
+        const purchaseIds = new Set();
         const quantities = new Set();
         const prices = new Set();
 
         function addSale() {
+            purchaseIds.add(parseInt(newpurchaseId.value));
             quantities.add(parseInt(newQuantity.value));
             prices.add(parseInt(newPrice.value));
 
@@ -112,8 +115,31 @@
 
             }
 
+            // used for displaying values on browser (console)
+            // how to parse the Set() to PurchaseFormViewModel.PurchaseItems()?
+            console.log(purchaseIds);
             console.log(quantities);
             console.log(prices);
+
+            var validator = $("#newPurchase").validate({
+                submitHandler: function () {
+                    $.ajax({
+                        url: "/Purchases/Create",
+                        method: "post",
+                        data: model //vm
+                    })
+                        .done(function () {
+                            toastr.success("Purchase successfully recorded.");
+
+                            validator.resetForm();
+                        })
+                        .fail(function () {
+                            toastr.error("Something unexpected happened.");
+                        });
+
+                    return false;
+                }
+            });
 
         }
     </script>
