@@ -124,12 +124,20 @@
                         , CustomerId: customerID.value
                         , PurchaseItems: purchaseItems
                     };
+                    console.log(Purchase);
                     debugger;
+
                     $.ajax({
+                        URL: "http://localhost/Purchases/Create",
                         type: "POST",
-                        data: JSON.stringify(Purchase),
-                        url: "/Purchases/Create",
-                        contentType: "application/json"
+                        contentType: "Content-Type: application/json",
+                        data: product,
+                        success: function (data, status, xhr) {
+                            alert('Success!');
+                        },
+                        error: function (xhr, status, error) {
+                            alert('Creation Error occurred - ' + error);
+                        }
                     });
 
                     return false;
