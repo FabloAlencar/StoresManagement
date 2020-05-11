@@ -90,22 +90,23 @@
     <script>
 
         // Values from the form
-
+        let branchID = document.getElementById('BranchId');
+        let customerID = document.getElementById('CustomerId');
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
         let newpurchaseId = document.getElementById('Product');
         let newQuantity = document.getElementById('itemQuantity');
         let newPrice = document.getElementById('itemPrice');
 
         let purchaseTotal = 0;
+        let purchaseItems = [];
 
-        const purchaseIds = new Set();
-        const quantities = new Set();
         const prices = new Set();
 
         function addSale() {
-            purchaseIds.add(parseInt(newpurchaseId.value));
-            quantities.add(parseInt(newQuantity.value));
+
             prices.add(parseInt(newPrice.value));
+
+            purchaseItems.push({ ProductId: newpurchaseId.value, ProductQuantity: newQuantity.value, ProductCurrentPrice: newPrice.value });
 
             let quantity = parseInt(newQuantity.value);
 
@@ -115,27 +116,21 @@
 
             }
 
-            // used for displaying values on browser (console)
-            // how to parse the Set() to PurchaseFormViewModel.PurchaseItems()?
-            console.log(purchaseIds);
-            console.log(quantities);
-            console.log(prices);
-
             var validator = $("#newPurchase").validate({
                 submitHandler: function () {
-                    $.ajax({
-                        url: "/Purchases/Create",
-                        method: "post",
-                        data: model //vm
-                    })
-                        .done(function () {
-                            toastr.success("Purchase successfully recorded.");
 
-                            validator.resetForm();
-                        })
-                        .fail(function () {
-                            toastr.error("Something unexpected happened.");
-                        });
+                    let Purchase = {
+                        BranchId: branchID.value
+                        , CustomerId: customerID.value
+                        , PurchaseItems: purchaseItems
+                    };
+                    debugger;
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify(Purchase),
+                        url: "/Purchases/Create",
+                        contentType: "application/json"
+                    });
 
                     return false;
                 }
