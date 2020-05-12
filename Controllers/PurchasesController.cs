@@ -107,7 +107,7 @@ namespace StoresManagement.Controllers
         // POST: Purchases/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PurchaseFormViewModel purchaseVM)
+        public async Task<IActionResult> Create([FromBody]Purchase purchaseVM)
         {
             if (ModelState.IsValid)
             {
@@ -120,9 +120,9 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            purchaseVM.Branches = _context.Branches.ToList();
-            purchaseVM.Customers = _context.Customers.ToList();
-            purchaseVM.Products = _context.Products.ToList();
+            //purchaseVM.Branches = _context.Branches.ToList();
+            //purchaseVM.Customers = _context.Customers.ToList();
+            //purchaseVM.Products = _context.Products.ToList();
 
             return View(purchaseVM);
         }

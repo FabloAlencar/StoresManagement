@@ -74,7 +74,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" id="newPurchase2" />
             </div>
         </form>
     </div>
@@ -106,7 +106,7 @@
 
             prices.add(parseInt(newPrice.value));
 
-            purchaseItems.push({ ProductId: newpurchaseId.value, ProductQuantity: newQuantity.value, ProductCurrentPrice: newPrice.value });
+            purchaseItems.push({ ProductId: parseInt(newpurchaseId.value), ProductQuantity: parseInt(newQuantity.value), ProductCurrentPrice: parseInt(newPrice.value) });
 
             let quantity = parseInt(newQuantity.value);
 
@@ -116,35 +116,42 @@
 
             }
 
-            var validator = $("#newPurchase").validate({
-                submitHandler: function () {
+        };
 
-                    let Purchase = {
-                        BranchId: branchID.value
-                        , CustomerId: customerID.value
-                        , PurchaseItems: purchaseItems
-                    };
-                    console.log(Purchase);
+        //
+        //
+        //
+
+        $("#newPurchase2").click(function () {
+
+            let Purchase = {
+                BranchId: 16  // branchID.value
+                , CustomerId: 10 //customerID.value
+                , ProductCurrentPrice: 91 ///PurchaseItems: purchaseItems
+            };
+            console.log(Purchase);
+            purchaseInString = JSON.stringify(Purchase);
+            $.ajax({
+                URL: "https://localhost:44320/Purchases/Create",
+                dataType: "json",
+                contentType: 'application/json',
+                data: purchaseInString,
+
+                success: function (data, status, xhr) {
+                    alert('Success!');
+                },
+                error: function (xhr, status, error) {
+                    alert('Creation Error occurred - ' + error);
                     debugger;
-
-                    $.ajax({
-                        URL: "http://localhost/Purchases/Create",
-                        type: "POST",
-                        contentType: "Content-Type: application/json",
-                        data: product,
-                        success: function (data, status, xhr) {
-                            alert('Success!');
-                        },
-                        error: function (xhr, status, error) {
-                            alert('Creation Error occurred - ' + error);
-                        }
-                    });
-
-                    return false;
                 }
             });
 
-        }
+            return false;
+        });
+
+                    //
+                    //
+                    //
     </script>
 
 }
