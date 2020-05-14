@@ -106,14 +106,14 @@ namespace StoresManagement.Controllers
 
         // POST: Purchases/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody]Purchase purchaseVM)
+        // [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromBody]TestPurchase purchaseVM)
         {
             if (ModelState.IsValid)
             {
                 var branch = await _context.Branches
                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
-                purchaseVM.EntityId = branch.EntityId;
+                // purchaseVM.EntityId = branch.EntityId;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
                 _context.Add(purchase);

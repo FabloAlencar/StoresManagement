@@ -122,36 +122,35 @@
         //
         //
 
-        $("#newPurchase2").click(function () {
+        $("#newPurchase").submit(function () {
 
             let Purchase = {
-                BranchId: 16  // branchID.value
-                , CustomerId: 10 //customerID.value
+                BranchId: parseInt(branchID.value)
+                , CustomerId: parseInt(customerID.value)
                 , ProductCurrentPrice: 91 ///PurchaseItems: purchaseItems
             };
+
             console.log(Purchase);
             purchaseInString = JSON.stringify(Purchase);
-            $.ajax({
-                URL: "https://localhost:44320/Purchases/Create",
-                dataType: "json",
-                contentType: 'application/json',
-                data: purchaseInString,
 
-                success: function (data, status, xhr) {
-                    alert('Success!');
-                },
-                error: function (xhr, status, error) {
-                    alert('Creation Error occurred - ' + error);
-                    debugger;
-                }
+            debugger;
+
+            $.ajax({
+                type: "POST",
+                url: '/Purchases/Create',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(Purchase),
+                dataType: "json",
+                success: function () { alert('Success'); },
+                error: function (xhr, status, error) { alert('Error:'); }
             });
 
             return false;
         });
 
-                    //
-                    //
-                    //
+                                                                                        //
+                                                                                        //
+                                                                                        //
     </script>
 
 }
