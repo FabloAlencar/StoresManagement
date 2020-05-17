@@ -45,24 +45,26 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                @*<form>*@
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.Product.Name)
-                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
-                                </div>
+                                @*<form>
+                                    *@
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Product.Name)
+                                        @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                                    </div>
 
-                                <div class="form-group">
-                                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
-                                           placeholder="Enter Price">
-                                </div>
+                                    <div class="form-group">
+                                        <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
+                                        <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                                               placeholder="Enter Price">
+                                    </div>
 
-                                <div class="form-group">
-                                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
-                                           placeholder="Enter Quantity">
-                                </div>
-                                @*</form>*@
+                                    <div class="form-group">
+                                        <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
+                                        <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                                               placeholder="Enter Quantity">
+                                    </div>
+                                    @*
+                                </form>*@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -87,7 +89,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script>
+<script>
 
         // Values from the form
         let branchID = document.getElementById('BranchId');
@@ -122,18 +124,20 @@
         //
         //
 
-        $("#newPurchase").submit(function () {
+        var validator = $("#newPurchase").submit(function () {
 
             let Purchase = {
                 BranchId: parseInt(branchID.value)
                 , CustomerId: parseInt(customerID.value)
-                , ProductCurrentPrice: 91 ///PurchaseItems: purchaseItems
+                , Total: purchaseTotal
+                , Discount: 0
+                , PurchaseItems: purchaseItems //  ProductCurrentPrice: 91 ///
             };
 
             console.log(Purchase);
             purchaseInString = JSON.stringify(Purchase);
 
-            debugger;
+            //debugger;
 
             $.ajax({
                 type: "POST",
@@ -141,16 +145,23 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(Purchase),
                 dataType: "json",
-                success: function () { alert('Success'); },
-                error: function (xhr, status, error) { alert('Error:'); }
+                success: function () {
+                    alert('Success');
+                    debugger;
+                    validator.resetForm();
+                    },
+                error: function (xhr, status, error) {
+                    alert('Error:');
+                    debugger;
+                    }
             });
 
             return false;
         });
 
-                                                                                        //
-                                                                                        //
-                                                                                        //
-    </script>
+                                                                                                            //
+                                                                                                            //
+                                                                                                            //
+</script>
 
 }

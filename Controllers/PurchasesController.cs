@@ -107,22 +107,38 @@ namespace StoresManagement.Controllers
         // POST: Purchases/Create
         [HttpPost]
         // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody]TestPurchase purchaseVM)
+        public async Task<IActionResult> Create([FromBody]PurchaseFormViewModel purchaseVM)
         {
             if (ModelState.IsValid)
             {
-                var branch = await _context.Branches
-                    .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
-                // purchaseVM.EntityId = branch.EntityId;
+                try
+                {
+                    var branch = await _context.Branches
+                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
 
-                var purchase = _mapper.Map<Purchase>(purchaseVM);
-                _context.Add(purchase);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    purchaseVM.EntityId = branch.EntityId;
+
+                    var purchase = _mapper.Map<Purchase>(purchaseVM);
+                    _context.Add(purchase);
+
+                    foreach (var purchaseitem in purchase.PurchaseItems)
+                    {
+                        purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
+                        purchaseitem.DiscountTotal = 0;
+                        _context.Add(purchaseitem);
+                    }
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
             }
-            //purchaseVM.Branches = _context.Branches.ToList();
-            //purchaseVM.Customers = _context.Customers.ToList();
-            //purchaseVM.Products = _context.Products.ToList();
+            purchaseVM.Branches = _context.Branches.ToList();
+            purchaseVM.Customers = _context.Customers.ToList();
+            purchaseVM.Products = _context.Products.ToList();
 
             return View(purchaseVM);
         }
