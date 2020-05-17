@@ -111,30 +111,23 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var branch = await _context.Branches
+                    .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+
+                purchaseVM.EntityId = branch.EntityId;
+
+                var purchase = _mapper.Map<Purchase>(purchaseVM);
+                _context.Add(purchase);
+
+                foreach (var purchaseitem in purchase.PurchaseItems)
                 {
-                    var branch = await _context.Branches
-                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
-
-                    purchaseVM.EntityId = branch.EntityId;
-
-                    var purchase = _mapper.Map<Purchase>(purchaseVM);
-                    _context.Add(purchase);
-
-                    foreach (var purchaseitem in purchase.PurchaseItems)
-                    {
-                        purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
-                        purchaseitem.DiscountTotal = 0;
-                        _context.Add(purchaseitem);
-                    }
-
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
+                    purchaseitem.DiscountTotal = 0;
+                    _context.Add(purchaseitem);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    throw;
-                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();

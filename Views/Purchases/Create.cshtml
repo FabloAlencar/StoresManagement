@@ -124,14 +124,15 @@
         //
         //
 
-        var validator = $("#newPurchase").submit(function () {
+            var validator = $("#newPurchase").validate({
+                submitHandler: function () {
 
             let Purchase = {
                 BranchId: parseInt(branchID.value)
                 , CustomerId: parseInt(customerID.value)
                 , Total: purchaseTotal
                 , Discount: 0
-                , PurchaseItems: purchaseItems //  ProductCurrentPrice: 91 ///
+                , PurchaseItems: purchaseItems
             };
 
             console.log(Purchase);
@@ -142,23 +143,23 @@
             $.ajax({
                 type: "POST",
                 url: '/Purchases/Create',
-                contentType: "application/json; charset=utf-8",
+                contentType: "application/json",
                 data: JSON.stringify(Purchase),
-                dataType: "json",
-                success: function () {
-                    alert('Success');
-                    debugger;
-                    validator.resetForm();
-                    },
-                error: function (xhr, status, error) {
-                    alert('Error:');
-                    debugger;
-                    }
+                dataType: "json"
+               ,  success: function () {
+    alert('Success');
+  //  debugger;
+    validator.resetForm();
+    }
+                , error: function (xhr, status, error) {
+    alert('Error:');
+   // debugger;
+    }
             });
 
-            return false;
-        });
-
+                    return false;
+                }
+            });
                                                                                                             //
                                                                                                             //
                                                                                                             //
