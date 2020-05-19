@@ -117,14 +117,16 @@ namespace StoresManagement.Controllers
                 purchaseVM.EntityId = branch.EntityId;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
-                _context.Add(purchase);
 
                 foreach (var purchaseitem in purchase.PurchaseItems)
                 {
-                    purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
-                    purchaseitem.DiscountTotal = 0;
+                    //  purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
+                    purchase.Discount += purchaseitem.DiscountTotal;
+                    purchase.Total += (purchaseitem.Total - purchaseitem.DiscountTotal);
                     _context.Add(purchaseitem);
                 }
+
+                _context.Add(purchase);
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -217,7 +219,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
-                .SingleOrDefaultAsync(m => m.Id == id);
+               .SingleOrDefaultAsync(m => m.Id == id);
             if (purchase == null)
             {
                 return NotFound();
