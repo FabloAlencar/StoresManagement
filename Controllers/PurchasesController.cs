@@ -120,7 +120,6 @@ namespace StoresManagement.Controllers
 
                 foreach (var purchaseitem in purchase.PurchaseItems)
                 {
-                    //  purchaseitem.Total = purchaseitem.ProductQuantity * purchaseitem.ProductCurrentPrice;
                     purchase.Discount += purchaseitem.DiscountTotal;
                     purchase.Total += (purchaseitem.Total - purchaseitem.DiscountTotal);
                     _context.Add(purchaseitem);
@@ -129,7 +128,9 @@ namespace StoresManagement.Controllers
                 _context.Add(purchase);
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return Json(null);
+                //  return Json(RedirectToAction(nameof(Index)));
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();
