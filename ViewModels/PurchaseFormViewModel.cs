@@ -8,8 +8,12 @@ namespace StoresManagement.ViewModels
     {
         public PurchaseFormViewModel()
         {
+            Branches = new HashSet<Branch>();
+            Customers = new HashSet<Customer>();
+            Products = new HashSet<Product>();
             PurchaseItems = new HashSet<PurchaseItem>();
         }
+
         public IEnumerable<Branch> Branches { get; set; }
 
         public IEnumerable<Customer> Customers { get; set; }

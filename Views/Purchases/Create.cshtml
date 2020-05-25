@@ -11,25 +11,15 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form id="newPurchase" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Branch.Name)
-                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control", @required = "Required" })
+                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Customer.FullName)
-                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control", @required = "Required" })
-            </div>
-
-            <div class="form-group">
-                <table id="purchasesTable">
-                    <tr>
-                        <td>Product Id</td>
-                        <td>Product Price</td>
-                        <td>Quantity</td>
-                    </tr>
-                </table>
+                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
             </div>
 
             <!-- Recent Sales -->
@@ -55,24 +45,26 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                @*<form>*@
+                                @*<form>
+                                *@
                                 <div class="form-group">
                                     @Html.LabelFor(m => m.Product.Name)
-                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control", @required = "Required" })
+                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
                                 </div>
 
                                 <div class="form-group">
                                     <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                    <input type="number" class="form-control" id="itemPrice"
+                                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
                                            placeholder="Enter Price">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                    <input type="number" class="form-control" id="itemQuantity"
+                                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
                                            placeholder="Enter Quantity">
                                 </div>
-                                @*</form>*@
+                                @*
+                                    </form>*@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -84,7 +76,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary" id="newPurchase2" />
             </div>
         </form>
     </div>
@@ -100,23 +92,29 @@
     <script>
 
         // Values from the form
+        let branchID = document.getElementById('BranchId');
+        let customerID = document.getElementById('CustomerId');
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
-
-        let newProduct = document.getElementById('Product');
-        let newPrice = document.getElementById('itemPrice');
+        let newpurchaseId = document.getElementById('Product');
         let newQuantity = document.getElementById('itemQuantity');
-
-        const products = Array.of();
-        const quantities = Array.of();
-        const prices = Array.of();
+        let newPrice = document.getElementById('itemPrice');
 
         let purchaseTotal = 0;
+        let purchaseItems = [];
+
+        const prices = new Set();
 
         function addSale() {
 
-            products.push(parseInt(newProduct.value));
-            quantities.push(parseInt(newQuantity.value));
-            prices.push(parseInt(newPrice.value));
+            prices.add(parseInt(newPrice.value));
+
+            purchaseItems.push({
+                ProductId: parseInt(newpurchaseId.value),
+                ProductQuantity: parseInt(newQuantity.value),
+                ProductCurrentPrice: parseInt(newPrice.value),
+                Total: parseInt(newQuantity.value) * parseInt(newPrice.value),
+                DiscountTotal: 0
+            });
 
             let quantity = parseInt(newQuantity.value);
 
@@ -126,24 +124,42 @@
 
             }
 
-            // Values for purchases table
-            var table = document.getElementById("purchasesTable");
-            var row = table.insertRow();
+        };
 
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
+        //
+        //
+        //
 
-            cell1.innerHTML = newProduct.value;
-            cell2.innerHTML = newPrice.value;
-            cell3.innerHTML = newQuantity.value;
+        var validator = $("#newPurchase").validate({
+            submitHandler: function () {
+                //  debugger;
 
-            console.log(products);
-            console.log("Products : " + products);
-            console.log("Quantities : " + quantities);
-            console.log("Prices : " + prices);
+                let Purchase =
+                {
+                    BranchId: parseInt(branchID.value)
+                    , CustomerId: parseInt(customerID.value)
+                    , Total: 0
+                    , Discount: 0
+                    , PurchaseItems: purchaseItems
+                };
 
-        }
+                $.ajax({
+                    url: '/Purchases/Create',
+                    data: JSON.stringify(Purchase),
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json'
+                    // , success: function () { window.open(data.URL); }
+                    , success: function () { alert('Success'); validator.resetForm(); }
+                    , error: function (xhr, status, error) { alert('Error:'); debugger; }
+                });
+
+                return false;
+            }
+        });
+                                                                                                                                    //
+                                                                                                                                    //
+                                                                                                                                    //
     </script>
 
 }

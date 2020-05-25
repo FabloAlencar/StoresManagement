@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoresManagement.Data;
 
 namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200517102528_PurchaseViewFixes")]
+    partial class PurchaseViewFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -439,7 +441,8 @@ namespace StoresManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("PurchaseId");
 
@@ -552,8 +555,8 @@ namespace StoresManagement.Data.Migrations
             modelBuilder.Entity("StoresManagement.Models.PurchaseItem", b =>
                 {
                     b.HasOne("StoresManagement.Models.Product", "Product")
-                        .WithMany("PurchaseItems")
-                        .HasForeignKey("ProductId")
+                        .WithOne("PurchaseItem")
+                        .HasForeignKey("StoresManagement.Models.PurchaseItem", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

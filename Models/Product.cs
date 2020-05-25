@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace StoresManagement.Models
 {
@@ -26,6 +27,6 @@ namespace StoresManagement.Models
 
         public float? Height { get; set; }
 
-        public virtual PurchaseItem PurchaseItem { get; set; }
+        public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
     }
 }
