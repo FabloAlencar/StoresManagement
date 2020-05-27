@@ -81,6 +81,8 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
+                .Include(b => b.PurchaseItems)
+                //.Include(b => b.PurchaseItems.Product)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (purchase == null)
