@@ -17,11 +17,15 @@
                 @Html.LabelFor(m => m.Branch.Name)
                 @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
             </div>
+
             <div class="form-group">
                 <label asp-for="Customer.FullName" class="control-label"></label>
-                <input id="autocompleteFullName" asp-for="Customer.FullName" class="form-control" />
+                <input id="CustomerFullName" asp-for="Customer.FullName" class="form-control" />
             </div>
+
             <input type="hidden" asp-for="Id" />
+            <input id="CustomerId" type="hidden" asp-for="CustomerId" />
+
             <div class="form-group">
                 <label asp-for="Discount" class="control-label"></label>
                 <input asp-for="Discount" class="form-control" />
@@ -50,9 +54,32 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script>
-        $(function () {
-            $("#autocompleteFullName").autocomplete({
-                source: '/Customers/SearchCustomer'
+        $(document).ready(function () {
+            $("#CustomerFullName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Customers/Search',
+                        type: 'GET',
+                        cache: false,
+                        data: request,
+                        dataType: 'json',
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.label,
+                                    value: item.id
+                                }
+                            }))
+                        }
+                    });
+
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    $('#CustomerFullName').val(ui.item.label);
+                    $('#CustomerId').val(ui.item.value);
+                    return false;
+                }
             });
         });
     </script>

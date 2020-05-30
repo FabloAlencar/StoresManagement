@@ -21,17 +21,18 @@ namespace StoresManagement.Controllers
             _mapper = mapper;
         }
 
-        // GET: Customers/SearchCustomer
+        // GET: Customers/Search
         [HttpGet]
-        public IActionResult SearchCustomer()
+        public ActionResult Search(string term)
         {
-            var term = HttpContext.Request.Query["term"].ToString();
+            var customerList = _context.Customers.Where(r => r.Name.Contains(term) || r.Surname.Contains(term))
+                              .Select(r => new
+                              {
+                                  id = r.Id,
+                                  label = r.FullName
+                              }).ToArray();
 
-            var fullName = _context.Customers
-                 .Where(c => c.Name.Contains(term) || c.Surname.Contains(term))
-                .Select(c => c.FullName).ToList();
-
-            return Ok(fullName);
+            return Json(customerList);
         }
 
         // GET: Customers
