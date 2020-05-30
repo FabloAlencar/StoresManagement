@@ -49,39 +49,5 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $("#CustomerFullName").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: '/Customers/Search',
-                        type: 'GET',
-                        cache: false,
-                        data: request,
-                        dataType: 'json',
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                return {
-                                    label: item.label,
-                                    value: item.id
-                                }
-                            }))
-                        }
-                    });
-
-                },
-                minLength: 2,
-                select: function (event, ui) {
-                    $('#CustomerFullName').val(ui.item.label);
-                    $('#CustomerId').val(ui.item.value);
-                    return false;
-                }
-            });
-        });
-    </script>
 
 }

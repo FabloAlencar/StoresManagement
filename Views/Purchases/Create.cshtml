@@ -13,15 +13,18 @@
     <div class="col-md-4">
         <form id="newPurchase" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Branch.Name)
-                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Customer.FullName)
-                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
-            </div>
+            <div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Branch.Name)
+                    @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
+                </div>
 
+                <div class="form-group">
+                    <label asp-for="Customer.FullName" class="control-label"></label>
+                    <input id="CustomerFullName" asp-for="Customer.FullName" class="form-control" />
+                </div>
+                <input id="CustomerId" type="hidden" asp-for="CustomerId" />
+            </div>
             <!-- Recent Sales -->
             <div class="container py-3">
                 <div class="d-flex flex-row justify-content-between pb-3">
@@ -45,26 +48,23 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                @*<form>
-                                    *@
-                                    <div class="form-group">
-                                        @Html.LabelFor(m => m.Product.Name)
-                                        @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
-                                    </div>
 
-                                    <div class="form-group">
-                                        <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                        <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
-                                               placeholder="Enter Price">
-                                    </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Product.Name)
+                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                                </div>
 
-                                    <div class="form-group">
-                                        <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                        <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
-                                               placeholder="Enter Quantity">
-                                    </div>
-                                    @*
-                                </form>*@
+                                <div class="form-group">
+                                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
+                                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                                           placeholder="Enter Price">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
+                                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                                           placeholder="Enter Quantity">
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -89,7 +89,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-<script>
+    <script>
 
         // Values from the form
         let branchID = document.getElementById('BranchId');
@@ -126,41 +126,33 @@
 
         };
 
-        //
-        //
-        //
-
         var validator = $("#newPurchase").validate({
             submitHandler: function () {
-                //  debugger;
 
-                let Purchase = JSON.stringify (
-                {
-                    BranchId: parseInt(branchID.value)
-                    , CustomerId: parseInt(customerID.value)
-                    , Total: 0
-                    , Discount: 0
-                    , PurchaseItems: purchaseItems
-                } );
+                let Purchase = JSON.stringify(
+                    {
+                        BranchId: parseInt(branchID.value)
+                        , CustomerId: parseInt(customerID.value)
+                        , Total: 0
+                        , Discount: 0
+                        , PurchaseItems: purchaseItems
+                    });
 
-              console.log(Purchase);
-
+                console.log(Purchase);
+                debugger;
                 $.ajax({
                     url: '/Purchases/Create',
-                    data: Purchase ,
+                    data: Purchase,
                     type: 'POST',
                     contentType: 'application/json',
                     dataType: 'json'
-                    , success: function () {  validator.resetForm();   window.location = '/Purchases';}
+                    , success: function () { validator.resetForm(); window.location = '/Purchases'; }
                     , error: function (xhr, status, error) { alert('Error:' + error); console.log(xhr); console.log(status); console.log(error); debugger; }
                 });
 
                 return false;
             }
         });
-                                                                                                                                                //
-                                                                                                                                                //
-                                                                                                                                                //
-</script>
+    </script>
 
 }
