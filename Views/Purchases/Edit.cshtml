@@ -18,8 +18,8 @@
                 @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Customer.FullName)
-                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
+                <label asp-for="Customer.FullName" class="control-label"></label>
+                <input id="autocompleteFullName" asp-for="Customer.FullName" class="form-control" />
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -45,4 +45,16 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(function () {
+            $("#autocompleteFullName").autocomplete({
+                source: '/Customers/SearchCustomer'
+            });
+        });
+    </script>
+
 }

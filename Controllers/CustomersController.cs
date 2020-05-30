@@ -21,6 +21,19 @@ namespace StoresManagement.Controllers
             _mapper = mapper;
         }
 
+        // GET: Customers/SearchCustomer
+        [HttpGet]
+        public IActionResult SearchCustomer()
+        {
+            var term = HttpContext.Request.Query["term"].ToString();
+
+            var fullName = _context.Customers
+                 .Where(c => c.Name.Contains(term) || c.Surname.Contains(term))
+                .Select(c => c.FullName).ToList();
+
+            return Ok(fullName);
+        }
+
         // GET: Customers
         public async Task<IActionResult> Index()
         {
