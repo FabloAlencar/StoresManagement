@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StoresManagement.Models
 {
@@ -26,5 +27,7 @@ namespace StoresManagement.Models
         public float? Total { get; set; }
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
+
+        public DateTime? RegistrationDate { get; set; }
     }
 }

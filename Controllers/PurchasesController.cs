@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -109,7 +110,7 @@ namespace StoresManagement.Controllers
         // POST: Purchases/Create
         [HttpPost]
         // [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody]PurchaseFormViewModel purchaseVM)
+        public async Task<IActionResult> Create([FromBody] PurchaseFormViewModel purchaseVM)
         {
             if (ModelState.IsValid)
             {
@@ -117,6 +118,7 @@ namespace StoresManagement.Controllers
                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
 
                 purchaseVM.EntityId = branch.EntityId;
+                purchaseVM.RegistrationDate = DateTime.Now;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
 

@@ -1,4 +1,5 @@
 ﻿using StoresManagement.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -44,5 +45,7 @@ namespace StoresManagement.ViewModels
         public string BranchTitle { get; set; }
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
+
+        public DateTime? RegistrationDate { get; set; }
     }
 }
