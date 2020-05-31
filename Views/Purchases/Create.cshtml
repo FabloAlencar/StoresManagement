@@ -13,33 +13,33 @@
     <div class="col-md-4">
         <form id="newPurchase" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.Branch.Name)
                     @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
                 </div>
-
                 <div class="form-group">
                     <label asp-for="Customer.FullName" class="control-label"></label>
                     <input id="CustomerFullName" asp-for="Customer.FullName" class="form-control" />
+                    <input id="CustomerId" type="hidden" asp-for="CustomerId" />
                 </div>
-                <input id="CustomerId" type="hidden" asp-for="CustomerId" />
             </div>
-            <!-- Recent Sales -->
-            <div class="container py-3">
-                <div class="d-flex flex-row justify-content-between pb-3">
+
+            <div>
+                <div>
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModal">
                         <span class="oi oi-plus pr-2"></span>Add Sale
                     </button>
                 </div>
-                <div class="graphSec">
+                <div>
                     <h2 class="text-right pt-3">Purchase Total</h2>
-                    <h1 class="text-right pb-3 totalNum" id="purchaseTotal"></h1>
+                    <h1 class="text-right pb-3" id="purchaseTotal"></h1>
                 </div>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" id="newPurchase2" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -49,36 +49,33 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<!-- New Sale Entry -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+<!-- New Purchase Item -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">NEW ITEM</h5>
+                <h5 class="modal-title">NEW PURCHASE ITEM</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
 
+            <div class="modal-body">
                 <div class="form-group">
                     @Html.LabelFor(m => m.Product.Name)
                     @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
                 </div>
-
                 <div class="form-group">
-                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
-                           placeholder="Enter Price">
+                    <label for="itemPrice">Item Price:</label>
+                    <input type="number" class="form-control" id="itemPrice" placeholder="Enter Price">
                 </div>
-
                 <div class="form-group">
-                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
-                           placeholder="Enter Quantity">
+                    <label for="itemQuantity">Item Quantity:</label>
+                    <input type="number" class="form-control" id="itemQuantity" placeholder="Enter Quantity">
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="addSale()">Add Item</button>
