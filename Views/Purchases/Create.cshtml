@@ -33,45 +33,8 @@
                     </button>
                 </div>
                 <div class="graphSec">
-                    <h3 class="text-right pt-3">Purchase Total</h3>
+                    <h2 class="text-right pt-3">Purchase Total</h2>
                     <h1 class="text-right pb-3 totalNum" id="purchaseTotal"></h1>
-                </div>
-                <!-- New Sale Entry -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">NEW ITEM</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="form-group">
-                                    @Html.LabelFor(m => m.Product.Name)
-                                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
-                                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
-                                           placeholder="Enter Price">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
-                                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
-                                           placeholder="Enter Quantity">
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="addSale()">Add Item</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -86,6 +49,44 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!-- New Sale Entry -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">NEW ITEM</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Product.Name)
+                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                </div>
+
+                <div class="form-group">
+                    <label for="itemPrice"><small class="text-muted">Item Price:</small></label>
+                    <input type="number" class="form-control" id="itemPrice" aria-describedby="emailHelp"
+                           placeholder="Enter Price">
+                </div>
+
+                <div class="form-group">
+                    <label for="itemQuantity"><small class="text-muted">Item Quantity:</small></label>
+                    <input type="number" class="form-control" id="itemQuantity" aria-describedby="emailHelp"
+                           placeholder="Enter Quantity">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="addSale()">Add Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
@@ -95,35 +96,29 @@
         let branchID = document.getElementById('BranchId');
         let customerID = document.getElementById('CustomerId');
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
-        let newpurchaseId = document.getElementById('Product');
+        let newProductId = document.getElementById('Product');
         let newQuantity = document.getElementById('itemQuantity');
         let newPrice = document.getElementById('itemPrice');
 
-        let purchaseTotal = 0;
         let purchaseItems = [];
-
-        const prices = new Set();
+        let purchaseTotal = 0;
 
         function addSale() {
 
-            prices.add(parseInt(newPrice.value));
+            let quantityItem = parseInt(newQuantity.value);
+            let currentPriceItem = parseInt(newPrice.value);
+            let purchaseTotalItem = quantityItem * currentPriceItem;
+
+            purchaseTotal += purchaseTotalItem;
+            purchaseTotalLabel.innerHTML = purchaseTotal;
 
             purchaseItems.push({
-                ProductId: parseInt(newpurchaseId.value),
-                ProductQuantity: parseInt(newQuantity.value),
-                ProductCurrentPrice: parseInt(newPrice.value),
-                Total: parseInt(newQuantity.value) * parseInt(newPrice.value),
+                ProductId: parseInt(newProductId.value),
+                ProductQuantity: quantityItem,
+                ProductCurrentPrice: currentPriceItem,
+                Total: purchaseTotalItem,
                 DiscountTotal: 0
             });
-
-            let quantity = parseInt(newQuantity.value);
-
-            for (let amount of prices) {
-                purchaseTotal = purchaseTotal + (quantity * amount);
-                purchaseTotalLabel.innerHTML = purchaseTotal;
-
-            }
-
         };
 
         var validator = $("#newPurchase").validate({
@@ -138,8 +133,6 @@
                         , PurchaseItems: purchaseItems
                     });
 
-                console.log(Purchase);
-                debugger;
                 $.ajax({
                     url: '/Purchases/Create',
                     data: Purchase,
@@ -147,7 +140,7 @@
                     contentType: 'application/json',
                     dataType: 'json'
                     , success: function () { validator.resetForm(); window.location = '/Purchases'; }
-                    , error: function (xhr, status, error) { alert('Error:' + error); console.log(xhr); console.log(status); console.log(error); debugger; }
+                    , error: function (xhr, status, error) { alert('Error:' + error); console.log(xhr); console.log(status); console.log(error); }
                 });
 
                 return false;
