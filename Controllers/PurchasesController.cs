@@ -118,6 +118,7 @@ namespace StoresManagement.Controllers
                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
 
                 purchaseVM.EntityId = branch.EntityId;
+                purchaseVM.Identification = DateTime.Now.ToString("yyMMddHHmmss0000ffff");
                 purchaseVM.RegistrationDate = DateTime.Now;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);

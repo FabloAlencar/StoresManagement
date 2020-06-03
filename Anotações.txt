@@ -1,0 +1,13 @@
+﻿
+
+
+Adicionar:
+- purchase identification (YYDDDSSSSSS) - done 
+- tabela items de da compra
+- pegar precos reais
+- uma melhora nas telas de compras 
+
+
+- linkar usuario master a determinada entidade:
+* a entidade pode criar outros usuarios 
+

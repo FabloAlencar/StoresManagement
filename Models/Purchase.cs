@@ -22,6 +22,8 @@ namespace StoresManagement.Models
 
         public int Id { get; set; }
 
+        public string Identification { get; set; }
+
         public float? Discount { get; set; }
 
         public float? Total { get; set; }

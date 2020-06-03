@@ -21,7 +21,10 @@
                     @Html.DisplayNameFor(model => model.Customer)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.RegistrationDate)
+                    @Html.DisplayNameFor(model => model.PurchaseDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Identification)
                 </th>
             </tr>
         </thead>
@@ -34,7 +37,10 @@
                     @Html.DisplayFor(modelItem => modelItem.Customer.FullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.RegistrationDate)
+                    @Html.DisplayFor(modelItem => modelItem.PurchaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Identification)
                 </td>
             </tr>
         </tbody>

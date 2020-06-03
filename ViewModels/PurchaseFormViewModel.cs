@@ -37,6 +37,9 @@ namespace StoresManagement.ViewModels
 
         public int Id { get; set; }
 
+        [Display(Name = "Purchase Number")]
+        public string Identification { get; set; }
+
         public float? Discount { get; set; }
 
         public float? Total { get; set; }
@@ -46,6 +49,9 @@ namespace StoresManagement.ViewModels
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
 
-        public DateTime? RegistrationDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
+
+        [Display(Name = "Purchase Date")]
+        public string PurchaseDate => RegistrationDate.ToString("dd/MMM/yyyy HH:mm");
     }
 }
