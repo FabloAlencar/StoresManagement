@@ -12,7 +12,8 @@ namespace StoresManagement.ViewModels
             Branches = new HashSet<Branch>();
             Customers = new HashSet<Customer>();
             Products = new HashSet<Product>();
-            PurchaseItems = new HashSet<PurchaseItem>();
+            PurchaseItems = new List<PurchaseItem>();
+            Product = new Product();
         }
 
         public IEnumerable<Branch> Branches { get; set; }
@@ -31,8 +32,6 @@ namespace StoresManagement.ViewModels
 
         public virtual Customer Customer { get; set; }
 
-        public int? ProductId { get; set; }
-
         public virtual Product Product { get; set; }
 
         public int Id { get; set; }
@@ -40,12 +39,9 @@ namespace StoresManagement.ViewModels
         [Display(Name = "Purchase Number")]
         public string Identification { get; set; }
 
-        public float? Discount { get; set; }
+        public decimal? Discount { get; set; }
 
-        public float? Total { get; set; }
-
-        [Display(Name = "Branch")]
-        public string BranchTitle { get; set; }
+        public decimal? Total { get; set; }
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
 

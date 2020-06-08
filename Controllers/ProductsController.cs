@@ -21,6 +21,22 @@ namespace StoresManagement.Controllers
             _mapper = mapper;
         }
 
+        // GET: Products/RetrieveProducts
+        [HttpGet]
+        public ActionResult RetrieveProducts(int? branchId)
+        {
+            var productList = _context.Products.Where(r => r.BranchId == branchId)
+                              .Select(r => new
+                              {
+                                  productId = r.Id,
+                                  productName = r.Name,
+                                  productPrice = r.Price,
+                                  productQuantityInStock = r.QuantityInStock
+                              }).ToArray();
+
+            return Json(productList);
+        }
+
         // GET: Products
         public async Task<IActionResult> Index()
         {

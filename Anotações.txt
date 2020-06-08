@@ -2,9 +2,9 @@
 
 
 Adicionar:
-- purchase identification (YYDDDSSSSSS) - done 
+- purchase identification (YYDDDSSSSSS) - DONE 
 - tabela items de da compra
-- pegar precos reais
+- pegar precos reais - IN PROGRESS
 - uma melhora nas telas de compras 
 
 
