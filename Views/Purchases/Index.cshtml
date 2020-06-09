@@ -45,10 +45,10 @@
                     @Html.DisplayFor(modelItem => item.PurchaseDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Discount)
+                    $ @Html.DisplayFor(modelItem => item.Discount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Total)
+                    $ @Html.DisplayFor(modelItem => item.Total)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

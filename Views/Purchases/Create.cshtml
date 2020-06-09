@@ -103,7 +103,7 @@
         function addSale() {
 
             let quantityItem = parseInt(newQuantity.value);
-            let currentPriceItem = parseInt(newPrice.value);
+            let currentPriceItem = parseFloat(newPrice.value);
             let purchaseTotalItem = quantityItem * currentPriceItem;
 
             purchaseTotal += purchaseTotalItem;

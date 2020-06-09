@@ -5,6 +5,11 @@ namespace StoresManagement.Models
 {
     public class Product
     {
+        public Product()
+        {
+            PurchaseItems = new HashSet<PurchaseItem>();
+        }
+
         public int EntityId { get; set; }
 
         public int BranchId { get; set; }

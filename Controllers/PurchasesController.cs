@@ -83,8 +83,13 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch.Entity)
                 .Include(b => b.Customer)
                 .Include(b => b.PurchaseItems)
-                //.Include(b => b.PurchaseItems.Product)
                 .SingleOrDefaultAsync(m => m.Id == id);
+
+            foreach (var item in purchase.PurchaseItems)
+            {
+                item.Product = await _context.Products
+                    .SingleOrDefaultAsync(m => m.Id == item.ProductId);
+            }
 
             if (purchase == null)
             {

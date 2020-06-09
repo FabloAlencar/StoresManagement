@@ -57,12 +57,10 @@
                         @Html.DisplayNameFor(model => model.Product.Name)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.PurchaseItems)
-                        @*@Html.DisplayNameFor(model => model.PurchaseItems.ProductQuantity)*@
+                        Quantity
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.PurchaseItems)
-                        @*@Html.DisplayNameFor(model => model.PurchaseItems.ProductCurrentPrice)*@
+                        Price
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.Discount)
@@ -83,13 +81,13 @@
                             @Html.DisplayFor(modelItem => item.ProductQuantity)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ProductCurrentPrice)
+                            $ @Html.DisplayFor(modelItem => item.ProductCurrentPrice)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.DiscountTotal)
+                            $ @Html.DisplayFor(modelItem => item.DiscountTotal)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Total)
+                            $ @Html.DisplayFor(modelItem => item.Total)
                         </td>
                     </tr>
                 }
@@ -125,10 +123,10 @@
                 <td></td>
                 <td></td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.Discount)
+                    $ @Html.DisplayFor(modelItem => modelItem.Discount)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => modelItem.Total)
+                    $ @Html.DisplayFor(modelItem => modelItem.Total)
                 </td>
             </tr>
         </tbody>

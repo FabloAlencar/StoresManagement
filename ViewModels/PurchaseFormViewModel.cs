@@ -12,7 +12,7 @@ namespace StoresManagement.ViewModels
             Branches = new HashSet<Branch>();
             Customers = new HashSet<Customer>();
             Products = new HashSet<Product>();
-            PurchaseItems = new List<PurchaseItem>();
+            PurchaseItems = new HashSet<PurchaseItem>();
             Product = new Product();
         }
 
