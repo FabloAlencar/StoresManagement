@@ -32,6 +32,8 @@
                         <span class="oi oi-plus pr-2"></span>Add Sale
                     </button>
                 </div>
+                <table id="purchaseItemsTable" class="table">
+                </table>
                 <div>
                     <h2 class="text-right pt-3">Purchase Total</h2>
                     <h1 class="text-right pb-3" id="purchaseTotal"></h1>
@@ -96,6 +98,8 @@
         let newProductId = document.getElementById('Product');
         let newQuantity = document.getElementById('itemQuantity');
         let newPrice = document.getElementById('itemPrice');
+        var table = document.getElementById("purchaseItemsTable");
+        var tableRowsNumber = 0;
 
         let purchaseItems = [];
         let purchaseTotal = 0;
@@ -116,6 +120,35 @@
                 Total: purchaseTotalItem,
                 DiscountTotal: 0
             });
+
+           
+            if (tableRowsNumber == 0) {
+
+                var row = table.insertRow(tableRowsNumber);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                cell1.innerHTML = "Product";
+                cell2.innerHTML = "Quantity";
+                cell3.innerHTML = "Price";
+                cell4.innerHTML = "Total";
+
+                tableRowsNumber += 1;
+            }
+
+            var row = table.insertRow(tableRowsNumber);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            cell1.innerHTML = "NEW CELL1";
+            cell2.innerHTML = quantityItem;
+            cell3.innerHTML = currentPriceItem;
+            cell4.innerHTML = purchaseTotalItem;
+
+            tableRowsNumber += 1;
+
         };
 
         var validator = $("#newPurchase").validate({
