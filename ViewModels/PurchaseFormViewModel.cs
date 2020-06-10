@@ -39,8 +39,10 @@ namespace StoresManagement.ViewModels
         [Display(Name = "Purchase Number")]
         public string Identification { get; set; }
 
+        [Display(Name = "DISCOUNT")]
         public decimal? Discount { get; set; }
 
+        [Display(Name = "TOTAL")]
         public decimal? Total { get; set; }
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }

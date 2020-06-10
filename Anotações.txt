@@ -4,8 +4,10 @@
 Adicionar:
 - purchase identification (YYDDDSSSSSS) - DONE 
 - tabela items de da compra
-- pegar precos reais - IN PROGRESS
+- pegar precos reais  - DONE 
 - uma melhora nas telas de compras 
+- read input data based on its individual id - example here: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_text_value2
+- create table nodes to display item  - see this: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
 
 
 - linkar usuario master a determinada entidade:

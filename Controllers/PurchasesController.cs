@@ -195,7 +195,9 @@ namespace StoresManagement.Controllers
                     purchaseVM.EntityId = branch.EntityId;
 
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
-                    _context.Update(purchase);
+
+                    _context.Entry(purchase).Property("BranchId").IsModified = true;
+                    _context.Entry(purchase).Property("CustomerId").IsModified = true;
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));

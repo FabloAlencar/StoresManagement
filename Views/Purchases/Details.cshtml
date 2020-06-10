@@ -54,7 +54,7 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.Product.Name)
+                        Product
                     </th>
                     <th>
                         Quantity
@@ -62,11 +62,9 @@
                     <th>
                         Price
                     </th>
+
                     <th>
-                        @Html.DisplayNameFor(model => model.Discount)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Total)
+                        Total
                     </th>
                 </tr>
             </thead>
@@ -83,9 +81,7 @@
                         <td>
                             $ @Html.DisplayFor(modelItem => item.ProductCurrentPrice)
                         </td>
-                        <td>
-                            $ @Html.DisplayFor(modelItem => item.DiscountTotal)
-                        </td>
+
                         <td>
                             $ @Html.DisplayFor(modelItem => item.Total)
                         </td>
