@@ -21,17 +21,17 @@ namespace StoresManagement.Controllers
             _mapper = mapper;
         }
 
-        // GET: Products/RetrieveProducts
+        // GET: Products/Search
         [HttpGet]
-        public ActionResult RetrieveProducts(int? branchId)
+        public ActionResult Search(string term)
         {
-            var productList = _context.Products.Where(r => r.BranchId == branchId)
+            var productList = _context.Products.Where(r => r.Name.Contains(term))
                               .Select(r => new
                               {
-                                  productId = r.Id,
-                                  productName = r.Name,
-                                  productPrice = r.Price,
-                                  productQuantityInStock = r.QuantityInStock
+                                  id = r.Id,
+                                  label = r.Name
+                                  //, productPrice = r.Price
+                                  //, productQuantityInStock = r.QuantityInStock
                               }).ToArray();
 
             return Json(productList);

@@ -64,9 +64,15 @@
             </div>
 
             <div class="modal-body">
+                @*<div class="form-group">
+                        @Html.LabelFor(m => m.Product.Name)
+                        @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                    </div>*@
+
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Product.Name)
-                    @Html.DropDownListFor(m => m.Product, new SelectList(Model.Products, "Id", "Name"), "Select Product", new { @class = "form-control" })
+                    <label asp-for="Product.Name" class="control-label"></label>
+                    <input id="ProductName" asp-for="Product.Name" class="form-control" />
+                    <input id="ProductId" type="hidden" asp-for="Product.Id" />
                 </div>
                 <div class="form-group">
                     <label for="itemPrice">Item Price:</label>
@@ -121,7 +127,6 @@
                 DiscountTotal: 0
             });
 
-           
             if (tableRowsNumber == 0) {
 
                 var row = table.insertRow(tableRowsNumber);
@@ -175,6 +180,34 @@
 
                 return false;
             }
+        });
+
+        $(document).ready(function () {
+            $("#ProductName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Products/Search',
+                        type: 'GET',
+                        cache: false,
+                        data: request,
+                        dataType: 'json',
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    label: item.label,
+                                    value: item.id
+                                }
+                            }))
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    $('#ProductName').val(ui.item.label);
+                    $('#ProductId').val(ui.item.value);
+                    return false;
+                }
+            });
         });
     </script>
 
