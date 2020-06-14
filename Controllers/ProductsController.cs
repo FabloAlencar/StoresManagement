@@ -28,9 +28,9 @@ namespace StoresManagement.Controllers
             var productList = _context.Products.Where(r => r.Name.Contains(term))
                               .Select(r => new
                               {
-                                  id = r.Id,
-                                  label = r.Name
-                                  //, productPrice = r.Price
+                                  productId = r.Id,
+                                  productName = r.Name,
+                                  productPrice = r.Price
                                   //, productQuantityInStock = r.QuantityInStock
                               }).ToArray();
 

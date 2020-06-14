@@ -39,14 +39,16 @@
                         <td>Price   </td>
                         <td>Quantity</td>
                         <td>Total   </td>
+                        <td>Action  </td>
                     </tr>
 
                     <tr>
                         <td>No.     </td>
                         <td><input id="ProductName" class="form-control" /></td>
-                        <td><input id="ItemQuantity" type="number" class="form-control"></td>
-                        <td><input id="ItemPrice" type="number" class="form-control"></td>
+                        <td><input id="ProductPrice" type="number" class="form-control" /> </td>
+                        <td><input id="ItemQuantity" type="number" class="form-control" /></td>
                         <td>Total   </td>
+                        <td>        </td>
                     </tr>
                 </table>
 
@@ -80,7 +82,7 @@
         let newProductId = document.getElementById('ProductId');
         let newProductName = document.getElementById('ProductName');
         let newQuantity = document.getElementById('ItemQuantity');
-        let newPrice = document.getElementById('ItemPrice');
+        let newPrice = document.getElementById('ProductPrice');
         var table = document.getElementById("PurchaseItemsTable");
         var tableRowsNumber = 1;
 
@@ -98,11 +100,13 @@
             var cell3 = row.insertCell(2);
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
             cell1.innerHTML = tableRowsNumber;
             cell2.innerHTML = newProductName.value;
             cell3.innerHTML = quantityItem;
             cell4.innerHTML = currentPriceItem;
             cell5.innerHTML = purchaseTotalItem;
+            cell6.innerHTML = " ";
             purchaseTotalLabel.innerHTML = purchaseTotal;
 
             purchaseItems.push({
@@ -155,8 +159,9 @@
                         success: function (data) {
                             response($.map(data, function (item) {
                                 return {
-                                    label: item.label,
-                                    value: item.id
+                                    value: item.productId,
+                                    label: item.productName,
+                                    price: item.productPrice
                                 }
                             }))
                         }
@@ -164,8 +169,9 @@
                 },
                 minLength: 2,
                 select: function (event, ui) {
-                    $('#ProductName').val(ui.item.label);
                     $('#ProductId').val(ui.item.value);
+                    $('#ProductName').val(ui.item.label);
+                    $('#ProductPrice').val(ui.item.price);
                     return false;
                 }
             });
