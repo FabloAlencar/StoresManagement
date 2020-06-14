@@ -43,12 +43,12 @@
                     </tr>
 
                     <tr>
-                        <td>No.     </td>
-                        <td><input id="ProductName" class="form-control" /></td>
-                        <td><input id="ProductPrice" type="number" class="form-control" /> </td>
-                        <td><input id="ItemQuantity" type="number" class="form-control" /></td>
-                        <td>Total   </td>
-                        <td>        </td>
+                        <td><input id="ProductTableRowNumber" type="number" readonly /> </td>
+                        <td><input id="ProductName" type="text" /></td>
+                        <td><input id="ProductPrice" type="number" readonly /> </td>
+                        <td><input id="ProdcutQuantity" type="number" /></td>
+                        <td><input id="PurchaseTotalItem" type="number" readonly /> </td>
+                        <td></td>
                     </tr>
                 </table>
 
@@ -81,7 +81,7 @@
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
         let newProductId = document.getElementById('ProductId');
         let newProductName = document.getElementById('ProductName');
-        let newQuantity = document.getElementById('ItemQuantity');
+        let newQuantity = document.getElementById('ProdcutQuantity');
         let newPrice = document.getElementById('ProductPrice');
         var table = document.getElementById("PurchaseItemsTable");
         var tableRowsNumber = 1;
