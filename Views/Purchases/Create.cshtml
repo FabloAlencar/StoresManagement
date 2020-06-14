@@ -27,34 +27,12 @@
             </div>
 
             <div>
-
-                <div>
-                    <h5 class="modal-title">NEW PURCHASE ITEM</h5>
-                </div>
-
-                @*<div>
-
-                        <div class="form-group">
-                            <label asp-for="Product.Name" class="control-label"></label>
-                            <input id="ProductName" asp-for="Product.Name" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label for="itemPrice">Item Price:</label>
-                            <input type="number" class="form-control" id="itemPrice" placeholder="Enter Price">
-                        </div>
-                        <div class="form-group">
-                            <label for="itemQuantity">Item Quantity:</label>
-                            <input type="number" class="form-control" id="itemQuantity" placeholder="Enter Quantity">
-                        </div>
-                    </div>*@
-
-                <div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="addSale()">Add Item</button>
-                </div>
+                <h5 class="modal-title">NEW PURCHASE ITEM</h5>
+                <button type="button" class="btn btn-secondary" onclick="addSale()">Add Item</button>
             </div>
 
             <div>
-                <table id="purchaseItemsTable" class="table">
+                <table id="PurchaseItemsTable" class="table">
                     <tr>
                         <td>No.     </td>
                         <td>Product </td>
@@ -66,8 +44,8 @@
                     <tr>
                         <td>No.     </td>
                         <td><input id="ProductName" class="form-control" /></td>
-                        <td><input id="itemPrice" type="number" class="form-control"></td>
-                        <td><input id="itemQuantity" type="number" class="form-control"></td>
+                        <td><input id="ItemQuantity" type="number" class="form-control"></td>
+                        <td><input id="ItemPrice" type="number" class="form-control"></td>
                         <td>Total   </td>
                     </tr>
                 </table>
@@ -101,9 +79,9 @@
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
         let newProductId = document.getElementById('ProductId');
         let newProductName = document.getElementById('ProductName');
-        let newQuantity = document.getElementById('itemQuantity');
-        let newPrice = document.getElementById('itemPrice');
-        var table = document.getElementById("purchaseItemsTable");
+        let newQuantity = document.getElementById('ItemQuantity');
+        let newPrice = document.getElementById('ItemPrice');
+        var table = document.getElementById("PurchaseItemsTable");
         var tableRowsNumber = 1;
 
         let purchaseItems = [];
@@ -113,6 +91,7 @@
             let quantityItem = parseInt(newQuantity.value);
             let currentPriceItem = parseFloat(newPrice.value);
             let purchaseTotalItem = quantityItem * currentPriceItem;
+            purchaseTotal += purchaseTotalItem;
             var row = table.insertRow(tableRowsNumber);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
@@ -124,8 +103,6 @@
             cell3.innerHTML = quantityItem;
             cell4.innerHTML = currentPriceItem;
             cell5.innerHTML = purchaseTotalItem;
-            tableRowsNumber += 1;
-            purchaseTotal += purchaseTotalItem;
             purchaseTotalLabel.innerHTML = purchaseTotal;
 
             purchaseItems.push({
@@ -135,7 +112,8 @@
                 Total: purchaseTotalItem,
                 DiscountTotal: 0
             });
-            console.log(purchaseItems);
+
+            tableRowsNumber += 1;
         };
 
         var validator = $("#newPurchase").validate({
