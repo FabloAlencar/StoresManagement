@@ -5,7 +5,14 @@ Adicionar:
 - purchase identification (YYDDDSSSSSS) - DONE 
 - tabela items de da compra - DONE 
 - pegar precos reais 
-- uma melhora nas telas de compras 
+- uma melhora nas telas de compras :
+  * total por item deve ser atualizado
+  * numero de purhcase aparece
+  * editar registro 
+  * deletar registro
+  * enter novo registro
+  * remover botao 
+
 - read input data based on its individual id - example here: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_text_value2
 - create table nodes to display item  - see this: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
 
