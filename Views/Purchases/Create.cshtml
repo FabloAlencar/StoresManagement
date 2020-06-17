@@ -45,6 +45,7 @@
                         <td><div id="ProductTableRowNumber"></div></td>
                         <td><div> <input id="ProductName" type="text" /></div></td>
                         <td><div> <input id="ProductPrice" type="number" readonly /> </div> </td>
+                        @*<td><div id="ProductPrice"> </div> </td>*@
                         <td><div> <input id="ProdcutQuantity" type="number" /></div></td>
                         <td><div id="PurchaseTotalItem"></div> </td>
                         <td><button type="button" class="btn btn-secondary" onclick="addSale()">Add</button></td>
@@ -107,8 +108,8 @@
             var cell6 = row.insertCell(5);
             cell1.innerHTML = tableRowsNumber;
             cell2.innerHTML = newProductName.value;
-            cell3.innerHTML = quantityItem;
-            cell4.innerHTML = currentPriceItem;
+            cell3.innerHTML = currentPriceItem;
+            cell4.innerHTML = quantityItem;
             cell5.innerHTML = purchaseTotalItem;
             cell6.innerHTML = " ";
 
@@ -128,7 +129,9 @@
             newProductName.value = "";
             newPrice.value = "";
             newQuantity.value = "";
-            updatePurchaseTotalItem();
+            newTotalItem.textContent = "";
+            //newTotalItem.value = 0;
+            //  updatePurchaseTotalItem();
 
         };
 
@@ -183,6 +186,8 @@
                     $('#ProductId').val(ui.item.value);
                     $('#ProductName').val(ui.item.label);
                     $('#ProductPrice').val(ui.item.price);
+                    $('#ProdcutQuantity').val(1);
+                    updatePurchaseTotalItem();
                     return false;
                 }
             });
@@ -190,19 +195,19 @@
 
         //
 
-        var txtA = $('#ProductPrice');
-        var txtB = $('#ProdcutQuantity');
-        var txtResult = $('#PurchaseTotalItem');
-
+        ProdcutQuantity.addEventListener("change", updatePurchaseTotalItem);
         function updatePurchaseTotalItem() {
-            txtResult.html(parseFloat(txtA.val()) * parseInt(txtB.val()));
-        }
 
-        $(function () {
-            updatePurchaseTotalItem();
-            txtA.change('change', updatePurchaseTotalItem);
-            txtB.bind('change', updatePurchaseTotalItem);
-        });
+            newTotalItem.textContent = newPrice.value * newQuantity.value;
+
+            //if (newPrice.value == 0 || newQuantity.value == 0) {
+            //    newTotalItem.textContent = "";
+            //}
+            //else {
+            //    newTotalItem.textContent = newPrice.value * newQuantity.value;
+            //}
+
+        }
     </script>
 
 }

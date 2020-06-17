@@ -8,10 +8,11 @@ Adicionar:
 - uma melhora nas telas de compras :
   * total por item deve ser atualizado - done 
   * numero de purhcase aparece - done 
+  * ao multiplicar, tirar as milhares de casas decimais 
+  * tirar preco de input
+  * validar campos antes de submeter
   * editar registro 
   * deletar registro
-  * validar campos antes de submeter
-  * ao multiplicar, tirar as milhares de casas decimais 
 
 - read input data based on its individual id - example here: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_text_value2
 - create table nodes to display item  - see this: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
