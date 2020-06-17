@@ -110,10 +110,10 @@
             cell2.innerHTML = newProductName.value;
             cell3.innerHTML = currentPriceItem;
             cell4.innerHTML = quantityItem;
-            cell5.innerHTML = purchaseTotalItem;
+            cell5.innerHTML = purchaseTotalItem.toFixed(2);
             cell6.innerHTML = " ";
 
-            purchaseTotalLabel.innerHTML = purchaseTotal;
+            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
 
             purchaseItems.push({
                 ProductId: parseInt(newProductId.value),
@@ -130,8 +130,6 @@
             newPrice.value = "";
             newQuantity.value = "";
             newTotalItem.textContent = "";
-            //newTotalItem.value = 0;
-            //  updatePurchaseTotalItem();
 
         };
 
@@ -198,14 +196,7 @@
         ProdcutQuantity.addEventListener("change", updatePurchaseTotalItem);
         function updatePurchaseTotalItem() {
 
-            newTotalItem.textContent = newPrice.value * newQuantity.value;
-
-            //if (newPrice.value == 0 || newQuantity.value == 0) {
-            //    newTotalItem.textContent = "";
-            //}
-            //else {
-            //    newTotalItem.textContent = newPrice.value * newQuantity.value;
-            //}
+            newTotalItem.textContent = (newPrice.value * newQuantity.value).toFixed(2);
 
         }
     </script>
