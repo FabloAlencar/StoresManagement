@@ -8,9 +8,9 @@ Adicionar:
 - uma melhora nas telas de compras :
   * total por item deve ser atualizado - done 
   * numero de purhcase aparece - done 
-  * ao multiplicar, tirar as milhares de casas decimais 
-  * tirar preco de input
-  * validar campos antes de submeter
+  * ao multiplicar, tirar as milhares de casas decimais - done 
+  * alterar preco (esta como input field)
+  * validar campos antes de submeter (ocorrencias tambem) - done 
   * editar registro 
   * deletar registro
 

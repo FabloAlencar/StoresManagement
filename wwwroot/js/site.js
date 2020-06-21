@@ -26,6 +26,10 @@ $(document).ready(function () {
             $('#CustomerFullName').val(ui.item.label);
             $('#CustomerId').val(ui.item.value);
             return false;
+        },
+        focus: function (event, ui) {
+            $('#CustomerFullName').val(ui.item.label);
+            return false;
         }
     });
 });
