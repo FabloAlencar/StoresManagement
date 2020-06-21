@@ -26,8 +26,8 @@
                 </div>
             </div>
 
-            <div>
-                <h5 class="modal-title">NEW PURCHASE ITEM</h5>
+            <div class="row">
+                <h5 class="modal-title;inputstyle;">NEW PURCHASE ITEM</h5>
             </div>
 
             <div>
@@ -48,7 +48,7 @@
                         @*<td><div id="ProductPrice"> </div> </td>*@
                         <td><div> <input id="ProdcutQuantity" type="number" min="1" /></div></td>
                         <td><div id="PurchaseTotalItem"></div> </td>
-                        <td><button type="button" class="btn btn-secondary" onclick="addSale()">Add</button></td>
+                        <td><button type="button" class="btn btn-secondary" onclick="addPurchaseItem()">Add</button></td>
                     </tr>
                 </table>
 
@@ -93,8 +93,30 @@
 
         productTableRowNumber.innerHTML = tableRowsNumber;
 
-        function addSale() {
+        function updatePurchaseItem(id) {
+            alert("update Purchase Item: " + id);
+            console.log(purchaseItems);
+            return false;
+        };
 
+        function removePurchaseItem(id) {
+
+            var index = id - 1;
+            purchaseTotal -= purchaseItems[index].ProductCurrentPrice;
+            tableRowsNumber -= 1;
+
+            debugger;
+            purchaseItems.splice(index, 1);
+            table.deleteRow(id);
+
+            productTableRowNumber.innerHTML = tableRowsNumber;
+            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
+
+            return false;
+        };
+
+        function addPurchaseItem() {
+            console.log("before adding - index : " + table.index);
             let quantityItem = parseInt(newQuantity.value);
             let currentPriceItem = parseFloat(newPrice.value);
 
@@ -115,10 +137,10 @@
             var cell6 = row.insertCell(5);
             cell1.innerHTML = tableRowsNumber;
             cell2.innerHTML = newProductName.value;
-            cell3.innerHTML = currentPriceItem;
+            cell3.innerHTML = currentPriceItem.toFixed(2);
             cell4.innerHTML = quantityItem;
             cell5.innerHTML = purchaseTotalItem.toFixed(2);
-            cell6.innerHTML = " ";
+            cell6.innerHTML = "<button type='button' onclick=\"updatePurchaseItem(\'" + tableRowsNumber + "\')\" >Change</button> | <button type='button' onclick=\"removePurchaseItem(\'" + tableRowsNumber + "\')\" >Delete</button>";
 
             purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
 
@@ -137,6 +159,7 @@
             newPrice.value = "";
             newQuantity.value = "";
             newTotalItem.textContent = "";
+            console.log("after adding - index : " + table.index);
 
         };
 
@@ -212,7 +235,6 @@
                 }
             });
         });
-
 
         ProdcutQuantity.addEventListener("change", updatePurchaseTotalItem);
         function updatePurchaseTotalItem() {
