@@ -93,11 +93,11 @@
 
         productTableRowNumber.innerHTML = tableRowsNumber;
 
-        function updatePurchaseItem(id) {
-            alert("update Purchase Item: " + id);
-            console.log(purchaseItems);
-            return false;
-        };
+        //function updatePurchaseItem(id) {
+        //    alert("update Purchase Item: " + id);
+        //    console.log(purchaseItems);
+        //    return false;
+        //};
 
         function removePurchaseItem(id) {
 
@@ -106,8 +106,21 @@
             tableRowsNumber -= 1;
 
             debugger;
+            console.log(table.length);
+
             purchaseItems.splice(index, 1);
             table.deleteRow(id);
+
+            var numRows = 1;
+            while (numRows < purchaseItems.length) {
+                numRows
+                var row = table.getElementsByTagName("tr")[numRows];
+                var td = row.getElementsByTagName("td")[0];
+
+                td.innerHTML = numRows;
+            }
+
+            console.log(table.length);
 
             productTableRowNumber.innerHTML = tableRowsNumber;
             purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
@@ -116,7 +129,6 @@
         };
 
         function addPurchaseItem() {
-            console.log("before adding - index : " + table.index);
             let quantityItem = parseInt(newQuantity.value);
             let currentPriceItem = parseFloat(newPrice.value);
 
@@ -140,7 +152,7 @@
             cell3.innerHTML = currentPriceItem.toFixed(2);
             cell4.innerHTML = quantityItem;
             cell5.innerHTML = purchaseTotalItem.toFixed(2);
-            cell6.innerHTML = "<button type='button' onclick=\"updatePurchaseItem(\'" + tableRowsNumber + "\')\" >Change</button> | <button type='button' onclick=\"removePurchaseItem(\'" + tableRowsNumber + "\')\" >Delete</button>";
+            cell6.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + tableRowsNumber + "\')\" >Delete</button>";
 
             purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
 
@@ -159,7 +171,6 @@
             newPrice.value = "";
             newQuantity.value = "";
             newTotalItem.textContent = "";
-            console.log("after adding - index : " + table.index);
 
         };
 
