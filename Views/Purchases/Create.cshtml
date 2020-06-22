@@ -102,25 +102,33 @@
         function removePurchaseItem(id) {
 
             var index = id - 1;
-            purchaseTotal -= purchaseItems[index].ProductCurrentPrice;
+            purchaseTotal -= (purchaseItems[index].ProductQuantity * purchaseItems[index].ProductCurrentPrice);
             tableRowsNumber -= 1;
 
             debugger;
-            console.log(table.length);
+            console.log("purchaseItems.lengt");
+            console.log(purchaseItems.lengt);
 
             purchaseItems.splice(index, 1);
             table.deleteRow(id);
 
             var numRows = 1;
-            while (numRows < purchaseItems.length) {
-                numRows
-                var row = table.getElementsByTagName("tr")[numRows];
-                var td = row.getElementsByTagName("td")[0];
+            while (numRows <= purchaseItems.length) {
 
-                td.innerHTML = numRows;
+                var row = table.getElementsByTagName("tr")[numRows];
+                var tdNumRows = row.getElementsByTagName("td")[0];
+                var tdDeleteButton = row.getElementsByTagName("td")[5];
+
+                tdNumRows.innerHTML = numRows;
+                tdDeleteButton.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + numRows + "\')\" >Delete</button>";
+
+                console.log("numRows");
+                console.log(numRows);
+                numRows++;
             }
 
-            console.log(table.length);
+            console.log("purchaseItems.lengt");
+            console.log(purchaseItems.lengt);
 
             productTableRowNumber.innerHTML = tableRowsNumber;
             purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
