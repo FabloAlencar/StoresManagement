@@ -19,6 +19,11 @@ namespace StoresManagement.ViewModels
 
         public string Name { get; set; }
 
+        public string Brand { get; set; }
+
+        [Display(Name = "Product")]
+        public string ProductTitle { get; set; }
+
         [Display(Name = "Quantity In Stock")]
         public int? QuantityInStock { get; set; }
 

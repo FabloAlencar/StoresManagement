@@ -9,14 +9,12 @@ Adicionar:
   * total por item deve ser atualizado - done 
   * numero de purhcase aparece - done 
   * ao multiplicar, tirar as milhares de casas decimais - done 
-  * alterar preco (esta como input field)
   * validar campos antes de submeter (ocorrencias tambem) - done 
-  * editar registro 
-  * deletar registro
-
-- read input data based on its individual id - example here: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_text_value2
-- create table nodes to display item  - see this: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_table_insertrow
-
+  * editar registro - outdated
+  * deletar registro - done 
+  * check stock
+  * alterar preco (esta como input field)
+- adicionar marca a produtos 
 
 - linkar usuario master a determinada entidade:
 * a entidade pode criar outros usuarios 

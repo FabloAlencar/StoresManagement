@@ -20,6 +20,8 @@ namespace StoresManagement.Models
 
         public string Name { get; set; }
 
+        public string Brand { get; set; }
+
         public int? QuantityInStock { get; set; }
 
         public decimal Price { get; set; }
@@ -33,5 +35,10 @@ namespace StoresManagement.Models
         public decimal? Height { get; set; }
 
         public virtual ICollection<PurchaseItem> PurchaseItems { get; set; }
+
+        public string ProductTitle
+        {
+            get { return Name + ", " + Brand; }
+        }
     }
 }

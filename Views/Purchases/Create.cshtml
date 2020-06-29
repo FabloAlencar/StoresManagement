@@ -45,7 +45,6 @@
                         <td><div id="ProductTableRowNumber"></div></td>
                         <td><div> <input id="ProductName" type="text" /></div></td>
                         <td><div> <input id="ProductPrice" type="number" readonly /> </div> </td>
-                        @*<td><div id="ProductPrice"> </div> </td>*@
                         <td><div> <input id="ProdcutQuantity" type="number" min="1" /></div></td>
                         <td><div id="PurchaseTotalItem"></div> </td>
                         <td><button type="button" class="btn btn-secondary" onclick="addPurchaseItem()">Add</button></td>
@@ -93,49 +92,6 @@
 
         productTableRowNumber.innerHTML = tableRowsNumber;
 
-        //function updatePurchaseItem(id) {
-        //    alert("update Purchase Item: " + id);
-        //    console.log(purchaseItems);
-        //    return false;
-        //};
-
-        function removePurchaseItem(id) {
-
-            var index = id - 1;
-            purchaseTotal -= (purchaseItems[index].ProductQuantity * purchaseItems[index].ProductCurrentPrice);
-            tableRowsNumber -= 1;
-
-            debugger;
-            console.log("purchaseItems.lengt");
-            console.log(purchaseItems.lengt);
-
-            purchaseItems.splice(index, 1);
-            table.deleteRow(id);
-
-            var numRows = 1;
-            while (numRows <= purchaseItems.length) {
-
-                var row = table.getElementsByTagName("tr")[numRows];
-                var tdNumRows = row.getElementsByTagName("td")[0];
-                var tdDeleteButton = row.getElementsByTagName("td")[5];
-
-                tdNumRows.innerHTML = numRows;
-                tdDeleteButton.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + numRows + "\')\" >Delete</button>";
-
-                console.log("numRows");
-                console.log(numRows);
-                numRows++;
-            }
-
-            console.log("purchaseItems.lengt");
-            console.log(purchaseItems.lengt);
-
-            productTableRowNumber.innerHTML = tableRowsNumber;
-            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
-
-            return false;
-        };
-
         function addPurchaseItem() {
             let quantityItem = parseInt(newQuantity.value);
             let currentPriceItem = parseFloat(newPrice.value);
@@ -180,6 +136,34 @@
             newQuantity.value = "";
             newTotalItem.textContent = "";
 
+        };
+
+        function removePurchaseItem(id) {
+
+            var index = id - 1;
+            purchaseTotal -= (purchaseItems[index].ProductQuantity * purchaseItems[index].ProductCurrentPrice);
+            tableRowsNumber -= 1;
+
+            purchaseItems.splice(index, 1);
+            table.deleteRow(id);
+
+            var numRows = 1;
+            while (numRows <= purchaseItems.length) {
+
+                var row = table.getElementsByTagName("tr")[numRows];
+                var tdNumRows = row.getElementsByTagName("td")[0];
+                var tdDeleteButton = row.getElementsByTagName("td")[5];
+
+                tdNumRows.innerHTML = numRows;
+                tdDeleteButton.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + numRows + "\')\" >Delete</button>";
+
+                numRows++;
+            }
+
+            productTableRowNumber.innerHTML = tableRowsNumber;
+            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
+
+            return false;
         };
 
         var validator = $("#newPurchase").validate({
@@ -244,6 +228,7 @@
                     $('#ProductId').val(ui.item.value);
                     $('#ProductName').val(ui.item.label);
                     $('#ProductPrice').val(ui.item.price.toFixed(2));
+                    //  newPrice.num = ui.item.price.toFixed(2);
                     $('#ProdcutQuantity').val(1);
                     updatePurchaseTotalItem();
                     return false;
