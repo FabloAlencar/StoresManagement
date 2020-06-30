@@ -131,8 +131,14 @@ namespace StoresManagement.Controllers
                 foreach (var purchaseitem in purchase.PurchaseItems)
                 {
                     purchase.Discount += purchaseitem.DiscountTotal;
-                    purchase.Total += (purchaseitem.Total - purchaseitem.DiscountTotal);
+                    purchase.Total += purchaseitem.Total - purchaseitem.DiscountTotal;
                     _context.Add(purchaseitem);
+
+                    var product = await _context.Products
+                    .SingleOrDefaultAsync(m => m.Id == purchaseitem.ProductId);
+
+                    product.QuantityInStock -= purchaseitem.ProductQuantity;
+                    _context.Entry(product).Property("QuantityInStock").IsModified = true;
                 }
 
                 _context.Add(purchase);
@@ -140,7 +146,6 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
 
                 return Json(null);
-                //  return Json(RedirectToAction(nameof(Index)));
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();

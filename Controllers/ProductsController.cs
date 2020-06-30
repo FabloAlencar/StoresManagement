@@ -25,13 +25,12 @@ namespace StoresManagement.Controllers
         [HttpGet]
         public ActionResult Search(string term)
         {
-            var productList = _context.Products.Where(r => r.Name.Contains(term))
+            var productList = _context.Products.Where(r => (r.Name.Contains(term) || r.Brand.Contains(term)) && r.QuantityInStock > 0)
                               .Select(r => new
                               {
                                   productId = r.Id,
-                                  productName = r.Name,
+                                  productName = r.Name + ", " + r.Brand,
                                   productPrice = r.Price
-                                  //, productQuantityInStock = r.QuantityInStock
                               }).ToArray();
 
             return Json(productList);

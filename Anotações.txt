@@ -12,9 +12,9 @@ Adicionar:
   * validar campos antes de submeter (ocorrencias tambem) - done 
   * editar registro - outdated
   * deletar registro - done 
-  * check stock
-  * alterar preco (esta como input field)
-- adicionar marca a produtos 
+  * check stock -done 
+  * alterar preco - outdated 
+- adicionar marca a produtos - done 
 
 - linkar usuario master a determinada entidade:
 * a entidade pode criar outros usuarios 
