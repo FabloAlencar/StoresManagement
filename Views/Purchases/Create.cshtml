@@ -101,6 +101,13 @@
                 alert("Please, select the product.");
                 return false;
             }
+            
+
+            const productExists = purchaseItems.some(product => product.ProductId == newProductId.value);
+            if (productExists) {
+                alert("Product already ordered.");
+                return false;
+            }
 
             let purchaseTotalItem = quantityItem * currentPriceItem;
             purchaseTotal += purchaseTotalItem;
@@ -233,7 +240,6 @@
                     $('#ProductQuantity').val(1);
                     newquantityInStock = ui.item.quantityInStock;
                     handleQuantityChanges();
-                    console.log(ui.item.quantityInStock);
                     return false;
                 },
                 focus: function (event, ui) {
