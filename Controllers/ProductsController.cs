@@ -30,7 +30,8 @@ namespace StoresManagement.Controllers
                               {
                                   productId = r.Id,
                                   productName = r.Name + ", " + r.Brand,
-                                  productPrice = r.Price
+                                  productPrice = r.Price,
+                                  productQuantityInStock = r.QuantityInStock
                               }).ToArray();
 
             return Json(productList);

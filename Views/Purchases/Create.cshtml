@@ -45,7 +45,7 @@
                         <td><div id="ProductTableRowNumber"></div></td>
                         <td><div> <input id="ProductName" type="text" /></div></td>
                         <td><div> <input id="ProductPrice" type="number" readonly /> </div> </td>
-                        <td><div> <input id="ProdcutQuantity" type="number" min="1" /></div></td>
+                        <td><div> <input id="ProductQuantity" type="number" min="1" /></div></td>
                         <td><div id="PurchaseTotalItem"></div> </td>
                         <td><button type="button" class="btn btn-secondary" onclick="addPurchaseItem()">Add</button></td>
                     </tr>
@@ -80,9 +80,10 @@
         let purchaseTotalLabel = document.getElementById('purchaseTotal');
         let newProductId = document.getElementById('ProductId');
         let newProductName = document.getElementById('ProductName');
-        let newQuantity = document.getElementById('ProdcutQuantity');
+        let newQuantity = document.getElementById('ProductQuantity');
         let newPrice = document.getElementById('ProductPrice');
         let newTotalItem = document.getElementById('PurchaseTotalItem');
+        let newquantityInStock;
         let productTableRowNumber = document.getElementById('ProductTableRowNumber');
         var table = document.getElementById('PurchaseItemsTable');
 
@@ -217,7 +218,8 @@
                                 return {
                                     value: item.productId,
                                     label: item.productName,
-                                    price: item.productPrice
+                                    price: item.productPrice,
+                                    quantityInStock: item.productQuantityInStock
                                 }
                             }))
                         }
@@ -228,9 +230,10 @@
                     $('#ProductId').val(ui.item.value);
                     $('#ProductName').val(ui.item.label);
                     $('#ProductPrice').val(ui.item.price.toFixed(2));
-                    //  newPrice.num = ui.item.price.toFixed(2);
-                    $('#ProdcutQuantity').val(1);
-                    updatePurchaseTotalItem();
+                    $('#ProductQuantity').val(1);
+                    newquantityInStock = ui.item.quantityInStock;
+                    handleQuantityChanges();
+                    console.log(ui.item.quantityInStock);
                     return false;
                 },
                 focus: function (event, ui) {
@@ -240,8 +243,13 @@
             });
         });
 
-        ProdcutQuantity.addEventListener("change", updatePurchaseTotalItem);
-        function updatePurchaseTotalItem() {
+        ProductQuantity.addEventListener("change", handleQuantityChanges);
+        function handleQuantityChanges() {
+
+            if (newQuantity.value > newquantityInStock) {
+                alert("The number of product in stock is: " + newquantityInStock);
+                newQuantity.value = newquantityInStock;
+            }
 
             newTotalItem.textContent = (newPrice.value * newQuantity.value).toFixed(2);
 

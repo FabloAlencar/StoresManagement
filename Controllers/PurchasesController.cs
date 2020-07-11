@@ -13,6 +13,13 @@ namespace StoresManagement.Controllers
 {
     public class PurchasesController : Controller
     {
+        public class JsonErrorModel
+        {
+            public int ErrorCode { get; set; }
+
+            public string ErrorMessage { get; set; }
+        }
+
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
@@ -138,6 +145,7 @@ namespace StoresManagement.Controllers
                     .SingleOrDefaultAsync(m => m.Id == purchaseitem.ProductId);
 
                     product.QuantityInStock -= purchaseitem.ProductQuantity;
+
                     _context.Entry(product).Property("QuantityInStock").IsModified = true;
                 }
 
