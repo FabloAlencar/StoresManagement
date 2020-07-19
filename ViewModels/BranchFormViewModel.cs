@@ -6,6 +6,11 @@ namespace StoresManagement.ViewModels
 {
     public class BranchFormViewModel
     {
+        public BranchFormViewModel()
+        {
+            Entities = new List<Entity>();
+        }
+
         public IEnumerable<Entity> Entities { get; set; }
 
         public int EntityId { get; set; }

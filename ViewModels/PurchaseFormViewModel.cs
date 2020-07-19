@@ -9,11 +9,10 @@ namespace StoresManagement.ViewModels
     {
         public PurchaseFormViewModel()
         {
-            Branches = new HashSet<Branch>();
-            Customers = new HashSet<Customer>();
-            Products = new HashSet<Product>();
-            PurchaseItems = new HashSet<PurchaseItem>();
-            Product = new Product();
+            Branches = new List<Branch>();
+            Customers = new List<Customer>();
+            Products = new List<Product>();
+            PurchaseItems = new List<PurchaseItem>();
         }
 
         public IEnumerable<Branch> Branches { get; set; }
@@ -36,8 +35,13 @@ namespace StoresManagement.ViewModels
 
         public int Id { get; set; }
 
-        [Display(Name = "Purchase Number")]
         public string Identification { get; set; }
+
+        [Display(Name = "Purchase Number")]
+        public string MaskedIdentification()
+        {
+            return Identification.Substring(1, 8);
+        }
 
         [Display(Name = "DISCOUNT")]
         public decimal? Discount { get; set; }

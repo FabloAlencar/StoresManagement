@@ -42,7 +42,7 @@ namespace StoresManagement.Controllers
         {
             var products = await _context.Products
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .ToListAsync();
 
             return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
@@ -58,7 +58,7 @@ namespace StoresManagement.Controllers
 
             var products = await _context.Products
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Where(m => m.BranchId == id)
                 .ToListAsync();
 
@@ -75,7 +75,7 @@ namespace StoresManagement.Controllers
 
             var product = await _context.Products
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
@@ -129,7 +129,7 @@ namespace StoresManagement.Controllers
 
             var product = await _context.Products
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (product == null)
@@ -196,7 +196,7 @@ namespace StoresManagement.Controllers
 
             var product = await _context.Products
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {

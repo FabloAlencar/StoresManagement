@@ -7,6 +7,11 @@ namespace StoresManagement.ViewModels
 {
     public class ProductFormViewModel
     {
+        public ProductFormViewModel()
+        {
+            Branches = new List<Branch>();
+        }
+
         public IEnumerable<Branch> Branches { get; set; }
 
         public int EntityId { get; set; }

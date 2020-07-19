@@ -13,12 +13,7 @@ namespace StoresManagement.Controllers
 {
     public class PurchasesController : Controller
     {
-        public class JsonErrorModel
-        {
-            public int ErrorCode { get; set; }
-
-            public string ErrorMessage { get; set; }
-        }
+        public static Guid NewGuid;
 
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -34,7 +29,7 @@ namespace StoresManagement.Controllers
         {
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .ToListAsync();
 
@@ -51,7 +46,7 @@ namespace StoresManagement.Controllers
 
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Where(m => m.BranchId == id)
                 .ToListAsync();
@@ -69,7 +64,7 @@ namespace StoresManagement.Controllers
 
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Where(m => m.CustomerId == id)
                 .ToListAsync();
@@ -87,7 +82,7 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Include(b => b.PurchaseItems)
                 .SingleOrDefaultAsync(m => m.Id == id);
@@ -130,7 +125,12 @@ namespace StoresManagement.Controllers
                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
 
                 purchaseVM.EntityId = branch.EntityId;
-                purchaseVM.Identification = DateTime.Now.ToString("yyMMddHHmmss0000ffff");
+
+                string timestamp = DateTime.Now.Ticks.ToString();
+                Random randonNum = new Random();
+
+                purchaseVM.Identification = timestamp + randonNum.Next(1, 9999999);
+
                 purchaseVM.RegistrationDate = DateTime.Now;
 
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
@@ -172,7 +172,7 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
@@ -243,7 +243,7 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                .SingleOrDefaultAsync(m => m.Id == id);
             if (purchase == null)

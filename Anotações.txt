@@ -2,20 +2,6 @@
 
 
 Adicionar:
-- purchase identification (YYDDDSSSSSS) - DONE 
-- tabela items de da compra - DONE 
-- pegar precos reais - DONE
-- uma melhora nas telas de compras :
-  * total por item deve ser atualizado - done 
-  * numero de purhcase aparece - done 
-  * ao multiplicar, tirar as milhares de casas decimais - done 
-  * validar campos antes de submeter (ocorrencias tambem) - done 
-  * editar registro - outdated
-  * deletar registro - done 
-  * check stock -done 
-  * alterar preco - outdated 
-  * adicionar range quantidade check 
-- adicionar marca a produtos - done 
 
 - linkar usuario master a determinada entidade:
 * a entidade pode criar outros usuarios 
