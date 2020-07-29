@@ -14,7 +14,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Branch.Name)
+                @Html.LabelFor(m => m.Branch)
                 @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
             </div>
 
