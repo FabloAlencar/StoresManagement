@@ -6,6 +6,11 @@ namespace StoresManagement.ViewModels
 {
     public class CustomerFormViewModel
     {
+        public CustomerFormViewModel()
+        {
+            Entities = new List<Entity>();
+        }
+
         public IEnumerable<Entity> Entities { get; set; }
 
         public int EntityId { get; set; }

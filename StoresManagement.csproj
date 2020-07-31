@@ -18,11 +18,14 @@
     <Compile Remove="Data\Migrations\20200318130310_teste.Designer.cs" />
     <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.cs" />
     <Compile Remove="Data\Migrations\20200318153757_AddPurchaseItemsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200517101801_PurchaseViewFixes.cs" />
+    <Compile Remove="Data\Migrations\20200517101801_PurchaseViewFixes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="automapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.2" />

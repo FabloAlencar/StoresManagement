@@ -21,10 +21,10 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.BranchTitle)
+                    @Html.DisplayNameFor(model => model.Branch)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.ProductTitle)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.QuantityInStock)
@@ -52,16 +52,16 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.BranchTitle)
+                        @Html.DisplayFor(modelItem => item.Branch.BranchTitle)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.ProductTitle)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.QuantityInStock)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Price)
+                        $  @Html.DisplayFor(modelItem => item.Price)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ExpiryDate)

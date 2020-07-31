@@ -1,0 +1,8 @@
+﻿
+
+
+Adicionar:
+
+- linkar usuario master a determinada entidade:
+* a entidade pode criar outros usuarios 
+

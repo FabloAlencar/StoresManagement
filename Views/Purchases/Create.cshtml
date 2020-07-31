@@ -11,26 +11,53 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form id="newPurchase" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Branch.Name)
-                @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control" })
+
+            <div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Branch)
+                    @Html.DropDownListFor(m => m.BranchId, new SelectList(Model.Branches, "Id", "Name"), "Select Branch", new { @class = "form-control", required = "Select Branch" })
+                </div>
+                <div class="form-group">
+                    <label asp-for="Customer.FullName" class="control-label"></label>
+                    <input id="CustomerFullName" asp-for="Customer.FullName" class="form-control" required />
+                    <input id="CustomerId" type="hidden" asp-for="CustomerId" />
+                </div>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.Customer.FullName)
-                @Html.DropDownListFor(m => m.CustomerId, new SelectList(Model.Customers, "Id", "FullName"), "Select Customer", new { @class = "form-control" })
+
+            <div class="row">
+                <h5 class="modal-title;inputstyle;">NEW PURCHASE ITEM</h5>
             </div>
-            <div class="form-group">
-                <label asp-for="Discount" class="control-label"></label>
-                <input asp-for="Discount" class="form-control" />
-                <span asp-validation-for="Discount" class="text-danger"></span>
+
+            <div>
+                <table id="PurchaseItemsTable" class="table">
+                    <tr>
+                        <td>No.     </td>
+                        <td>Product </td>
+                        <td>Price   </td>
+                        <td>Quantity</td>
+                        <td>Total   </td>
+                        <td>Action  </td>
+                    </tr>
+
+                    <tr>
+                        <td><div id="ProductTableRowNumber"></div></td>
+                        <td><div> <input id="ProductName" type="text" /></div></td>
+                        <td><div> <input id="ProductPrice" type="number" readonly /> </div> </td>
+                        <td><div> <input id="ProductQuantity" type="number" min="1" /></div></td>
+                        <td><div id="PurchaseTotalItem"></div> </td>
+                        <td><button type="button" class="btn btn-secondary" onclick="addPurchaseItem()">Add</button></td>
+                    </tr>
+                </table>
+
+                <input id="ProductId" type="hidden" />
+                <div>
+                    <h3 class="text-right pt-3">Purchase Total</h3>
+                    <h2 class="text-right pb-3" id="purchaseTotal"></h2>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Total" class="control-label"></label>
-                <input asp-for="Total" class="form-control" />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -44,4 +71,195 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        // Values from the form
+        const branchID = document.getElementById('BranchId');
+        const customerID = document.getElementById('CustomerId');
+        const purchaseTotalLabel = document.getElementById('purchaseTotal');
+        const newProductId = document.getElementById('ProductId');
+        const newProductName = document.getElementById('ProductName');
+        const newQuantity = document.getElementById('ProductQuantity');
+        const newPrice = document.getElementById('ProductPrice');
+        const newTotalItem = document.getElementById('PurchaseTotalItem');
+        const productTableRowNumber = document.getElementById('ProductTableRowNumber');
+        const table = document.getElementById('PurchaseItemsTable');
+
+        let newquantityInStock = 0;
+
+        let tableRowsNumber = 1;
+        let purchaseItems = [];
+        let purchaseTotal = 0;
+
+        productTableRowNumber.innerHTML = tableRowsNumber;
+
+        function addPurchaseItem() {
+            let quantityItem = parseInt(newQuantity.value);
+            let currentPriceItem = parseFloat(newPrice.value);
+
+            if (Number.isNaN(currentPriceItem) || currentPriceItem == "" || currentPriceItem === null || currentPriceItem <= 0) {
+                alert("Please, select the product.");
+                return false;
+            }
+
+            const productExists = purchaseItems.some(product => product.ProductId == newProductId.value);
+            if (productExists) {
+                alert("Product already ordered.");
+                return false;
+            }
+
+            let purchaseTotalItem = quantityItem * currentPriceItem;
+            purchaseTotal += purchaseTotalItem;
+
+            let row = table.insertRow(tableRowsNumber);
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            let cell5 = row.insertCell(4);
+            let cell6 = row.insertCell(5);
+            cell1.innerHTML = tableRowsNumber;
+            cell2.innerHTML = newProductName.value;
+            cell3.innerHTML = currentPriceItem.toFixed(2);
+            cell4.innerHTML = quantityItem;
+            cell5.innerHTML = purchaseTotalItem.toFixed(2);
+            cell6.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + tableRowsNumber + "\')\" >Delete</button>";
+
+            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
+
+            purchaseItems.push({
+                ProductId: parseInt(newProductId.value),
+                ProductQuantity: quantityItem,
+                ProductCurrentPrice: currentPriceItem,
+                Total: purchaseTotalItem,
+                DiscountTotal: 0
+            });
+
+            tableRowsNumber += 1;
+
+            productTableRowNumber.innerHTML = tableRowsNumber;
+            newProductName.value = "";
+            newPrice.value = "";
+            newQuantity.value = "";
+            newTotalItem.textContent = "";
+
+        };
+
+        function removePurchaseItem(id) {
+
+            let index = id - 1;
+            purchaseTotal -= (purchaseItems[index].ProductQuantity * purchaseItems[index].ProductCurrentPrice);
+            tableRowsNumber -= 1;
+
+            purchaseItems.splice(index, 1);
+            table.deleteRow(id);
+
+            let numRows = 1;
+            while (numRows <= purchaseItems.length) {
+
+                let row = table.getElementsByTagName("tr")[numRows];
+                let tdNumRows = row.getElementsByTagName("td")[0];
+                let tdDeleteButton = row.getElementsByTagName("td")[5];
+
+                tdNumRows.innerHTML = numRows;
+                tdDeleteButton.innerHTML = "<button type='button' onclick=\"removePurchaseItem(\'" + numRows + "\')\" >Delete</button>";
+
+                numRows++;
+            }
+
+            productTableRowNumber.innerHTML = tableRowsNumber;
+            purchaseTotalLabel.innerHTML = purchaseTotal.toFixed(2);
+
+            return false;
+        };
+
+        let validator = $("#newPurchase").validate({
+            submitHandler: function () {
+
+                if (typeof purchaseItems != "undefined"
+                    && purchaseItems != null
+                    && purchaseItems.length != null
+                    && purchaseItems.length > 0) {
+                    alert("Purchase Ok - Total: $ " + purchaseTotal.toFixed(2));
+                }
+                else {
+                    alert("Please, add at least a product to the purchase.");
+                    return false;
+                }
+
+                let Purchase = JSON.stringify(
+                    {
+                        BranchId: parseInt(branchID.value)
+                        , CustomerId: parseInt(customerID.value)
+                        , Total: 0
+                        , Discount: 0
+                        , PurchaseItems: purchaseItems
+                    });
+
+                $.ajax({
+                    url: '/Purchases/Create',
+                    data: Purchase,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    dataType: 'json'
+                    , success: function () { validator.resetForm(); window.location = '/Purchases'; }
+                    , error: function (xhr, status, error) { alert('Error:' + error); console.log(xhr); console.log(status); console.log(error); }
+                });
+
+                return false;
+            }
+        });
+
+        $(document).ready(function () {
+            $("#ProductName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Products/Search',
+                        type: 'GET',
+                        cache: false,
+                        data: request,
+                        dataType: 'json',
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return {
+                                    value: item.productId,
+                                    label: item.productName,
+                                    price: item.productPrice,
+                                    quantityInStock: item.productQuantityInStock
+                                }
+                            }))
+                        }
+                    });
+                },
+                minLength: 2,
+                select: function (event, ui) {
+                    $('#ProductId').val(ui.item.value);
+                    $('#ProductName').val(ui.item.label);
+                    $('#ProductPrice').val(ui.item.price.toFixed(2));
+                    $('#ProductQuantity').val(1);
+                    newquantityInStock = ui.item.quantityInStock;
+                    handleQuantityChanges();
+                    return false;
+                },
+                focus: function (event, ui) {
+                    $('#ProductName').val(ui.item.label);
+                    return false;
+                }
+            });
+        });
+
+        ProductQuantity.addEventListener("change", handleQuantityChanges);
+        function handleQuantityChanges() {
+
+            if (newQuantity.value > newquantityInStock) {
+                alert("The number of product in stock is: " + newquantityInStock);
+                newQuantity.value = newquantityInStock;
+            }
+
+            newTotalItem.textContent = (newPrice.value * newQuantity.value).toFixed(2);
+
+        }
+    </script>
+
 }

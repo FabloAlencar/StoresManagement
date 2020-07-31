@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoresManagement.Data;
 
 namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200517102528_PurchaseViewFixes")]
+    partial class PurchaseViewFixes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -347,32 +349,29 @@ namespace StoresManagement.Data.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("Height")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Height")
+                        .HasColumnType("real");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Price")
+                        .HasColumnType("real");
 
                     b.Property<int?>("QuantityInStock")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Weight")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Weight")
+                        .HasColumnType("real");
 
-                    b.Property<decimal?>("Width")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Width")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -394,20 +393,14 @@ namespace StoresManagement.Data.Migrations
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Discount")
+                        .HasColumnType("real");
 
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Identification")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RegistrationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Total")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -425,30 +418,31 @@ namespace StoresManagement.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("DiscountTotal")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("DiscountTotal")
+                        .HasColumnType("real");
 
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ProductCurrentPrice")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("ProductCurrentPrice")
+                        .HasColumnType("real");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductQuantity")
+                    b.Property<int?>("ProductQuantity")
                         .HasColumnType("int");
 
                     b.Property<int>("PurchaseId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("Total")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .IsUnique();
 
                     b.HasIndex("PurchaseId");
 
@@ -561,8 +555,8 @@ namespace StoresManagement.Data.Migrations
             modelBuilder.Entity("StoresManagement.Models.PurchaseItem", b =>
                 {
                     b.HasOne("StoresManagement.Models.Product", "Product")
-                        .WithMany("PurchaseItems")
-                        .HasForeignKey("ProductId")
+                        .WithOne("PurchaseItem")
+                        .HasForeignKey("StoresManagement.Models.PurchaseItem", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

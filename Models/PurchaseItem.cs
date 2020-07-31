@@ -16,12 +16,12 @@ namespace StoresManagement.Models
 
         public int Id { get; set; }
 
-        public int? ProductQuantity { get; set; }
+        public int ProductQuantity { get; set; }
 
-        public float? ProductCurrentPrice { get; set; }
+        public decimal ProductCurrentPrice { get; set; }
 
-        public float? Total { get; set; }
+        public decimal Total { get; set; }
 
-        public float? DiscountTotal { get; set; }
+        public decimal DiscountTotal { get; set; }
     }
 }

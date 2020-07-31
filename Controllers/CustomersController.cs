@@ -21,6 +21,20 @@ namespace StoresManagement.Controllers
             _mapper = mapper;
         }
 
+        // GET: Customers/Search
+        [HttpGet]
+        public ActionResult Search(string term)
+        {
+            var customerList = _context.Customers.Where(r => r.Name.Contains(term) || r.Surname.Contains(term))
+                              .Select(r => new
+                              {
+                                  id = r.Id,
+                                  label = r.FullName
+                              }).ToArray();
+
+            return Json(customerList);
+        }
+
         // GET: Customers
         public async Task<IActionResult> Index()
         {

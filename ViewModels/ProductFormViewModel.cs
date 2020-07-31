@@ -7,6 +7,11 @@ namespace StoresManagement.ViewModels
 {
     public class ProductFormViewModel
     {
+        public ProductFormViewModel()
+        {
+            Branches = new List<Branch>();
+        }
+
         public IEnumerable<Branch> Branches { get; set; }
 
         public int EntityId { get; set; }
@@ -19,18 +24,23 @@ namespace StoresManagement.ViewModels
 
         public string Name { get; set; }
 
+        public string Brand { get; set; }
+
+        [Display(Name = "Product")]
+        public string ProductTitle { get; set; }
+
         [Display(Name = "Quantity In Stock")]
         public int? QuantityInStock { get; set; }
 
-        public float? Price { get; set; }
+        public decimal? Price { get; set; }
 
         public DateTime? ExpiryDate { get; set; }
 
-        public float? Weight { get; set; }
+        public decimal? Weight { get; set; }
 
-        public float? Width { get; set; }
+        public decimal? Width { get; set; }
 
-        public float? Height { get; set; }
+        public decimal? Height { get; set; }
 
         [Display(Name = "Branch")]
         public string BranchTitle { get; set; }

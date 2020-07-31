@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,6 +13,8 @@ namespace StoresManagement.Controllers
 {
     public class PurchasesController : Controller
     {
+        public static Guid NewGuid;
+
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
@@ -26,7 +29,7 @@ namespace StoresManagement.Controllers
         {
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .ToListAsync();
 
@@ -43,7 +46,7 @@ namespace StoresManagement.Controllers
 
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Where(m => m.BranchId == id)
                 .ToListAsync();
@@ -61,7 +64,7 @@ namespace StoresManagement.Controllers
 
             var purchases = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Where(m => m.CustomerId == id)
                 .ToListAsync();
@@ -79,9 +82,16 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
+                .Include(b => b.PurchaseItems)
                 .SingleOrDefaultAsync(m => m.Id == id);
+
+            foreach (var item in purchase.PurchaseItems)
+            {
+                item.Product = await _context.Products
+                    .SingleOrDefaultAsync(m => m.Id == item.ProductId);
+            }
 
             if (purchase == null)
             {
@@ -97,7 +107,8 @@ namespace StoresManagement.Controllers
             var purchaseVM = new PurchaseFormViewModel
             {
                 Branches = _context.Branches.ToList(),
-                Customers = _context.Customers.ToList()
+                Customers = _context.Customers.ToList(),
+                Products = _context.Products.ToList()
             };
 
             return View(purchaseVM);
@@ -105,22 +116,48 @@ namespace StoresManagement.Controllers
 
         // POST: Purchases/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(PurchaseFormViewModel purchaseVM)
+        // [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromBody] PurchaseFormViewModel purchaseVM)
         {
             if (ModelState.IsValid)
             {
                 var branch = await _context.Branches
                     .SingleOrDefaultAsync(m => m.Id == purchaseVM.BranchId);
+
                 purchaseVM.EntityId = branch.EntityId;
 
+                string timestamp = DateTime.Now.Ticks.ToString();
+                Random randonNum = new Random();
+
+                purchaseVM.Identification = timestamp + randonNum.Next(1, 9999999);
+
+                purchaseVM.RegistrationDate = DateTime.Now;
+
                 var purchase = _mapper.Map<Purchase>(purchaseVM);
+
+                foreach (var purchaseitem in purchase.PurchaseItems)
+                {
+                    purchase.Discount += purchaseitem.DiscountTotal;
+                    purchase.Total += purchaseitem.Total - purchaseitem.DiscountTotal;
+                    _context.Add(purchaseitem);
+
+                    var product = await _context.Products
+                    .SingleOrDefaultAsync(m => m.Id == purchaseitem.ProductId);
+
+                    product.QuantityInStock -= purchaseitem.ProductQuantity;
+
+                    _context.Entry(product).Property("QuantityInStock").IsModified = true;
+                }
+
                 _context.Add(purchase);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return Json(null);
             }
             purchaseVM.Branches = _context.Branches.ToList();
             purchaseVM.Customers = _context.Customers.ToList();
+            purchaseVM.Products = _context.Products.ToList();
 
             return View(purchaseVM);
         }
@@ -135,7 +172,7 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
@@ -171,7 +208,9 @@ namespace StoresManagement.Controllers
                     purchaseVM.EntityId = branch.EntityId;
 
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
-                    _context.Update(purchase);
+
+                    _context.Entry(purchase).Property("BranchId").IsModified = true;
+                    _context.Entry(purchase).Property("CustomerId").IsModified = true;
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -204,9 +243,9 @@ namespace StoresManagement.Controllers
 
             var purchase = await _context.Purchases
                 .Include(b => b.Branch)
-                .Include(b => b.Branch.Entity)
+                    .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
-                .SingleOrDefaultAsync(m => m.Id == id);
+               .SingleOrDefaultAsync(m => m.Id == id);
             if (purchase == null)
             {
                 return NotFound();

@@ -12,7 +12,7 @@ namespace StoresManagement.Migrations.EntityConfigurations
                 .WithMany(e => e.PurchaseItems);
 
             modelBuilder.HasOne(b => b.Product)
-                .WithOne(e => e.PurchaseItem);
+                .WithMany(e => e.PurchaseItems);
         }
     }
 }
