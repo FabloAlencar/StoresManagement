@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -23,24 +24,29 @@ namespace StoresManagement.Controllers
         // GET: Administration
         public async Task<IActionResult> Index()
         {
-            var userRoles = await _context.UserRoles.ToListAsync();
+            var users = await _context.Users.Where(m => m.Email != "admin@sm.com").ToListAsync();
 
-            var userRolesVM = new List<RoleFormViewModel>();
+            var rolesVM = new List<UserRoleFormViewModel>();
 
-            foreach (var userRole in userRoles)
+            foreach (var user in users)
             {
-                var userRoleVM = new RoleFormViewModel();
+                var userRoleVM = new UserRoleFormViewModel();
 
-                userRoleVM.User = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == userRole.UserId);
+                var userRole = await _context.UserRoles
+                .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
-                userRoleVM.Role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
+                userRoleVM.User = user;
 
-                userRolesVM.Add(userRoleVM);
+                if (userRole != null)
+                {
+                    userRoleVM.Role = await _context.Roles
+                    .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
+                }
+
+                rolesVM.Add(userRoleVM);
             }
 
-            return View(userRolesVM);
+            return View(rolesVM);
         }
 
         // GET: Administration/Details/5
@@ -58,7 +64,7 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            return View(_mapper.Map<RoleFormViewModel>(role));
+            return View(_mapper.Map<UserRoleFormViewModel>(role));
         }
 
         // GET: Administration/Create
@@ -70,7 +76,7 @@ namespace StoresManagement.Controllers
         // POST: Administration/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RoleFormViewModel roleVM)
+        public async Task<IActionResult> Create(UserRoleFormViewModel roleVM)
         {
             if (ModelState.IsValid)
             {
@@ -81,6 +87,87 @@ namespace StoresManagement.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(roleVM);
+        }
+
+        // GET: Administration/Edit/5
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userRoleVM = new UserRoleFormViewModel();
+
+            var userRole = await _context.UserRoles
+            .FirstOrDefaultAsync(m => m.UserId == user.Id);
+
+            userRoleVM.User = user;
+
+            if (userRole != null)
+            {
+                userRoleVM.Role = await _context.Roles
+                .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
+            }
+
+            // userRoleVM.Roles = _context.Roles.ToList();
+            userRoleVM.Roles = await _context.Roles.Where(m => m.Name != "Manager").ToListAsync();
+
+            return View(userRoleVM);
+        }
+
+        // POST: Administration/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, UserRoleFormViewModel userRoleVM)
+        {
+            if (id != userRoleVM.User.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userRole = await _context.UserRoles
+                    .SingleOrDefaultAsync(m => m.UserId == userRoleVM.User.Id);
+
+                    if (userRole != null)
+                    {
+                        _context.UserRoles.Remove(userRole);
+                    }
+
+                    userRole = new IdentityUserRole<string>();
+
+                    userRole.UserId = userRoleVM.User.Id;
+                    userRole.RoleId = userRoleVM.Role.Id;
+
+                    _context.Add(userRole);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await UserExists(userRoleVM.User.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return View(userRoleVM);
         }
 
         //// GET: Administration/Delete/5
@@ -116,5 +203,10 @@ namespace StoresManagement.Controllers
         //{
         //    return await _context.Roles.AnyAsync(e => e.Id == id);
         //}
+
+        private async Task<bool> UserExists(string id)
+        {
+            return await _context.Users.AnyAsync(e => e.Id == id);
+        }
     }
 }

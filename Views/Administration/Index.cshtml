@@ -1,4 +1,4 @@
-﻿@model IEnumerable<StoresManagement.ViewModels.RoleFormViewModel>
+﻿@model IEnumerable<StoresManagement.ViewModels.UserRoleFormViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -39,9 +39,9 @@
                     @Html.DisplayFor(modelItem => item.Role.Name)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.User.Email">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.User.Email">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.User.Email">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.User.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.User.Id">Details</a> @*|
+                        <a asp-action="Delete" asp-route-id="@item.User.Id">Delete</a>*@
                 </td>
             </tr>
         }
