@@ -1,8 +1,17 @@
-﻿
+﻿us: admin@sm.com
+pw: 123sS$
 
 
 Adicionar:
 
-- linkar usuario master a determinada entidade:
+- linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
 * a entidade pode criar outros usuarios 
+
+- add a limit of records per page 
+- add searching function to list of purchase/product/customer screen
+
+us: admin@sm.com
+pw: 123sS$
+
+
 
