@@ -50,37 +50,6 @@ namespace StoresManagement.Controllers
             return View(rolesVM);
         }
 
-        //// GET: Administration/Details/5
-        //public async Task<IActionResult> Details(string id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var user = await _context.Users
-        //        .SingleOrDefaultAsync(m => m.Id == id);
-
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var userRoleVM = new UserRoleFormViewModel();
-        //    userRoleVM.User = user;
-
-        //    var userRole = await _context.UserRoles
-        //    .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-        //    if (userRole != null)
-        //    {
-        //        userRoleVM.Role = await _context.Roles
-        //        .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
-        //    }
-
-        //    return View(userRoleVM);
-        //}
-
         // GET: Administration/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -134,32 +103,30 @@ namespace StoresManagement.Controllers
                     var user = await _context.Users
                     .SingleOrDefaultAsync(m => m.Id == userRoleVM.User.Id);
 
-                    if (user.UserName != userRoleVM.User.UserName)
+                    if (user.UserName != userRoleVM.User.UserName || user.PhoneNumber != userRoleVM.User.PhoneNumber)
                     {
                         user.UserName = userRoleVM.User.UserName;
+                        user.PhoneNumber = userRoleVM.User.PhoneNumber;
                         _context.Users.Update(user);
                     }
 
                     // Updating the Role of the User
 
-                    var userRole = await _context.UserRoles
+                    var userRoleDB = await _context.UserRoles
                     .SingleOrDefaultAsync(m => m.UserId == userRoleVM.User.Id);
 
-                    if (userRole == null)
+                    if (userRoleDB == null || userRoleDB.RoleId != userRoleVM.Role.Id)
                     {
-                        userRole = new IdentityUserRole<string>();
+                        if (userRoleDB != null)
+                        {
+                            _context.UserRoles.Remove(userRoleDB);
+                        }
 
-                        userRole.UserId = userRoleVM.User.Id;
-                        userRole.RoleId = userRoleVM.Role.Id;
-
-                        _context.Add(userRole);
-                    }
-                    else if (userRole.RoleId != userRoleVM.Role.Id)
-                    {
-                        _context.UserRoles.Remove(userRole);
-
-                        userRole.UserId = userRoleVM.User.Id;
-                        userRole.RoleId = userRoleVM.Role.Id;
+                        var userRole = new IdentityUserRole<string>
+                        {
+                            UserId = userRoleVM.User.Id,
+                            RoleId = userRoleVM.Role.Id
+                        };
 
                         _context.Add(userRole);
                     }
