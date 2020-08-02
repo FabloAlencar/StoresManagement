@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -11,6 +12,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    //[Authorize(Roles = "Manager,Administrator,Seller")]
     public class PurchasesController : Controller
     {
         public static Guid NewGuid;

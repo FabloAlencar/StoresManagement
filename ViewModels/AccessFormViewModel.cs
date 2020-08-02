@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace StoresManagement.ViewModels
 {
-    public class UserRoleFormViewModel
+    public class AccessFormViewModel
     {
-        public UserRoleFormViewModel()
+        public AccessFormViewModel()
         {
             Roles = new List<IdentityRole>();
         }

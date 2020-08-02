@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -10,6 +11,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    //[Authorize(Roles = "Manager,Administrator,Seller")]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -87,6 +89,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Create
+        //[Authorize(Roles = "Manager,Administrator")]
         public IActionResult Create()
         {
             var productVM = new ProductFormViewModel
@@ -100,6 +103,7 @@ namespace StoresManagement.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Create(ProductFormViewModel productVM)
         {
             if (ModelState.IsValid)
@@ -120,6 +124,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Edit/5
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -147,6 +152,7 @@ namespace StoresManagement.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Edit(int id, ProductFormViewModel productVM)
         {
             if (id != productVM.Id)
@@ -187,6 +193,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Delete/5
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -209,6 +216,7 @@ namespace StoresManagement.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);

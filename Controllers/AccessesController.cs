@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +11,13 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    public class AdministrationController : Controller
+    // "Manager,Administrator")]
+    public class AccessesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public AdministrationController(ApplicationDbContext context, IMapper mapper)
+        public AccessesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -27,11 +29,11 @@ namespace StoresManagement.Controllers
             var users = await _context.Users
                 .ToListAsync();
 
-            var rolesVM = new List<UserRoleFormViewModel>();
+            var rolesVM = new List<AccessFormViewModel>();
 
             foreach (var user in users)
             {
-                var userRoleVM = new UserRoleFormViewModel();
+                var userRoleVM = new AccessFormViewModel();
 
                 var userRole = await _context.UserRoles
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
@@ -51,6 +53,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Administration/Edit/5
+        //[Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -65,7 +68,7 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var userRoleVM = new UserRoleFormViewModel();
+            var userRoleVM = new AccessFormViewModel();
 
             userRoleVM.User = user;
 
@@ -88,7 +91,8 @@ namespace StoresManagement.Controllers
         // POST: Administration/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, UserRoleFormViewModel userRoleVM)
+        //[Authorize(Roles = "Manager")]
+        public async Task<IActionResult> Edit(string id, AccessFormViewModel userRoleVM)
         {
             if (id != userRoleVM.User.Id)
             {

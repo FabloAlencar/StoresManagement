@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -10,6 +11,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    //[Authorize(Roles = "Manager,Administrator,Seller")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -114,6 +116,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/Edit/5
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -141,6 +144,7 @@ namespace StoresManagement.Controllers
         // POST: Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Edit(int id, CustomerFormViewModel customerVM)
         {
             if (id != customerVM.Id)
@@ -177,6 +181,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/Delete/5
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -199,6 +204,7 @@ namespace StoresManagement.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        //[Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
