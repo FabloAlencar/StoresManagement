@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Migrations.EntityConfigurations;
 using StoresManagement.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace StoresManagement.Data
 {
@@ -27,6 +30,11 @@ namespace StoresManagement.Data
             modelBuilder.ApplyConfiguration(new PurchaseItemConfiguration());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        internal Task AddToRoleAsync(IdentityUser user, string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

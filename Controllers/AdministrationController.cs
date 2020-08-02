@@ -24,7 +24,8 @@ namespace StoresManagement.Controllers
         // GET: Administration
         public async Task<IActionResult> Index()
         {
-            var users = await _context.Users.Where(m => m.Email != "admin@sm.com").ToListAsync();
+            var users = await _context.Users
+                .ToListAsync();
 
             var rolesVM = new List<UserRoleFormViewModel>();
 
@@ -49,45 +50,36 @@ namespace StoresManagement.Controllers
             return View(rolesVM);
         }
 
-        // GET: Administration/Details/5
-        public async Task<IActionResult> Details(string roleName)
-        {
-            if (roleName == null)
-            {
-                return NotFound();
-            }
+        //// GET: Administration/Details/5
+        //public async Task<IActionResult> Details(string id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var role = await _context.Roles
-                .SingleOrDefaultAsync(m => m.Name == roleName);
-            if (role == null)
-            {
-                return NotFound();
-            }
+        //    var user = await _context.Users
+        //        .SingleOrDefaultAsync(m => m.Id == id);
 
-            return View(_mapper.Map<UserRoleFormViewModel>(role));
-        }
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-        // GET: Administration/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        //    var userRoleVM = new UserRoleFormViewModel();
+        //    userRoleVM.User = user;
 
-        // POST: Administration/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserRoleFormViewModel roleVM)
-        {
-            if (ModelState.IsValid)
-            {
-                var role = _mapper.Map<IdentityRole>(roleVM);
+        //    var userRole = await _context.UserRoles
+        //    .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
-                _context.Add(role);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(roleVM);
-        }
+        //    if (userRole != null)
+        //    {
+        //        userRoleVM.Role = await _context.Roles
+        //        .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
+        //    }
+
+        //    return View(userRoleVM);
+        //}
 
         // GET: Administration/Edit/5
         public async Task<IActionResult> Edit(string id)
@@ -106,10 +98,10 @@ namespace StoresManagement.Controllers
 
             var userRoleVM = new UserRoleFormViewModel();
 
+            userRoleVM.User = user;
+
             var userRole = await _context.UserRoles
             .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-            userRoleVM.User = user;
 
             if (userRole != null)
             {
@@ -117,8 +109,9 @@ namespace StoresManagement.Controllers
                 .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
             }
 
-            // userRoleVM.Roles = _context.Roles.ToList();
-            userRoleVM.Roles = await _context.Roles.Where(m => m.Name != "Manager").ToListAsync();
+            userRoleVM.Roles = await _context.Roles
+                 .Where(m => m.Name != "Manager")
+                .ToListAsync();
 
             return View(userRoleVM);
         }
@@ -137,20 +130,41 @@ namespace StoresManagement.Controllers
             {
                 try
                 {
+                    // Updating the Username of the User
+                    var user = await _context.Users
+                    .SingleOrDefaultAsync(m => m.Id == userRoleVM.User.Id);
+
+                    if (user.UserName != userRoleVM.User.UserName)
+                    {
+                        user.UserName = userRoleVM.User.UserName;
+                        _context.Users.Update(user);
+                    }
+
+                    // Updating the Role of the User
+
                     var userRole = await _context.UserRoles
                     .SingleOrDefaultAsync(m => m.UserId == userRoleVM.User.Id);
 
-                    if (userRole != null)
+                    if (userRole == null)
+                    {
+                        userRole = new IdentityUserRole<string>();
+
+                        userRole.UserId = userRoleVM.User.Id;
+                        userRole.RoleId = userRoleVM.Role.Id;
+
+                        _context.Add(userRole);
+                    }
+                    else if (userRole.RoleId != userRoleVM.Role.Id)
                     {
                         _context.UserRoles.Remove(userRole);
+
+                        userRole.UserId = userRoleVM.User.Id;
+                        userRole.RoleId = userRoleVM.Role.Id;
+
+                        _context.Add(userRole);
                     }
 
-                    userRole = new IdentityUserRole<string>();
-
-                    userRole.UserId = userRoleVM.User.Id;
-                    userRole.RoleId = userRoleVM.Role.Id;
-
-                    _context.Add(userRole);
+                    // Saving changes
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Index));
@@ -169,40 +183,6 @@ namespace StoresManagement.Controllers
             }
             return View(userRoleVM);
         }
-
-        //// GET: Administration/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var role = await _context.Roles
-        //        .SingleOrDefaultAsync(m => m.Id == id);
-        //    if (role == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(_mapper.Map<RoleFormViewModel>(role));
-        //}
-
-        //// POST: Administration/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    var role = await _context.Roles.FindAsync(id);
-        //    _context.Roles.Remove(role);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private async Task<bool> RoleExists(int id)
-        //{
-        //    return await _context.Roles.AnyAsync(e => e.Id == id);
-        //}
 
         private async Task<bool> UserExists(string id)
         {
