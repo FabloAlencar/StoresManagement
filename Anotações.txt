@@ -10,10 +10,19 @@ Adicionar:
 - add a limit of records per page 
 - add searching function to list of purchase/product/customer screen
 
-us: 
+
+# Create a initScript for:
+ 4 roles:
+- Manager
+- Administrator
+- Seller
+- Inactive
+
+* 1 manager user:
+us= 
 manager@sm.com
-pw: 
+pw=
 123sS$
 
-
+* 1 entity.
 

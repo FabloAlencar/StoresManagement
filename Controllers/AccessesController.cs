@@ -11,7 +11,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    // "Manager,Administrator")]
+    [Authorize(Roles = "Manager,Administrator")]
     public class AccessesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -53,7 +53,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Administration/Edit/5
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -91,7 +91,7 @@ namespace StoresManagement.Controllers
         // POST: Administration/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(string id, AccessFormViewModel userRoleVM)
         {
             if (id != userRoleVM.User.Id)

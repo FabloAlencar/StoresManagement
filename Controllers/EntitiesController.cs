@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -9,6 +10,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    [Authorize(Roles = "Manager")]
     public class EntitiesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -69,6 +71,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Entities/Edit/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

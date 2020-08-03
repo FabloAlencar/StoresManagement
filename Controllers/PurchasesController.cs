@@ -12,7 +12,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    //[Authorize(Roles = "Manager,Administrator,Seller")]
+    [Authorize(Roles = "Manager,Administrator,Seller")]
     public class PurchasesController : Controller
     {
         public static Guid NewGuid;
