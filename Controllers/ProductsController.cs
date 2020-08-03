@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -16,11 +20,13 @@ namespace StoresManagement.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductsController(ApplicationDbContext context, IMapper mapper)
+        public ProductsController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _mapper = mapper;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Products/Search
@@ -108,6 +114,17 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Save image to wwwRootPath/image
+                string wwwRootPath = _hostEnvironment.WebRootPath;
+                string imageName = Path.GetFileNameWithoutExtension(productVM.ImageFile.FileName);
+                string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
+                productVM.ImageName = imageName = imageName + DateTime.Now.ToString("yyyymmddssfff") + imageExtension;
+                string imagePath = Path.Combine(wwwRootPath + "/image/", imageName);
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await productVM.ImageFile.CopyToAsync(fileStream);
+                }
+
                 var branch = await _context.Branches
                     .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
                 productVM.EntityId = branch.EntityId;
@@ -220,6 +237,15 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
+
+            // Delete image from wwwRootPath/image
+            if (product.ImageName != null)
+            {
+                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", product.ImageName);
+                if (System.IO.File.Exists(imagePath))
+                    System.IO.File.Delete(imagePath);
+            }
+
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

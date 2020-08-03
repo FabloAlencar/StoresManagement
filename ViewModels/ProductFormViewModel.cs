@@ -1,4 +1,5 @@
-﻿using StoresManagement.Models;
+﻿using Microsoft.AspNetCore.Http;
+using StoresManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -47,5 +48,8 @@ namespace StoresManagement.ViewModels
 
         [Display(Name = "Expiry Date")]
         public string ExpiryDay => String.Format("{0:dd/MM/yyyy}", ExpiryDate);
+
+        public string ImageName { get; set; }
+        public IFormFile ImageFile { get; set; }
     }
 }

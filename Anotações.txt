@@ -12,7 +12,7 @@ Adicionar:
 
 
 # Create a initScript for:
- 4 roles:
+* 4 roles:
 - Manager
 - Administrator
 - Seller
@@ -25,4 +25,6 @@ pw=
 123sS$
 
 * 1 entity.
+
+* 1 directory (...\StoresManagement\wwwroot\image\)
 

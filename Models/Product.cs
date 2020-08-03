@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoresManagement.Models
 {
@@ -40,5 +41,7 @@ namespace StoresManagement.Models
         {
             get { return Name + ", " + Brand; }
         }
+
+        public string ImageName { get; set; }
     }
 }
