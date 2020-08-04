@@ -178,7 +178,8 @@ namespace StoresManagement.Controllers
                     productVM.EntityId = branch.EntityId;
 
                     // Delete image from wwwRootPath/image && Save image to wwwRootPath/image
-                    DeleteImageFromwwwRootPath(productVM.ImageName);
+                    if (productVM.ImageFile != null)
+                        DeleteImageFromwwwRootPath(productVM.ImageName);
                     await addImageTowwwRootPathAsync(productVM);
 
                     var product = _mapper.Map<Product>(productVM);
@@ -249,13 +250,16 @@ namespace StoresManagement.Controllers
 
         private async Task addImageTowwwRootPathAsync(ProductFormViewModel productVM)
         {
-            string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
-            productVM.ImageName = productVM.Name.Replace(" ", "_") + productVM.Name.Replace(" ", "_")
-                                + DateTime.Now.ToString("_yyyymmddss_fff") + imageExtension;
-            string imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/image/", productVM.ImageName);
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            if (productVM.ImageFile != null)
             {
-                await productVM.ImageFile.CopyToAsync(fileStream);
+                string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
+                productVM.ImageName = productVM.Name.Replace(" ", "_") + productVM.Brand.Replace(" ", "_")
+                                    + DateTime.Now.ToString("_yyyymmddss_fff") + imageExtension;
+                string imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/image/", productVM.ImageName);
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await productVM.ImageFile.CopyToAsync(fileStream);
+                }
             }
         }
 

@@ -7,9 +7,9 @@ Adicionar:
 - linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
 * a entidade pode criar outros usuarios 
 
-- editar/adicionar imagem ao  produto, autalizar automaticamente 
 - add a limit of records per page 
 - add searching function to list of purchase/product/customer screen
+- add hash to pw
 
 
 # Create a initScript for:
@@ -27,5 +27,4 @@ pw=
 
 * 1 entity.
 
-* 1 directory (...\StoresManagement\wwwroot\image\)
 

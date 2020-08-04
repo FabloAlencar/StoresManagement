@@ -59,9 +59,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" accept="image/*" />
-                <span asp-validation-for="ImageFile" class="text-danger">Choose file..</span>
+                <input asp-for="ImageFile" accept="image/*" onchange="loadFile(event)" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <img id="previewImage" asp-append-version="true" width="250" height="250" />
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -75,4 +77,16 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        let previewImage = document.getElementById('previewImage');
+
+        let loadFile = function (event) {
+            previewImage.src = URL.createObjectURL(event.target.files[0]);
+            previewImage.onload = function () {
+                URL.revokeObjectURL(previewImage.src) // free memory
+            }
+        };
+    </script>
 }

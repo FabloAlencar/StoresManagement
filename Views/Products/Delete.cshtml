@@ -66,9 +66,12 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Height)
         </dd>
-        <dd class="col-sm-10">
-            <img src="@("~/image/"+ Model.ImageName)" asp-append-version="true" width="250" height="250" />
-        </dd>
+        @if (Model.ImageName != null)
+        {
+            <dd class="col-sm-10">
+                <img src="@("~/image/"+ Model.ImageName)" asp-append-version="true" width="250" height="250" />
+            </dd>
+        }
     </dl>
 
     <form asp-action="Delete">
