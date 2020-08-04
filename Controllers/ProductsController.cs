@@ -115,15 +115,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 // Save image to wwwRootPath/image
-                string wwwRootPath = _hostEnvironment.WebRootPath;
-                string imageName = Path.GetFileNameWithoutExtension(productVM.ImageFile.FileName);
-                string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
-                productVM.ImageName = imageName = imageName + DateTime.Now.ToString("yyyymmddssfff") + imageExtension;
-                string imagePath = Path.Combine(wwwRootPath + "/image/", imageName);
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await productVM.ImageFile.CopyToAsync(fileStream);
-                }
+                await addImageTowwwRootPathAsync(productVM);
 
                 var branch = await _context.Branches
                     .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
@@ -185,6 +177,10 @@ namespace StoresManagement.Controllers
                         .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
                     productVM.EntityId = branch.EntityId;
 
+                    // Delete image from wwwRootPath/image && Save image to wwwRootPath/image
+                    DeleteImageFromwwwRootPath(productVM.ImageName);
+                    await addImageTowwwRootPathAsync(productVM);
+
                     var product = _mapper.Map<Product>(productVM);
 
                     _context.Update(product);
@@ -239,12 +235,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products.FindAsync(id);
 
             // Delete image from wwwRootPath/image
-            if (product.ImageName != null)
-            {
-                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", product.ImageName);
-                if (System.IO.File.Exists(imagePath))
-                    System.IO.File.Delete(imagePath);
-            }
+            DeleteImageFromwwwRootPath(product.ImageName);
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
@@ -254,6 +245,28 @@ namespace StoresManagement.Controllers
         private async Task<bool> BranchExists(int id)
         {
             return await _context.Products.AnyAsync(e => e.Id == id);
+        }
+
+        private async Task addImageTowwwRootPathAsync(ProductFormViewModel productVM)
+        {
+            string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
+            productVM.ImageName = productVM.Name.Replace(" ", "_") + productVM.Name.Replace(" ", "_")
+                                + DateTime.Now.ToString("_yyyymmddss_fff") + imageExtension;
+            string imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/image/", productVM.ImageName);
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await productVM.ImageFile.CopyToAsync(fileStream);
+            }
+        }
+
+        private void DeleteImageFromwwwRootPath(string imageName)
+        {
+            if (imageName != null)
+            {
+                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", imageName);
+                if (System.IO.File.Exists(imagePath))
+                    System.IO.File.Delete(imagePath);
+            }
         }
     }
 }
