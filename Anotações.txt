@@ -11,7 +11,7 @@ Adicionar:
 - add searching function to list of purchase/product/customer screen
 - add filter per entity
 - add hash to pw
-
+- create entity, create a user with a admin role
 
 # Create a initScript for:
 * 4 roles:

@@ -8,6 +8,7 @@ namespace StoresManagement.Models
         {
             Branches = new HashSet<Branch>();
             Customers = new HashSet<Customer>();
+            EntityUsers = new HashSet<EntityUser>();
         }
 
         public int Id { get; set; }
@@ -17,5 +18,6 @@ namespace StoresManagement.Models
         public virtual ICollection<Branch> Branches { get; set; }
 
         public virtual ICollection<Customer> Customers { get; set; }
+        public virtual ICollection<EntityUser> EntityUsers { get; set; }
     }
 }

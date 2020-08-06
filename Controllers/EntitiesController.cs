@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -15,11 +16,15 @@ namespace StoresManagement.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public EntitiesController(ApplicationDbContext context, IMapper mapper)
+        public EntitiesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Entities
@@ -61,9 +66,34 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = new IdentityUser
+                {
+                    UserName = entityVM.Email,
+                    Email = entityVM.Email
+                };
+
+                var result = await _userManager.CreateAsync(user, entityVM.Password);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
                 var entity = _mapper.Map<Entity>(entityVM);
 
                 _context.Add(entity);
+                await _context.SaveChangesAsync();
+
+                var entityUser = new EntityUser
+                {
+                    UserEmail = entityVM.Email,
+                    EntityId = entity.Id
+                };
+                _context.Add(entityUser);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

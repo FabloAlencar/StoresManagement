@@ -14,6 +14,7 @@ namespace StoresManagement.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<PurchaseItem> PurchaseItems { get; set; }
+        public DbSet<EntityUser> EntityUsers { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                 : base(options)
@@ -25,6 +26,7 @@ namespace StoresManagement.Data
             modelBuilder.ApplyConfiguration(new BranchConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new PurchaseItemConfiguration());
+            modelBuilder.ApplyConfiguration(new EntityUserConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

@@ -29,7 +29,7 @@ namespace StoresManagement.Controllers
         //    {
         //        var user = new IdentityUser
         //        {
-        //            UserName = loginVM.Email
+        //            UserName = loginVM.Email,
         //            // Email = loginVM.Email;
         //        };
         //        var result = await _userManager.CreateAsync(user, loginVM.Password);
