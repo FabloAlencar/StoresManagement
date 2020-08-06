@@ -49,9 +49,11 @@ namespace StoresManagement.ViewModels
         public string BranchTitle { get; set; }
 
         [Display(Name = "Expiry Date")]
-        public string ExpiryDay => String.Format("{0:dd/MM/yyyy}", ExpiryDate);
+        public string ExpiryDay => string.Format("{0:dd/MM/yyyy}", ExpiryDate);
 
         public string ImageName { get; set; }
+
+        [Display(Name = "Image File")]
         public IFormFile ImageFile { get; set; }
     }
 }

@@ -9,6 +9,7 @@ Adicionar:
 
 - add a limit of records per page 
 - add searching function to list of purchase/product/customer screen
+- add filter per entity
 - add hash to pw
 
 
