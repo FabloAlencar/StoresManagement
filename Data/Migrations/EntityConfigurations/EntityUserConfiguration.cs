@@ -8,7 +8,7 @@ namespace StoresManagement.Migrations.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<EntityUser> modelBuilder)
         {
-            modelBuilder.HasKey(e => new { e.EntityId, e.UserEmail });
+            modelBuilder.HasKey(e => new { e.EntityId, e.UserId });
 
             modelBuilder.HasOne(b => b.Entity)
                 .WithMany(e => e.EntityUsers);

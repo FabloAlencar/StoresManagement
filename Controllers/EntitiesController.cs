@@ -92,8 +92,8 @@ namespace StoresManagement.Controllers
                 // Creating Enity & User relationship
                 var entityUser = new EntityUser
                 {
-                    UserEmail = entityVM.Email,
-                    EntityId = entity.Id
+                    EntityId = entity.Id,
+                    UserId = user.Id
                 };
                 _context.Add(entityUser);
 

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -16,17 +18,39 @@ namespace StoresManagement.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly int _entityId;
 
-        public BranchesController(ApplicationDbContext context, IMapper mapper)
+        public BranchesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
+            _entityId = GetEntityId();
+        }
+
+        private int GetEntityId()
+        {
+            var entityUsers = _context.EntityUsers
+        .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+            if (entityUsers == null)
+                return 0;
+            else
+                return entityUsers.EntityId;
         }
 
         // GET: Branches
         public async Task<IActionResult> Index()
         {
+            var loggedUserId = _userManager.GetUserId(HttpContext.User);
+
             var branches = await _context.Branches
+                .Where(m => m.EntityId == _entityId)
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .ToListAsync();
@@ -43,9 +67,9 @@ namespace StoresManagement.Controllers
             }
 
             var branches = await _context.Branches
+                .Where(m => m.EntityId == id)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
-                .Where(m => m.EntityId == id)
                 .ToListAsync();
 
             return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
@@ -62,7 +86,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
 
             if (branch == null)
             {

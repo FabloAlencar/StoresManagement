@@ -39,13 +39,12 @@ namespace StoresManagement.Controllers
 
                 var entityUser = await _context.EntityUsers
                 .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.UserEmail == user.Email);
+                .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
                 if (entityUser != null)
                 {
                     userRoleVM.Entity = entityUser.Entity;
                 }
-
 
                 var userRole = await _context.UserRoles
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);

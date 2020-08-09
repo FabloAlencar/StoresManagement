@@ -11,11 +11,11 @@ namespace StoresManagement.Data.Migrations
                 columns: table => new
                 {
                     EntityId = table.Column<int>(nullable: false),
-                    UserEmail = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EntityUsers", x => new { x.EntityId, x.UserEmail });
+                    table.PrimaryKey("PK_EntityUsers", x => new { x.EntityId, x.UserId });
                     table.ForeignKey(
                         name: "FK_EntityUsers_Entities_EntityId",
                         column: x => x.EntityId,

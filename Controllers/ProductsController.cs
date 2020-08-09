@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -21,19 +22,41 @@ namespace StoresManagement.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly int _entityId;
 
-        public ProductsController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment hostEnvironment)
+        public ProductsController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _hostEnvironment = hostEnvironment;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
+            _entityId = GetEntityId();
+        }
+
+        private int GetEntityId()
+        {
+            var entityUsers = _context.EntityUsers
+        .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+            if (entityUsers == null)
+                return 0;
+            else
+                return entityUsers.EntityId;
         }
 
         // GET: Products/Search
         [HttpGet]
         public ActionResult Search(string term)
         {
-            var productList = _context.Products.Where(r => (r.Name.Contains(term) || r.Brand.Contains(term)) && r.QuantityInStock > 0)
+            var productList = _context.Products
+                .Where(r => r.EntityId == _entityId
+                && r.QuantityInStock > 0
+                && (r.Name.Contains(term) || r.Brand.Contains(term)))
                               .Select(r => new
                               {
                                   productId = r.Id,
@@ -49,6 +72,7 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products
+                .Where(m => m.EntityId == _entityId)
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .ToListAsync();
@@ -65,9 +89,9 @@ namespace StoresManagement.Controllers
             }
 
             var products = await _context.Products
+                .Where(m => m.EntityId == _entityId && m.BranchId == id)
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .Where(m => m.BranchId == id)
                 .ToListAsync();
 
             return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
@@ -84,7 +108,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
 
             if (product == null)
             {
@@ -100,7 +124,9 @@ namespace StoresManagement.Controllers
         {
             var productVM = new ProductFormViewModel
             {
-                Branches = _context.Branches.ToList()
+                Branches = _context.Branches
+                .Where(m => m.EntityId == _entityId)
+                .ToList()
             };
 
             return View(productVM);
@@ -118,7 +144,7 @@ namespace StoresManagement.Controllers
                 await addImageTowwwRootPathAsync(productVM);
 
                 var branch = await _context.Branches
-                    .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
+                    .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == productVM.BranchId);
                 productVM.EntityId = branch.EntityId;
 
                 var product = _mapper.Map<Product>(productVM);
@@ -127,7 +153,9 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            productVM.Branches = _context.Branches.ToList();
+            productVM.Branches = _context.Branches
+                .Where(m => m.EntityId == _entityId)
+                .ToList();
 
             return View(productVM);
         }
@@ -144,7 +172,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
 
             if (product == null)
             {
@@ -153,7 +181,9 @@ namespace StoresManagement.Controllers
 
             var productVM = _mapper.Map<ProductFormViewModel>(product);
 
-            productVM.Branches = _context.Branches.ToList();
+            productVM.Branches = _context.Branches
+                .Where(m => m.EntityId == _entityId)
+                .ToList();
 
             return View(productVM);
         }
@@ -174,7 +204,7 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = await _context.Branches
-                        .SingleOrDefaultAsync(m => m.Id == productVM.BranchId);
+                        .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == productVM.BranchId);
                     productVM.EntityId = branch.EntityId;
 
                     // Delete image from wwwRootPath/image && Save image to wwwRootPath/image
@@ -218,7 +248,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
             if (product == null)
             {
                 return NotFound();

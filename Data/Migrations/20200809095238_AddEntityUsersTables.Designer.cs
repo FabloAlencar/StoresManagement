@@ -10,7 +10,7 @@ using StoresManagement.Data;
 namespace StoresManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200806202542_AddEntityUsersTables")]
+    [Migration("20200809095238_AddEntityUsersTables")]
     partial class AddEntityUsersTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -344,10 +344,10 @@ namespace StoresManagement.Data.Migrations
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserEmail")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("EntityId", "UserEmail");
+                    b.HasKey("EntityId", "UserId");
 
                     b.ToTable("EntityUsers");
                 });

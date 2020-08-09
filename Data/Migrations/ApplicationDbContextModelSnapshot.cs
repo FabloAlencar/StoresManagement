@@ -342,10 +342,10 @@ namespace StoresManagement.Data.Migrations
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserEmail")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("EntityId", "UserEmail");
+                    b.HasKey("EntityId", "UserId");
 
                     b.ToTable("EntityUsers");
                 });
