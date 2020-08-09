@@ -11,6 +11,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Entity)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.User)
             </th>
             <th>
@@ -33,6 +36,9 @@
             {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Entity.Name)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.User.UserName)
                     </td>
                     <td>
@@ -53,7 +59,9 @@
             {
 
                 <tr>
-
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Entity.Name)
+                    </td>
                     <td>
                         <b>
                             @Html.DisplayFor(modelItem => item.User.UserName)

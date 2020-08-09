@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using StoresManagement.Models;
 using System.Collections.Generic;
 
 namespace StoresManagement.ViewModels
@@ -9,6 +10,8 @@ namespace StoresManagement.ViewModels
         {
             Roles = new List<IdentityRole>();
         }
+
+        public virtual Entity Entity { get; set; }
 
         public IEnumerable<IdentityRole> Roles { get; set; }
 

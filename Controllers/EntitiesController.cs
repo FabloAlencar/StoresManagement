@@ -66,6 +66,7 @@ namespace StoresManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Creating User
                 var user = new IdentityUser
                 {
                     UserName = entityVM.Email,
@@ -82,17 +83,34 @@ namespace StoresManagement.Controllers
                     }
                 }
 
+                // Creating Entity
                 var entity = _mapper.Map<Entity>(entityVM);
 
                 _context.Add(entity);
                 await _context.SaveChangesAsync();
 
+                // Creating Enity & User relationship
                 var entityUser = new EntityUser
                 {
                     UserEmail = entityVM.Email,
                     EntityId = entity.Id
                 };
                 _context.Add(entityUser);
+
+                // Adding role to the User
+                var administratorRole = await _context.Roles
+                .SingleOrDefaultAsync(m => m.Name == "Administrator");
+
+                if (administratorRole != null)
+                {
+                    var userRole = new IdentityUserRole<string>
+                    {
+                        UserId = user.Id,
+                        RoleId = administratorRole.Id
+                    };
+
+                    _context.Add(userRole);
+                }
 
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

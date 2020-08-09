@@ -35,10 +35,20 @@ namespace StoresManagement.Controllers
             {
                 var userRoleVM = new AccessFormViewModel();
 
+                userRoleVM.User = user;
+
+                var entityUser = await _context.EntityUsers
+                .Include(b => b.Entity)
+                .FirstOrDefaultAsync(m => m.UserEmail == user.Email);
+
+                if (entityUser != null)
+                {
+                    userRoleVM.Entity = entityUser.Entity;
+                }
+
+
                 var userRole = await _context.UserRoles
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-                userRoleVM.User = user;
 
                 if (userRole != null)
                 {
@@ -115,7 +125,6 @@ namespace StoresManagement.Controllers
                     }
 
                     // Updating the Role of the User
-
                     var userRoleDB = await _context.UserRoles
                     .SingleOrDefaultAsync(m => m.UserId == userRoleVM.User.Id);
 
