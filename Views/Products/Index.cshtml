@@ -10,70 +10,129 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.BranchTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductTitle)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantityInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExpiryDay)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Width)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Height)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Branch.BranchTitle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductTitle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.QuantityInStock)
-                </td>
-                <td>
-                    $ @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ExpiryDay)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Weight)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Width)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Height)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+</head>
+
+<body>
+    <div class="form-group">
+        <div id="product-table" width=100></div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        //custom max min header filter
+        var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
+
+            var end;
+
+            var container = document.createElement("span");
+
+            //create and style inputs
+            var start = document.createElement("input");
+            start.setAttribute("type", "number");
+            start.setAttribute("placeholder", "Min");
+            start.setAttribute("min", 0);
+            start.setAttribute("max", 100);
+            start.style.padding = "4px";
+            start.style.width = "50%";
+            start.style.boxSizing = "border-box";
+
+            start.value = cell.getValue();
+
+            function buildValues() {
+                success({
+                    start: start.value,
+                    end: end.value,
+                });
+            }
+
+            function keypress(e) {
+                if (e.keyCode == 13) {
+                    buildValues();
+                }
+
+                if (e.keyCode == 27) {
+                    cancel();
+                }
+            }
+
+            end = start.cloneNode();
+            end.setAttribute("placeholder", "Max");
+
+            start.addEventListener("change", buildValues);
+            start.addEventListener("blur", buildValues);
+            start.addEventListener("keydown", keypress);
+
+            end.addEventListener("change", buildValues);
+            end.addEventListener("blur", buildValues);
+            end.addEventListener("keydown", keypress);
+
+            container.appendChild(start);
+            container.appendChild(end);
+
+            return container;
         }
-    </tbody>
-</table>
+
+        //custom max min filter function
+        function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams) {
+            //headerValue - the value of the header filter element
+            //rowValue - the value of the column in this row
+            //rowData - the data for the row being filtered
+            //filterParams - params object passed to the headerFilterFuncParams property
+
+            if (rowValue) {
+                if (headerValue.start != "") {
+                    if (headerValue.end != "") {
+                        return rowValue >= headerValue.start && rowValue <= headerValue.end;
+                    } else {
+                        return rowValue >= headerValue.start;
+                    }
+                } else {
+                    if (headerValue.end != "") {
+                        return rowValue <= headerValue.end;
+                    }
+                }
+            }
+
+            return true; //must return a boolean, true if it passes the filter.
+        }
+        $(document).ready(function () {
+
+            //Build Tabulator
+            var productTable = new Tabulator("#product-table", {
+                height: "311px",
+                layout: "fitColumns",
+                ajaxURL: "/Products/GetProducts",
+                ajaxProgressiveLoad: "scroll",
+                paginationSize: 2,
+                placeholder: "No Data Set",
+                columns: [
+                    { title: "Branch", field: "productBranch", width: 150, headerFilter: "input" },
+                    { title: "Product", field: "productProduct", width: 150, headerFilter: "input" },
+                    {
+                        title: "Price", field: "productPrice", width: 100, formatter: "money", formatterParams: {
+                            decimal: ",",
+                            thousand: ".",
+                            symbol: "$",
+                            symbolAfter: "p",
+                            precision: false,
+                        }, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">="
+                    },
+                    { title: "Quantity In Stock", field: "productQuantityInStock", width: 150, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Expiry Date", field: "productExpiryDate", width: 150, hozAlign: "center", sorter: "date", headerFilter: "input" },
+                    { title: "Weight", field: "productWeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Width", field: "productWidth", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Height", field: "productHeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                ],
+            });
+
+        });
+    </script>
+}

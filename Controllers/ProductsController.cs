@@ -68,16 +68,35 @@ namespace StoresManagement.Controllers
             return Json(productList);
         }
 
-        // GET: Products
-        public async Task<IActionResult> Index()
+        // GET: Products/GetProducts
+        [HttpGet]
+        public ActionResult GetProducts()
         {
-            var products = await _context.Products
-                .Where(m => m.EntityId == _entityId)
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .ToListAsync();
+            var productList = _context.Products.Select(r => new
+            {
+                productBranch = r.Branch.Entity.Name +", " + r.Branch.Name,
+                productProduct = r.Name + ", " + r.Brand,
+                productQuantityInStock = r.QuantityInStock,
+                productPrice = r.Price,
+                productExpiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
+                productWeight = r.Weight,
+                productWidth = r.Width,
+                productHeight = r.Height
+            }).ToArray();
 
-            return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
+            var dataPage = new
+            {
+                last_page = 0,
+                data = productList
+            };
+
+            return Json(dataPage);
+        }
+
+        // GET: Products
+        public IActionResult Index()
+        {
+            return View();
         }
 
         // GET: Products/ListProducts/5
