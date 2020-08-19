@@ -59,15 +59,15 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/ListBranches/5
-        public async Task<IActionResult> ListBranches(int? id)
+        public async Task<IActionResult> ListBranches(int? entityId)
         {
-            if (id == null)
+            if (entityId == null && entityId != _entityId)
             {
                 return NotFound();
             }
 
             var branches = await _context.Branches
-                .Where(m => m.EntityId == id)
+                .Where(m => m.EntityId == entityId)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .ToListAsync();

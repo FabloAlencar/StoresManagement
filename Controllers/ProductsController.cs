@@ -72,17 +72,19 @@ namespace StoresManagement.Controllers
         [HttpGet]
         public ActionResult GetProducts()
         {
-            var productList = _context.Products.Select(r => new
-            {
-                productBranch = r.Branch.Entity.Name +", " + r.Branch.Name,
-                productProduct = r.Name + ", " + r.Brand,
-                productQuantityInStock = r.QuantityInStock,
-                productPrice = r.Price,
-                productExpiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
-                productWeight = r.Weight,
-                productWidth = r.Width,
-                productHeight = r.Height
-            }).ToArray();
+            var productList = _context.Products
+                .Where(r => r.EntityId == _entityId)
+                .Select(r => new
+                {
+                    productBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
+                    productProduct = r.Name + ", " + r.Brand,
+                    productQuantityInStock = r.QuantityInStock,
+                    productPrice = r.Price,
+                    productExpiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
+                    productWeight = r.Weight,
+                    productWidth = r.Width,
+                    productHeight = r.Height
+                }).ToArray();
 
             var dataPage = new
             {

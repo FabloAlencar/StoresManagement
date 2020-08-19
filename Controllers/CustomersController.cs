@@ -73,15 +73,15 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/ListCustomers/5
-        public async Task<IActionResult> ListCustomers(int? id)
+        public async Task<IActionResult> ListCustomers(int? entityId)
         {
-            if (id == null)
+            if (entityId == null && entityId != _entityId)
             {
                 return NotFound();
             }
 
             var customers = await _context.Customers
-                .Where(m => m.EntityId == id)
+                .Where(m => m.EntityId == entityId)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .ToListAsync();

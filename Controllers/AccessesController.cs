@@ -11,7 +11,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [Authorize(Roles = "Manager,Administrator")]
+    [Authorize(Roles = "Manager")]
     public class AccessesController : Controller
     {
         private readonly ApplicationDbContext _context;
