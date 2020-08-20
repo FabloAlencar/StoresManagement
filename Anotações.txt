@@ -9,9 +9,11 @@ Adicionar:
 
 - add a limit of records per page 
 - add searching function to list of purchase/product/customer screen
-- add filter per entity
+- add filter per entity - done
 - add hash to pw
-- create entity, create a user with a admin role
+- create entity, create a user with a admin role - done
+- adicionar not found page
+- adicionar telefeone e endereco pra usuarios
 
 # Create a initScript for:
 * 4 roles:

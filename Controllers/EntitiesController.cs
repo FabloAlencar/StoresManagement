@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -99,7 +100,7 @@ namespace StoresManagement.Controllers
 
                 // Adding role to the User
                 var administratorRole = await _context.Roles
-                .SingleOrDefaultAsync(m => m.Name == "Administrator");
+                .SingleOrDefaultAsync(m => m.Name == UserRoles.Administrator);
 
                 if (administratorRole != null)
                 {
