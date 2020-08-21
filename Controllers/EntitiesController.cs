@@ -82,6 +82,7 @@ namespace StoresManagement.Controllers
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
+                    return View(entityVM);
                 }
 
                 // Creating Entity
@@ -197,7 +198,14 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var entity = await _context.Entities.FindAsync(id);
+            var entityUser = await _context.EntityUsers.SingleOrDefaultAsync(m => m.EntityId == id);
+            var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == entityUser.UserId);
+            var userRole = await _context.UserRoles.SingleOrDefaultAsync(m => m.UserId == entityUser.UserId);
             _context.Entities.Remove(entity);
+            _context.EntityUsers.Remove(entityUser);
+            _context.Users.Remove(user);
+            _context.UserRoles.Remove(userRole);
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
