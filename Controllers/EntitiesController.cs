@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -63,18 +64,19 @@ namespace StoresManagement.Controllers
         // POST: Entities/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EntityFormViewModel entityVM)
+        public async Task<IActionResult> Create(RegisterFormViewModel registerFormVM)
         {
             if (ModelState.IsValid)
             {
                 // Creating User
                 var user = new IdentityUser
                 {
-                    UserName = entityVM.Email,
-                    Email = entityVM.Email
+                    UserName = registerFormVM.UserName,
+                    Email = registerFormVM.Email,
+                    EmailConfirmed = true
                 };
 
-                var result = await _userManager.CreateAsync(user, entityVM.Password);
+                var result = await _userManager.CreateAsync(user, registerFormVM.Password);
 
                 if (!result.Succeeded)
                 {
@@ -82,11 +84,11 @@ namespace StoresManagement.Controllers
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    return View(entityVM);
+                    return View(registerFormVM);
                 }
 
                 // Creating Entity
-                var entity = _mapper.Map<Entity>(entityVM);
+                var entity = _mapper.Map<Entity>(registerFormVM.Entity);
 
                 _context.Add(entity);
                 await _context.SaveChangesAsync();
@@ -117,7 +119,7 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(entityVM);
+            return View(registerFormVM);
         }
 
         // GET: Entities/Edit/5
@@ -197,16 +199,20 @@ namespace StoresManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var entityUsers = _context.EntityUsers.Where(m => m.EntityId == id).ToList();
+            _context.EntityUsers.RemoveRange(entityUsers);
+
+            foreach (var entityUser in entityUsers)
+            {
+                _context.Users.Remove(_context.Users.SingleOrDefault(m => m.Id == entityUser.UserId));
+                _context.UserRoles.Remove(_context.UserRoles.SingleOrDefault(m => m.UserId == entityUser.UserId));
+            }
+
             var entity = await _context.Entities.FindAsync(id);
-            var entityUser = await _context.EntityUsers.SingleOrDefaultAsync(m => m.EntityId == id);
-            var user = await _context.Users.SingleOrDefaultAsync(m => m.Id == entityUser.UserId);
-            var userRole = await _context.UserRoles.SingleOrDefaultAsync(m => m.UserId == entityUser.UserId);
             _context.Entities.Remove(entity);
-            _context.EntityUsers.Remove(entityUser);
-            _context.Users.Remove(user);
-            _context.UserRoles.Remove(userRole);
 
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

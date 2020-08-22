@@ -14,6 +14,8 @@ Adicionar:
 - create entity, create a user with a admin role - done
 - adicionar not found page
 - adicionar telefeone e endereco pra usuarios
+- adicionar validacao de email antes de inserir
+- ordenar por entidade 
 
 # Create a initScript for:
 * 4 roles:

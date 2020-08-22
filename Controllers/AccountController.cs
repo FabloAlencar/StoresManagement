@@ -44,7 +44,8 @@ namespace StoresManagement.Controllers
                 var user = new IdentityUser
                 {
                     UserName = registerVM.UserName,
-                    Email = registerVM.Email
+                    Email = registerVM.Email,
+                    EmailConfirmed = true
                 };
 
                 // adicionar entides
@@ -93,24 +94,6 @@ namespace StoresManagement.Controllers
         public IActionResult Login()
         {
             return View();
-        }
-
-        [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel loginVM)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(loginVM.Email, loginVM.Password, loginVM.RememberMe, false);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
-            }
-            return View(loginVM);
         }
     }
 }

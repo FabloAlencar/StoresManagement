@@ -33,9 +33,9 @@ namespace StoresManagement.Controllers
 
             foreach (var user in users)
             {
-                var userRoleVM = new AccessFormViewModel();
+                var accessVM = new AccessFormViewModel();
 
-                userRoleVM.User = user;
+                accessVM.User = user;
 
                 var entityUser = await _context.EntityUsers
                 .Include(b => b.Entity)
@@ -43,7 +43,7 @@ namespace StoresManagement.Controllers
 
                 if (entityUser != null)
                 {
-                    userRoleVM.Entity = entityUser.Entity;
+                    accessVM.Entity = entityUser.Entity;
                 }
 
                 var userRole = await _context.UserRoles
@@ -51,11 +51,11 @@ namespace StoresManagement.Controllers
 
                 if (userRole != null)
                 {
-                    userRoleVM.Role = await _context.Roles
+                    accessVM.Role = await _context.Roles
                     .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
                 }
 
-                rolesVM.Add(userRoleVM);
+                rolesVM.Add(accessVM);
             }
 
             return View(rolesVM);
