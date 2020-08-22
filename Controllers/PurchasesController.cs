@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -22,7 +23,7 @@ namespace StoresManagement.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly int _entityId;
+        private readonly List<int> _entityIds = new List<int>();
 
         public PurchasesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -31,25 +32,45 @@ namespace StoresManagement.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityId = GetEntityId();
+            _entityIds = GetEntityId();
         }
 
-        private int GetEntityId()
+        private List<int> GetEntityId()
         {
-            var entityUsers = _context.EntityUsers
-        .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+            var entityIds = new List<int>();
 
-            if (entityUsers == null)
-                return 0;
+            var entityUser = _context.EntityUsers.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+            if (entityUser != null)
+            {
+                entityIds.Add(entityUser.EntityId);
+            }
             else
-                return entityUsers.EntityId;
+            {
+                var userRole = (from t1 in _context.UserRoles
+                                from t2 in _context.Roles
+                                             .Where(o => t1.RoleId == o.Id && t1.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User))
+                                select t2.Name).First();
+
+                if (userRole == UserRoles.Manager)
+                {
+                    var entityUsers = _context.EntityUsers.Select(m => new { m.EntityId }).ToList();
+
+                    foreach (var user in entityUsers)
+                    {
+                        entityIds.Add(user.EntityId);
+                    }
+                }
+            }
+
+            return entityIds;
         }
 
         // GET: Purchases
         public async Task<IActionResult> Index()
         {
             var purchases = await _context.Purchases
-                .Where(m => m.EntityId == _entityId)
+                .Where(m => _entityIds.Contains(m.EntityId))
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
@@ -67,7 +88,7 @@ namespace StoresManagement.Controllers
             }
 
             var purchases = await _context.Purchases
-                .Where(m => m.EntityId == _entityId && m.BranchId == id)
+                .Where(m => _entityIds.Contains(m.EntityId) && m.BranchId == id)
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
@@ -85,7 +106,7 @@ namespace StoresManagement.Controllers
             }
 
             var purchases = await _context.Purchases
-                .Where(m => m.EntityId == _entityId && m.CustomerId == id)
+                .Where(m => _entityIds.Contains(m.EntityId) && m.CustomerId == id)
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
@@ -107,7 +128,7 @@ namespace StoresManagement.Controllers
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Include(b => b.PurchaseItems)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (purchase == null)
             {
@@ -133,9 +154,9 @@ namespace StoresManagement.Controllers
         {
             var purchaseVM = new PurchaseFormViewModel
             {
-                Branches = _context.Branches.Where(m => m.EntityId == _entityId).ToList(),
-                Customers = _context.Customers.Where(m => m.EntityId == _entityId).ToList(),
-                Products = _context.Products.Where(m => m.EntityId == _entityId).ToList()
+                Branches = _context.Branches.Where(m => _entityIds.Contains(m.EntityId)).ToList(),
+                Customers = _context.Customers.Where(m => _entityIds.Contains(m.EntityId)).ToList(),
+                Products = _context.Products.Where(m => _entityIds.Contains(m.EntityId)).ToList()
             };
 
             return View(purchaseVM);
@@ -149,7 +170,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var branch = await _context.Branches
-                    .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == purchaseVM.BranchId);
+                    .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == purchaseVM.BranchId);
 
                 purchaseVM.EntityId = branch.EntityId;
 
@@ -182,9 +203,9 @@ namespace StoresManagement.Controllers
 
                 return Json(null);
             }
-            purchaseVM.Branches = _context.Branches.Where(m => m.EntityId == _entityId).ToList();
-            purchaseVM.Customers = _context.Customers.Where(m => m.EntityId == _entityId).ToList();
-            purchaseVM.Products = _context.Products.Where(m => m.EntityId == _entityId).ToList();
+            purchaseVM.Branches = _context.Branches.Where(m => _entityIds.Contains(m.EntityId)).ToList();
+            purchaseVM.Customers = _context.Customers.Where(m => _entityIds.Contains(m.EntityId)).ToList();
+            purchaseVM.Products = _context.Products.Where(m => _entityIds.Contains(m.EntityId)).ToList();
 
             return View(purchaseVM);
         }
@@ -201,7 +222,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (purchase == null)
             {
@@ -210,8 +231,8 @@ namespace StoresManagement.Controllers
 
             var purchaseVM = _mapper.Map<PurchaseFormViewModel>(purchase);
 
-            purchaseVM.Branches = _context.Branches.Where(m => m.EntityId == _entityId).ToList();
-            purchaseVM.Customers = _context.Customers.Where(m => m.EntityId == _entityId).ToList();
+            purchaseVM.Branches = _context.Branches.Where(m => _entityIds.Contains(m.EntityId)).ToList();
+            purchaseVM.Customers = _context.Customers.Where(m => _entityIds.Contains(m.EntityId)).ToList();
 
             return View(purchaseVM);
         }
@@ -231,7 +252,7 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = await _context.Branches
-                        .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == purchaseVM.BranchId);
+                        .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == purchaseVM.BranchId);
                     purchaseVM.EntityId = branch.EntityId;
 
                     var purchase = _mapper.Map<Purchase>(purchaseVM);
@@ -254,8 +275,8 @@ namespace StoresManagement.Controllers
                     }
                 }
             }
-            purchaseVM.Branches = _context.Branches.Where(m => m.EntityId == _entityId).ToList();
-            purchaseVM.Customers = _context.Customers.Where(m => m.EntityId == _entityId).ToList();
+            purchaseVM.Branches = _context.Branches.Where(m => _entityIds.Contains(m.EntityId)).ToList();
+            purchaseVM.Customers = _context.Customers.Where(m => _entityIds.Contains(m.EntityId)).ToList();
 
             return View(purchaseVM);
         }
@@ -272,7 +293,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
-               .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+               .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
             if (purchase == null)
             {
                 return NotFound();

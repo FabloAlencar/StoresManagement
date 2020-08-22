@@ -22,7 +22,7 @@ namespace StoresManagement.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private List<int> _entityIds = new List<int>();
+        private readonly List<int> _entityIds = new List<int>();
 
         public CustomersController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -70,8 +70,8 @@ namespace StoresManagement.Controllers
         public ActionResult Search(string term)
         {
             var customerList = _context.Customers
-                .Where(r => _entityIds.Contains(r.EntityId)
-            && (r.Name.Contains(term) || r.Surname.Contains(term)))
+                .Where(b => _entityIds.Contains(b.EntityId)
+            && (b.Name.Contains(term) || b.Surname.Contains(term)))
                               .Select(r => new
                               {
                                   id = r.Id,
@@ -85,7 +85,6 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> Index()
         {
             var customers = await _context.Customers
-                // .Where(m => m.EntityId == _entityId)
                 .Where(b => _entityIds.Contains(b.EntityId))
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
@@ -95,15 +94,15 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/ListCustomers/5
-        public async Task<IActionResult> ListCustomers(int entityId)
+        public async Task<IActionResult> ListCustomers(int id)
         {
-            if (_entityIds.Contains(entityId))
+            if (!_entityIds.Contains(id))
             {
                 return NotFound();
             }
 
             var customers = await _context.Customers
-                .Where(m => _entityIds.Contains(m.EntityId))
+                .Where(m => m.EntityId == id)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .ToListAsync();

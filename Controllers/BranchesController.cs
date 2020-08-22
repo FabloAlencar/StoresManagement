@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -21,7 +22,7 @@ namespace StoresManagement.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly int _entityId;
+        private readonly List<int> _entityIds = new List<int>();
 
         public BranchesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -30,18 +31,38 @@ namespace StoresManagement.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityId = GetEntityId();
+            _entityIds = GetEntityId();
         }
 
-        private int GetEntityId()
+        private List<int> GetEntityId()
         {
-            var entityUsers = _context.EntityUsers
-        .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+            var entityIds = new List<int>();
 
-            if (entityUsers == null)
-                return 0;
+            var entityUser = _context.EntityUsers.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+            if (entityUser != null)
+            {
+                entityIds.Add(entityUser.EntityId);
+            }
             else
-                return entityUsers.EntityId;
+            {
+                var userRole = (from t1 in _context.UserRoles
+                                from t2 in _context.Roles
+                                             .Where(o => t1.RoleId == o.Id && t1.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User))
+                                select t2.Name).First();
+
+                if (userRole == UserRoles.Manager)
+                {
+                    var entityUsers = _context.EntityUsers.Select(m => new { m.EntityId }).ToList();
+
+                    foreach (var user in entityUsers)
+                    {
+                        entityIds.Add(user.EntityId);
+                    }
+                }
+            }
+
+            return entityIds;
         }
 
         // GET: Branches
@@ -50,7 +71,7 @@ namespace StoresManagement.Controllers
             var loggedUserId = _userManager.GetUserId(HttpContext.User);
 
             var branches = await _context.Branches
-                .Where(m => m.EntityId == _entityId)
+                .Where(m => _entityIds.Contains(m.EntityId))
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
                 .ToListAsync();
@@ -59,15 +80,15 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/ListBranches/5
-        public async Task<IActionResult> ListBranches(int? entityId)
+        public async Task<IActionResult> ListBranches(int id)
         {
-            if (entityId == null && entityId != _entityId)
+            if (!_entityIds.Contains(id))
             {
                 return NotFound();
             }
 
             var branches = await _context.Branches
-                .Where(m => m.EntityId == entityId)
+                .Where(m => m.EntityId == id)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
                 .ToListAsync();
@@ -86,7 +107,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (branch == null)
             {
@@ -102,7 +123,7 @@ namespace StoresManagement.Controllers
         {
             var branchVM = new BranchFormViewModel
             {
-                Entities = _context.Entities.ToList()
+                Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList()
             };
 
             return View(branchVM);
@@ -122,7 +143,7 @@ namespace StoresManagement.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }
@@ -148,7 +169,7 @@ namespace StoresManagement.Controllers
 
             var branchVM = _mapper.Map<BranchFormViewModel>(branch);
 
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }
@@ -187,7 +208,7 @@ namespace StoresManagement.Controllers
                     }
                 }
             }
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
@@ -25,7 +26,7 @@ namespace StoresManagement.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly int _entityId;
+        private readonly List<int> _entityIds = new List<int>();
 
         public ProductsController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -35,18 +36,38 @@ namespace StoresManagement.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityId = GetEntityId();
+            _entityIds = GetEntityId();
         }
 
-        private int GetEntityId()
+        private List<int> GetEntityId()
         {
-            var entityUsers = _context.EntityUsers
-        .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+            var entityIds = new List<int>();
 
-            if (entityUsers == null)
-                return 0;
+            var entityUser = _context.EntityUsers.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+
+            if (entityUser != null)
+            {
+                entityIds.Add(entityUser.EntityId);
+            }
             else
-                return entityUsers.EntityId;
+            {
+                var userRole = (from t1 in _context.UserRoles
+                                from t2 in _context.Roles
+                                             .Where(o => t1.RoleId == o.Id && t1.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User))
+                                select t2.Name).First();
+
+                if (userRole == UserRoles.Manager)
+                {
+                    var entityUsers = _context.EntityUsers.Select(m => new { m.EntityId }).ToList();
+
+                    foreach (var user in entityUsers)
+                    {
+                        entityIds.Add(user.EntityId);
+                    }
+                }
+            }
+
+            return entityIds;
         }
 
         // GET: Products/Search
@@ -54,9 +75,9 @@ namespace StoresManagement.Controllers
         public ActionResult Search(string term)
         {
             var productList = _context.Products
-                .Where(r => r.EntityId == _entityId
-                && r.QuantityInStock > 0
-                && (r.Name.Contains(term) || r.Brand.Contains(term)))
+                .Where(b => _entityIds.Contains(b.EntityId)
+                && b.QuantityInStock > 0
+                && (b.Name.Contains(term) || b.Brand.Contains(term)))
                               .Select(r => new
                               {
                                   productId = r.Id,
@@ -73,7 +94,7 @@ namespace StoresManagement.Controllers
         public ActionResult GetProducts()
         {
             var productList = _context.Products
-                .Where(r => r.EntityId == _entityId)
+                .Where(b => _entityIds.Contains(b.EntityId))
                 .Select(r => new
                 {
                     productBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
@@ -110,7 +131,7 @@ namespace StoresManagement.Controllers
             }
 
             var products = await _context.Products
-                .Where(m => m.EntityId == _entityId && m.BranchId == id)
+                .Where(m => _entityIds.Contains(m.EntityId) && m.BranchId == id)
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
                 .ToListAsync();
@@ -129,7 +150,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (product == null)
             {
@@ -146,7 +167,7 @@ namespace StoresManagement.Controllers
             var productVM = new ProductFormViewModel
             {
                 Branches = _context.Branches
-                .Where(m => m.EntityId == _entityId)
+                .Where(m => _entityIds.Contains(m.EntityId))
                 .ToList()
             };
 
@@ -165,7 +186,7 @@ namespace StoresManagement.Controllers
                 await addImageTowwwRootPathAsync(productVM);
 
                 var branch = await _context.Branches
-                    .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == productVM.BranchId);
+                    .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == productVM.BranchId);
                 productVM.EntityId = branch.EntityId;
 
                 var product = _mapper.Map<Product>(productVM);
@@ -175,7 +196,7 @@ namespace StoresManagement.Controllers
                 return RedirectToAction(nameof(Index));
             }
             productVM.Branches = _context.Branches
-                .Where(m => m.EntityId == _entityId)
+                .Where(m => _entityIds.Contains(m.EntityId))
                 .ToList();
 
             return View(productVM);
@@ -193,7 +214,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (product == null)
             {
@@ -203,7 +224,7 @@ namespace StoresManagement.Controllers
             var productVM = _mapper.Map<ProductFormViewModel>(product);
 
             productVM.Branches = _context.Branches
-                .Where(m => m.EntityId == _entityId)
+                .Where(m => _entityIds.Contains(m.EntityId))
                 .ToList();
 
             return View(productVM);
@@ -225,7 +246,7 @@ namespace StoresManagement.Controllers
                 try
                 {
                     var branch = await _context.Branches
-                        .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == productVM.BranchId);
+                        .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == productVM.BranchId);
                     productVM.EntityId = branch.EntityId;
 
                     // Delete image from wwwRootPath/image && Save image to wwwRootPath/image
@@ -269,7 +290,7 @@ namespace StoresManagement.Controllers
             var product = await _context.Products
                 .Include(b => b.Branch)
                     .ThenInclude(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.EntityId == _entityId && m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
             if (product == null)
             {
                 return NotFound();

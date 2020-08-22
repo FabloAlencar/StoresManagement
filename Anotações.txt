@@ -15,7 +15,9 @@ Adicionar:
 - adicionar not found page
 - adicionar telefeone e endereco pra usuarios
 - adicionar validacao de email antes de inserir
-- ordenar por entidade 
+- ordenar por entidade os acessos
+- mudar nome ListCustomers listcustomer produto purcvhase
+- produtos de outra branch estao disponiveis?
 
 # Create a initScript for:
 * 4 roles:
