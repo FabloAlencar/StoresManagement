@@ -80,7 +80,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/ListBranches/5
-        public async Task<IActionResult> ListBranches(int id)
+        public async Task<IActionResult> ListBranchesByEntity(int id)
         {
             if (!_entityIds.Contains(id))
             {

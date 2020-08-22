@@ -122,8 +122,8 @@ namespace StoresManagement.Controllers
             return View();
         }
 
-        // GET: Products/ListProducts/5
-        public async Task<IActionResult> ListProducts(int? id)
+        // GET: Products/ListProductsByBranch/5
+        public async Task<IActionResult> ListProductsByBranch(int? id)
         {
             if (id == null)
             {

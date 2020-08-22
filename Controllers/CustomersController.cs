@@ -94,7 +94,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/ListCustomers/5
-        public async Task<IActionResult> ListCustomers(int id)
+        public async Task<IActionResult> ListCustomersByEntity(int id)
         {
             if (!_entityIds.Contains(id))
             {

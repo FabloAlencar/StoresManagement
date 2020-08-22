@@ -79,8 +79,8 @@ namespace StoresManagement.Controllers
             return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
-        // GET: Purchases/BranchListOfPurchases/5
-        public async Task<IActionResult> BranchListOfPurchases(int? id)
+        // GET: Purchases/ListPurchasesByBranch/5
+        public async Task<IActionResult> ListPurchasesByBranch(int? id)
         {
             if (id == null)
             {
@@ -97,8 +97,8 @@ namespace StoresManagement.Controllers
             return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
-        // GET: Purchases/CustomerListOfPurchases/5
-        public async Task<IActionResult> CustomerListOfPurchases(int? id)
+        // GET: Purchases/ListPurchasesByCustumer/5
+        public async Task<IActionResult> ListPurchasesByCustumer(int? id)
         {
             if (id == null)
             {
