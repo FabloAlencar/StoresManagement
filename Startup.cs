@@ -44,6 +44,7 @@ namespace StoresManagement
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
             else
             {
