@@ -14,6 +14,7 @@ namespace StoresManagement.Data
             CreateMap<Customer, CustomerFormViewModel>();
             CreateMap<Product, ProductFormViewModel>();
             CreateMap<Purchase, PurchaseFormViewModel>();
+            CreateMap<Operator, OperatorFormViewModel>();
 
             // ViewModel to Domain
             CreateMap<EntityFormViewModel, Entity>();
@@ -21,6 +22,7 @@ namespace StoresManagement.Data
             CreateMap<CustomerFormViewModel, Customer>();
             CreateMap<ProductFormViewModel, Product>();
             CreateMap<PurchaseFormViewModel, Purchase>();
+            CreateMap<OperatorFormViewModel, Operator>();
         }
     }
 }

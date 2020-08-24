@@ -8,6 +8,7 @@ Adicionar:
 * a entidade pode criar outros usuarios 
 
 - add a limit of records per page 
+- add total to purchase/product index
 - add hash to pw
 - add searching function to list of purchase/product/customer screen - done ?
 - add filter per entity - done

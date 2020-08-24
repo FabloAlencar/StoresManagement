@@ -337,7 +337,7 @@ namespace StoresManagement.Data.Migrations
                     b.ToTable("Entities");
                 });
 
-            modelBuilder.Entity("StoresManagement.Models.EntityUser", b =>
+            modelBuilder.Entity("StoresManagement.Models.Operator", b =>
                 {
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
@@ -345,9 +345,22 @@ namespace StoresManagement.Data.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("EntityId", "UserId");
 
-                    b.ToTable("EntityUsers");
+                    b.HasIndex("ContactId")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Operators");
                 });
 
             modelBuilder.Entity("StoresManagement.Models.Product", b =>
@@ -552,11 +565,27 @@ namespace StoresManagement.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("StoresManagement.Models.EntityUser", b =>
+            modelBuilder.Entity("StoresManagement.Models.Operator", b =>
                 {
+                    b.HasOne("StoresManagement.Models.Contact", "Contact")
+                        .WithOne("Operators")
+                        .HasForeignKey("StoresManagement.Models.Operator", "ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StoresManagement.Models.Entity", "Entity")
-                        .WithMany("EntityUsers")
+                        .WithMany("Operators")
                         .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

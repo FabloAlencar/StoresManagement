@@ -86,37 +86,44 @@ namespace StoresManagement.Controllers
                     }
                     return View(registerFormVM);
                 }
-
-                // Creating Entity
-                var entity = _mapper.Map<Entity>(registerFormVM.Entity);
-
-                _context.Add(entity);
                 await _context.SaveChangesAsync();
-
-                // Creating Enity & User relationship
-                var entityUser = new EntityUser
-                {
-                    EntityId = entity.Id,
-                    UserId = user.Id
-                };
-                _context.Add(entityUser);
 
                 // Adding role to the User
                 var administratorRole = await _context.Roles
                 .SingleOrDefaultAsync(m => m.Name == UserRoles.Administrator);
 
-                if (administratorRole != null)
+                var userRole = new IdentityUserRole<string>
                 {
-                    var userRole = new IdentityUserRole<string>
-                    {
-                        UserId = user.Id,
-                        RoleId = administratorRole.Id
-                    };
-
-                    _context.Add(userRole);
-                }
-
+                    UserId = user.Id,
+                    RoleId = administratorRole.Id
+                };
+                _context.Add(userRole);
                 await _context.SaveChangesAsync();
+
+                // Creating Entity
+                var entity = _mapper.Map<Entity>(registerFormVM.Entity);
+                _context.Add(entity);
+                await _context.SaveChangesAsync();
+
+                // Adding contact
+                var contact = new Contact
+                {
+                    EntityId = entity.Id,
+                    Email = registerFormVM.Email
+                };
+                _context.Add(contact);
+                await _context.SaveChangesAsync();
+                // Adding operator
+                var sysOperator = new Operator
+                {
+                    EntityId = entity.Id,
+                    UserId = user.Id,
+                    RoleId = administratorRole.Id,
+                    ContactId = contact.Id
+                };
+                _context.Add(sysOperator);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(registerFormVM);
@@ -199,13 +206,14 @@ namespace StoresManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var entityUsers = _context.EntityUsers.Where(m => m.EntityId == id).ToList();
-            _context.EntityUsers.RemoveRange(entityUsers);
+            var sysOperators = _context.Operators.Where(m => m.EntityId == id).ToList();
+            _context.Operators.RemoveRange(sysOperators);
 
-            foreach (var entityUser in entityUsers)
+            foreach (var sysOperator in sysOperators)
             {
-                _context.Users.Remove(_context.Users.SingleOrDefault(m => m.Id == entityUser.UserId));
-                _context.UserRoles.Remove(_context.UserRoles.SingleOrDefault(m => m.UserId == entityUser.UserId));
+                _context.Users.Remove(_context.Users.SingleOrDefault(m => m.Id == sysOperator.UserId));
+                _context.UserRoles.Remove(_context.UserRoles.SingleOrDefault(m => m.UserId == sysOperator.UserId));
+                _context.Contacts.Remove(_context.Contacts.SingleOrDefault(m => m.Id == sysOperator.ContactId));
             }
 
             var entity = await _context.Entities.FindAsync(id);

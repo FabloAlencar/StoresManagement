@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StoresManagement.Constants;
 using StoresManagement.Data;
+using StoresManagement.Models;
 using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
@@ -16,11 +18,13 @@ namespace StoresManagement.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AccessesController(ApplicationDbContext context, IMapper mapper)
+        public AccessesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         // GET: Administration
@@ -29,15 +33,15 @@ namespace StoresManagement.Controllers
             var users = await _context.Users
                 .ToListAsync();
 
-            var rolesVM = new List<AccessFormViewModel>();
+            var rolesVM = new List<OperatorFormViewModel>();
 
             foreach (var user in users)
             {
-                var accessVM = new AccessFormViewModel();
+                var accessVM = new OperatorFormViewModel();
 
                 accessVM.User = user;
 
-                var entityUser = await _context.EntityUsers
+                var entityUser = await _context.Operators
                 .Include(b => b.Entity)
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
@@ -61,6 +65,80 @@ namespace StoresManagement.Controllers
             return View(rolesVM);
         }
 
+        public IActionResult Register()
+        {
+            var registerVM = new RegisterFormViewModel
+            {
+                Entities = _context.Entities.ToList()
+            };
+
+            return View(registerVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterFormViewModel registerVM)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new IdentityUser
+                {
+                    UserName = registerVM.UserName,
+                    Email = registerVM.Email,
+                    EmailConfirmed = true
+                };
+
+                // adicionar entides
+                var result = await _userManager.CreateAsync(user, registerVM.Password);
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                // Adding role to the User
+                var sellerRole = await _context.Roles
+                .SingleOrDefaultAsync(m => m.Name == UserRoles.Seller);
+
+                var userRole = new IdentityUserRole<string>
+                {
+                    UserId = user.Id,
+                    RoleId = sellerRole.Id
+                };
+
+                _context.Add(userRole);
+
+                // Adding contact
+                var contact = new Contact
+                {
+                    EntityId = registerVM.EntityId,
+                    Email = registerVM.Email
+                };
+                _context.Add(contact);
+                await _context.SaveChangesAsync();
+
+                // Adding operator
+                var sysOperator = new Operator
+                {
+                    EntityId = registerVM.EntityId,
+                    UserId = user.Id,
+                    RoleId = sellerRole.Id,
+                    ContactId = contact.Id
+                };
+                _context.Add(sysOperator);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index", "Accesses");
+            }
+
+            registerVM.Entities = _context.Entities.ToList();
+
+            return View(registerVM);
+        }
+
         // GET: Administration/Edit/5
         [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(string id)
@@ -77,33 +155,33 @@ namespace StoresManagement.Controllers
                 return NotFound();
             }
 
-            var userRoleVM = new AccessFormViewModel();
+            var operatorVM = new OperatorFormViewModel();
 
-            userRoleVM.User = user;
+            operatorVM.User = user;
 
             var userRole = await _context.UserRoles
             .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
             if (userRole != null)
             {
-                userRoleVM.Role = await _context.Roles
+                operatorVM.Role = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
             }
 
-            userRoleVM.Roles = await _context.Roles
+            operatorVM.Roles = await _context.Roles
                  .Where(m => m.Name != "Manager")
                 .ToListAsync();
 
-            return View(userRoleVM);
+            return View(operatorVM);
         }
 
         // POST: Administration/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Edit(string id, AccessFormViewModel userRoleVM)
+        public async Task<IActionResult> Edit(string id, OperatorFormViewModel operatorVM)
         {
-            if (id != userRoleVM.User.Id)
+            if (id != operatorVM.User.Id)
             {
                 return BadRequest();
             }
@@ -114,20 +192,20 @@ namespace StoresManagement.Controllers
                 {
                     // Updating the Username of the User
                     var user = await _context.Users
-                    .SingleOrDefaultAsync(m => m.Id == userRoleVM.User.Id);
+                    .SingleOrDefaultAsync(m => m.Id == operatorVM.User.Id);
 
-                    if (user.UserName != userRoleVM.User.UserName || user.PhoneNumber != userRoleVM.User.PhoneNumber)
+                    if (user.UserName != operatorVM.User.UserName || user.PhoneNumber != operatorVM.User.PhoneNumber)
                     {
-                        user.UserName = userRoleVM.User.UserName;
-                        user.PhoneNumber = userRoleVM.User.PhoneNumber;
+                        user.UserName = operatorVM.User.UserName;
+                        user.PhoneNumber = operatorVM.User.PhoneNumber;
                         _context.Users.Update(user);
                     }
 
                     // Updating the Role of the User
                     var userRoleDB = await _context.UserRoles
-                    .SingleOrDefaultAsync(m => m.UserId == userRoleVM.User.Id);
+                    .SingleOrDefaultAsync(m => m.UserId == operatorVM.User.Id);
 
-                    if (userRoleDB == null || userRoleDB.RoleId != userRoleVM.Role.Id)
+                    if (userRoleDB == null || userRoleDB.RoleId != operatorVM.Role.Id)
                     {
                         if (userRoleDB != null)
                         {
@@ -136,8 +214,8 @@ namespace StoresManagement.Controllers
 
                         var userRole = new IdentityUserRole<string>
                         {
-                            UserId = userRoleVM.User.Id,
-                            RoleId = userRoleVM.Role.Id
+                            UserId = operatorVM.User.Id,
+                            RoleId = operatorVM.Role.Id
                         };
 
                         _context.Add(userRole);
@@ -150,7 +228,7 @@ namespace StoresManagement.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await UserExists(userRoleVM.User.Id))
+                    if (!await UserExists(operatorVM.UserId))
                     {
                         return NotFound();
                     }
@@ -160,7 +238,7 @@ namespace StoresManagement.Controllers
                     }
                 }
             }
-            return View(userRoleVM);
+            return View(operatorVM);
         }
 
         private async Task<bool> UserExists(string id)

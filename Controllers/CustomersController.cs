@@ -38,7 +38,7 @@ namespace StoresManagement.Controllers
         {
             var entityIds = new List<int>();
 
-            var entityUser = _context.EntityUsers.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+            var entityUser = _context.Operators.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
 
             if (entityUser != null)
             {
@@ -53,7 +53,7 @@ namespace StoresManagement.Controllers
 
                 if (userRole == UserRoles.Manager)
                 {
-                    var entityUsers = _context.EntityUsers.Select(m => new { m.EntityId }).ToList();
+                    var entityUsers = _context.Operators.Select(m => new { m.EntityId }).ToList();
 
                     foreach (var user in entityUsers)
                     {
@@ -264,6 +264,7 @@ namespace StoresManagement.Controllers
                 .FindAsync(id);
 
             _context.Customers.Remove(customer);
+            _context.Contacts.Remove(_context.Contacts.SingleOrDefault(m => m.Id == customer.ContactId));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
