@@ -15,10 +15,13 @@ Adicionar:
 - create entity, create a user with a admin role - done
 - adicionar not found page - done
 - mudar nome ListCustomers listcustomer produto purcvhase - done
-- adicionar telefeone e endereco pra usuarios
+- adicionar telefeone e endereco pra usuarios - done 
+- test records removal (no records in table)
+- refactor: add a key to operator? then manager can also have a record without entity
 - adicionar validacao de email antes de inserir (duplicados)
 - ordenar por entidade os acessos
 - produtos de outra branch estao disponiveis?
+- usar roles da constante
 
 # Create a initScript for:
 * 4 roles:

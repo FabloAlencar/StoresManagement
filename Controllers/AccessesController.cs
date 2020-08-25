@@ -30,39 +30,13 @@ namespace StoresManagement.Controllers
         // GET: Administration
         public async Task<IActionResult> Index()
         {
-            var users = await _context.Users
+            var sysOperators = await _context.Operators
+                .Include(b => b.Entity)
+                .Include(b => b.User)
+                .Include(b => b.Role)
                 .ToListAsync();
 
-            var rolesVM = new List<OperatorFormViewModel>();
-
-            foreach (var user in users)
-            {
-                var accessVM = new OperatorFormViewModel();
-
-                accessVM.User = user;
-
-                var entityUser = await _context.Operators
-                .Include(b => b.Entity)
-                .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-                if (entityUser != null)
-                {
-                    accessVM.Entity = entityUser.Entity;
-                }
-
-                var userRole = await _context.UserRoles
-                .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-                if (userRole != null)
-                {
-                    accessVM.Role = await _context.Roles
-                    .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
-                }
-
-                rolesVM.Add(accessVM);
-            }
-
-            return View(rolesVM);
+            return View(_mapper.Map<IEnumerable<OperatorFormViewModel>>(sysOperators));
         }
 
         public IActionResult Register()
@@ -141,35 +115,28 @@ namespace StoresManagement.Controllers
 
         // GET: Administration/Edit/5
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var sysOperator = await _context.Operators
+                .Include(b => b.Entity)
+                .Include(b => b.User)
+                .Include(b => b.Role)
+                .SingleOrDefaultAsync(m => m.Id == id); ;
 
-            if (user == null)
+            if (sysOperator == null)
             {
                 return NotFound();
             }
 
-            var operatorVM = new OperatorFormViewModel();
-
-            operatorVM.User = user;
-
-            var userRole = await _context.UserRoles
-            .FirstOrDefaultAsync(m => m.UserId == user.Id);
-
-            if (userRole != null)
-            {
-                operatorVM.Role = await _context.Roles
-                .FirstOrDefaultAsync(m => m.Id == userRole.RoleId);
-            }
+            var operatorVM = _mapper.Map<OperatorFormViewModel>(sysOperator);
 
             operatorVM.Roles = await _context.Roles
-                 .Where(m => m.Name != "Manager")
+                 .Where(m => m.Name != UserRoles.Manager)
                 .ToListAsync();
 
             return View(operatorVM);
@@ -179,9 +146,9 @@ namespace StoresManagement.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Manager")]
-        public async Task<IActionResult> Edit(string id, OperatorFormViewModel operatorVM)
+        public async Task<IActionResult> Edit(int id, OperatorFormViewModel operatorVM)
         {
-            if (id != operatorVM.User.Id)
+            if (id != operatorVM.Id)
             {
                 return BadRequest();
             }
@@ -191,34 +158,46 @@ namespace StoresManagement.Controllers
                 try
                 {
                     // Updating the Username of the User
-                    var user = await _context.Users
-                    .SingleOrDefaultAsync(m => m.Id == operatorVM.User.Id);
+                    var sysOperator = await _context.Operators
+                    .Include(b => b.User)
+                    .Include(b => b.Role)
+                    .Include(b => b.Contact)
+                    .SingleOrDefaultAsync(m => m.Id == operatorVM.Id);
 
-                    if (user.UserName != operatorVM.User.UserName || user.PhoneNumber != operatorVM.User.PhoneNumber)
+                    if (sysOperator == null)
                     {
-                        user.UserName = operatorVM.User.UserName;
-                        user.PhoneNumber = operatorVM.User.PhoneNumber;
-                        _context.Users.Update(user);
+                        return NotFound();
+                    }
+
+                    if (sysOperator.User.UserName != operatorVM.User.UserName || sysOperator.User.PhoneNumber != operatorVM.User.PhoneNumber)
+                    {
+                        sysOperator.User.UserName = operatorVM.User.UserName;
+                        sysOperator.User.PhoneNumber = sysOperator.Contact.PhoneNumber = operatorVM.User.PhoneNumber;
+                        _context.Users.Update(sysOperator.User);
+                        _context.Contacts.Update(sysOperator.Contact);
                     }
 
                     // Updating the Role of the User
                     var userRoleDB = await _context.UserRoles
-                    .SingleOrDefaultAsync(m => m.UserId == operatorVM.User.Id);
+                    .SingleOrDefaultAsync(m => m.UserId == sysOperator.UserId);
 
-                    if (userRoleDB == null || userRoleDB.RoleId != operatorVM.Role.Id)
+                    if (userRoleDB == null)
                     {
-                        if (userRoleDB != null)
-                        {
-                            _context.UserRoles.Remove(userRoleDB);
-                        }
+                        return NotFound();
+                    }
+
+                    if (sysOperator.RoleId != operatorVM.Role.Id)
+                    {
+                        _context.UserRoles.Remove(userRoleDB);
 
                         var userRole = new IdentityUserRole<string>
                         {
-                            UserId = operatorVM.User.Id,
-                            RoleId = operatorVM.Role.Id
+                            UserId = operatorVM.UserId,
+                            RoleId = sysOperator.RoleId = operatorVM.Role.Id
                         };
 
                         _context.Add(userRole);
+                        _context.Operators.Update(sysOperator);
                     }
 
                     // Saving changes

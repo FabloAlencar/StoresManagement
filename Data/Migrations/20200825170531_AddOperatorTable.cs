@@ -10,14 +10,16 @@ namespace StoresManagement.Data.Migrations
                 name: "Operators",
                 columns: table => new
                 {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     EntityId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: true),
                     RoleId = table.Column<string>(nullable: true),
                     ContactId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Operators", x => new { x.EntityId, x.UserId });
+                    table.PrimaryKey("PK_Operators", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Operators_Contacts_ContactId",
                         column: x => x.ContactId,
@@ -41,7 +43,7 @@ namespace StoresManagement.Data.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -49,6 +51,11 @@ namespace StoresManagement.Data.Migrations
                 table: "Operators",
                 column: "ContactId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Operators_EntityId",
+                table: "Operators",
+                column: "EntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Operators_RoleId",

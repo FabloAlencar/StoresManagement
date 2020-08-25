@@ -38,7 +38,10 @@ namespace StoresManagement.Controllers
         {
             var entityIds = new List<int>();
 
-            var entityUser = _context.Operators.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
+            var entityUser = _context.Operators
+                .Include(b => b.Role)
+                .Include(b => b.Entity)
+                .SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
 
             if (entityUser != null)
             {

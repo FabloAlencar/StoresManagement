@@ -8,14 +8,12 @@ namespace StoresManagement.Migrations.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Operator> modelBuilder)
         {
-            modelBuilder.HasKey(e => new { e.EntityId, e.UserId });
+            //modelBuilder.HasOne(b => b.Entity)
+            //    .WithMany(e => e.Operators);
 
-            modelBuilder.HasOne(b => b.Entity)
-                .WithMany(e => e.Operators);
-
-            modelBuilder.HasOne(b => b.Contact)
-                .WithOne(c => c.Operators)
-                .HasForeignKey<Operator>(b => b.ContactId);
+            //modelBuilder.HasOne(b => b.Contact)
+            //    .WithOne(c => c.Operators)
+            //    .HasForeignKey<Operator>(b => b.ContactId);
         }
     }
 }

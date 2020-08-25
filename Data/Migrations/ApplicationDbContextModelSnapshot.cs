@@ -339,22 +339,29 @@ namespace StoresManagement.Data.Migrations
 
             modelBuilder.Entity("StoresManagement.Models.Operator", b =>
                 {
-                    b.Property<int>("EntityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityId")
                         .HasColumnType("int");
 
                     b.Property<string>("RoleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("EntityId", "UserId");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ContactId")
                         .IsUnique();
+
+                    b.HasIndex("EntityId");
 
                     b.HasIndex("RoleId");
 
@@ -585,9 +592,7 @@ namespace StoresManagement.Data.Migrations
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("StoresManagement.Models.Product", b =>
