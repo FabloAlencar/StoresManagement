@@ -25,8 +25,6 @@ namespace StoresManagement.Data
         {
             modelBuilder.ApplyConfiguration(new BranchConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-            modelBuilder.ApplyConfiguration(new PurchaseItemConfiguration());
-            modelBuilder.ApplyConfiguration(new OperatorConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

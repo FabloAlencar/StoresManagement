@@ -26,6 +26,8 @@
     <Compile Remove="Data\Migrations\20200806202542_AddEntityUsersTables.Designer.cs" />
     <Compile Remove="Data\Migrations\20200809095238_AddEntityUsersTables.cs" />
     <Compile Remove="Data\Migrations\20200809095238_AddEntityUsersTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200826192743_teste.cs" />
+    <Compile Remove="Data\Migrations\20200826192743_teste.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -187,6 +187,7 @@ namespace StoresManagement.Controllers
                 {
                     purchase.Discount += purchaseitem.DiscountTotal;
                     purchase.Total += purchaseitem.Total - purchaseitem.DiscountTotal;
+                    purchaseitem.EntityId = purchase.EntityId;
                     _context.Add(purchaseitem);
 
                     var product = await _context.Products
