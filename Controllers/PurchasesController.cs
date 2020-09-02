@@ -128,17 +128,12 @@ namespace StoresManagement.Controllers
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                 .Include(b => b.PurchaseItems)
+                    .ThenInclude(b => b.Product)
                 .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (purchase == null)
             {
                 return NotFound();
-            }
-
-            foreach (var item in purchase.PurchaseItems)
-            {
-                item.Product = await _context.Products
-                    .SingleOrDefaultAsync(m => m.Id == item.ProductId);
             }
 
             if (purchase == null)

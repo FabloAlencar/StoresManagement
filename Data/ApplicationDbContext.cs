@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using StoresManagement.Migrations.EntityConfigurations;
+using StoresManagement.Data.Migrations.EntityConfigurations;
 using StoresManagement.Models;
 
 namespace StoresManagement.Data
@@ -25,6 +25,7 @@ namespace StoresManagement.Data
         {
             modelBuilder.ApplyConfiguration(new BranchConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

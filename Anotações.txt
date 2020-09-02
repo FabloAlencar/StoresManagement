@@ -13,10 +13,9 @@ Adicionar:
 - add searching function to list of purchase/product/customer screen - done ?
 
 - test records removal (no records in table) 
-* se deletar o produto, purchase item tambem eh deletado - produto id deve ser atualizado para zero
 * Error ao deletar entidade por causa cliente (arquivo no desktop) - client id deve ser atualizado para zero
 * quando deleta entidade, branch e customer sao deletados mas nao os contatos. adicionar delete triggers
-
+* branch index, minusculos purchase
 
 
 - refactor: add a key to operator? then manager can also have a record without entity

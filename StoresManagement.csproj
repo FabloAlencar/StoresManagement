@@ -28,6 +28,34 @@
     <Compile Remove="Data\Migrations\20200809095238_AddEntityUsersTables.Designer.cs" />
     <Compile Remove="Data\Migrations\20200826192743_teste.cs" />
     <Compile Remove="Data\Migrations\20200826192743_teste.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827171622_FixForDeletionProduct.cs" />
+    <Compile Remove="Data\Migrations\20200827171622_FixForDeletionProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827171653_FixForDeletionOfProduct.cs" />
+    <Compile Remove="Data\Migrations\20200827171653_FixForDeletionOfProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827172104_FixForDeletionOfProduct.cs" />
+    <Compile Remove="Data\Migrations\20200827172104_FixForDeletionOfProduct.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827172305_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827172305_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827173201_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827173201_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827173326_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827173326_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827173526_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827173526_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827174332_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827174332_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827174653_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827174653_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827175503_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827175503_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827175752_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827175752_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200827175917_FixForDeletionOfProducts.cs" />
+    <Compile Remove="Data\Migrations\20200827175917_FixForDeletionOfProducts.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200902175011_ProductAndPurchaseItemRelationship.cs" />
+    <Compile Remove="Data\Migrations\20200902175011_ProductAndPurchaseItemRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200902182530_ProductAndPurchaseItemRelationship.cs" />
+    <Compile Remove="Data\Migrations\20200902182530_ProductAndPurchaseItemRelationship.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

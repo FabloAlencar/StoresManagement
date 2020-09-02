@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StoresManagement.Models;
 
-namespace StoresManagement.Migrations.EntityConfigurations
+namespace StoresManagement.Data.Migrations.EntityConfigurations
 {
     public class BranchConfiguration : IEntityTypeConfiguration<Branch>
     {
@@ -19,8 +19,7 @@ namespace StoresManagement.Migrations.EntityConfigurations
                 .WithOne(p => p.Branch);
 
             modelBuilder.HasMany(b => b.Purchases)
-                .WithOne(p => p.Branch)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithOne(p => p.Branch);
         }
     }
 }

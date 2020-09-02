@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using StoresManagement.Models;
 
-namespace StoresManagement.Migrations.EntityConfigurations
+namespace StoresManagement.Data.Migrations.EntityConfigurations
 {
     public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
@@ -17,7 +17,7 @@ namespace StoresManagement.Migrations.EntityConfigurations
 
             modelBuilder.HasMany(c => c.Purchases)
                 .WithOne(p => p.Customer)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
