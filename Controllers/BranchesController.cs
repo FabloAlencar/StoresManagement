@@ -141,6 +141,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var branch = _mapper.Map<Branch>(branchVM);
+                branch.Contact.EntityId = branch.EntityId;
 
                 _context.Add(branch);
                 await _context.SaveChangesAsync();

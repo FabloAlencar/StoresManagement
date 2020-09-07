@@ -152,6 +152,7 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var customer = _mapper.Map<Customer>(customerVM);
+                customer.Contact.EntityId = customer.EntityId;
 
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
