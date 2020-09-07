@@ -17,7 +17,6 @@ Adicionar:
 
 
 - adicionar validacao de email antes de inserir (duplicados)
-- ordenar por entidade os acessos
 - produtos de outra branch estao disponiveis?
 - usar roles da constante
 

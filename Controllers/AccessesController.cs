@@ -57,7 +57,7 @@ namespace StoresManagement.Controllers
             {
                 var user = new IdentityUser
                 {
-                    UserName = registerVM.UserName,
+                    UserName = registerVM.Email,
                     Email = registerVM.Email,
                     EmailConfirmed = true
                 };

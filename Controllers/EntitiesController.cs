@@ -71,7 +71,7 @@ namespace StoresManagement.Controllers
                 // Creating User
                 var user = new IdentityUser
                 {
-                    UserName = registerFormVM.UserName,
+                    UserName = registerFormVM.Email,
                     Email = registerFormVM.Email,
                     EmailConfirmed = true
                 };

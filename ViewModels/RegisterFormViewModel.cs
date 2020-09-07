@@ -20,7 +20,6 @@ namespace StoresManagement.ViewModels
 
         public virtual Entity Entity { get; set; }
 
-        [Required]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 
