@@ -290,6 +290,7 @@ namespace StoresManagement.Controllers
                     .ThenInclude(b => b.Entity)
                 .Include(b => b.Customer)
                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
+
             if (purchase == null)
             {
                 return NotFound();
@@ -304,7 +305,24 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var purchase = await _context.Purchases.FindAsync(id);
+
+            var purchaseItems = _context.PurchaseItems
+                .Include(m => m.Product)
+                .Where(m => m.PurchaseId == id)
+                .ToList();
+
             _context.Purchases.Remove(purchase);
+
+            foreach (var purchaseitem in purchaseItems)
+            {
+                //var product = await _context.Products
+                //.SingleOrDefaultAsync(m => m.Id == purchaseitem.ProductId);
+
+                purchaseitem.Product.QuantityInStock += purchaseitem.ProductQuantity;
+
+                _context.Entry(purchaseitem.Product).Property("QuantityInStock").IsModified = true;
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

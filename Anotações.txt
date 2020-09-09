@@ -13,7 +13,7 @@ Adicionar:
 - add searching function to list of purchase/product/customer screen - done ?
 
 - test records removal (no records in table) 
-* Adicionar status para as classes - ativo/inativo 
+* Adicionar status para as classes - ativo/inativo (Entity/Client)
 
 
 - adicionar validacao de email antes de inserir (duplicados)
