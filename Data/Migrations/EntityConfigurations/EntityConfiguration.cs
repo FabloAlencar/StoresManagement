@@ -4,14 +4,10 @@ using StoresManagement.Models;
 
 namespace StoresManagement.Data.Migrations.EntityConfigurations
 {
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class EntityConfiguration : IEntityTypeConfiguration<Entity>
     {
-        public void Configure(EntityTypeBuilder<Product> modelBuilder)
+        public void Configure(EntityTypeBuilder<Entity> modelBuilder)
         {
-            modelBuilder.HasMany(b => b.PurchaseItems)
-                .WithOne(e => e.Product)
-                .OnDelete(DeleteBehavior.SetNull);
-
             modelBuilder
                 .Property(p => p.Active)
                 .HasDefaultValue(true);

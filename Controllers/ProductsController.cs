@@ -307,11 +307,14 @@ namespace StoresManagement.Controllers
         {
             var product = await _context.Products.FindAsync(id);
 
+            product.Active = false;
+            _context.Entry(product).Property("Active").IsModified = true;
+
+            await _context.SaveChangesAsync();
+
             // Delete image from wwwRootPath/image
             DeleteImageFromwwwRootPath(product.ImageName);
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

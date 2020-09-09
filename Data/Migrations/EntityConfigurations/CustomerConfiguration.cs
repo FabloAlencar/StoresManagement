@@ -18,6 +18,10 @@ namespace StoresManagement.Data.Migrations.EntityConfigurations
             modelBuilder.HasMany(c => c.Purchases)
                 .WithOne(p => p.Customer)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder
+                .Property(c => c.Active)
+                .HasDefaultValue(true);
         }
     }
 }

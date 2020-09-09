@@ -58,6 +58,8 @@
     <Compile Remove="Data\Migrations\20200902182530_ProductAndPurchaseItemRelationship.Designer.cs" />
     <Compile Remove="Data\Migrations\20200902200032_ProductAndPurchaseItemRelationshipgg.cs" />
     <Compile Remove="Data\Migrations\20200902200032_ProductAndPurchaseItemRelationshipgg.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200909192550_AddActiveFlagCollumntoTables.cs" />
+    <Compile Remove="Data\Migrations\20200909192550_AddActiveFlagCollumntoTables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

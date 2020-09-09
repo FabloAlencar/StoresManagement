@@ -315,9 +315,6 @@ namespace StoresManagement.Controllers
 
             foreach (var purchaseitem in purchaseItems)
             {
-                //var product = await _context.Products
-                //.SingleOrDefaultAsync(m => m.Id == purchaseitem.ProductId);
-
                 purchaseitem.Product.QuantityInStock += purchaseitem.ProductQuantity;
 
                 _context.Entry(purchaseitem.Product).Property("QuantityInStock").IsModified = true;

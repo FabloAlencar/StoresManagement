@@ -261,11 +261,11 @@ namespace StoresManagement.Controllers
         [Authorize(Roles = "Manager,Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers
-                .FindAsync(id);
+            var customer = await _context.Customers.FindAsync(id);
 
-            _context.Customers.Remove(customer);
-            _context.Contacts.Remove(_context.Contacts.SingleOrDefault(m => m.Id == customer.ContactId));
+            customer.Active = false;
+            _context.Entry(customer).Property("Active").IsModified = true;
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

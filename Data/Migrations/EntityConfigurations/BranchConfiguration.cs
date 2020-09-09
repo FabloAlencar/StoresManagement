@@ -20,6 +20,10 @@ namespace StoresManagement.Data.Migrations.EntityConfigurations
 
             modelBuilder.HasMany(b => b.Purchases)
                 .WithOne(p => p.Branch);
+
+            modelBuilder
+                .Property(b => b.Active)
+                .HasDefaultValue(true);
         }
     }
 }

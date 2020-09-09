@@ -206,18 +206,10 @@ namespace StoresManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sysOperators = _context.Operators.Where(m => m.EntityId == id).ToList();
-            _context.Operators.RemoveRange(sysOperators);
-
-            foreach (var sysOperator in sysOperators)
-            {
-                _context.Users.Remove(_context.Users.SingleOrDefault(m => m.Id == sysOperator.UserId));
-                _context.UserRoles.Remove(_context.UserRoles.SingleOrDefault(m => m.UserId == sysOperator.UserId));
-                _context.Contacts.Remove(_context.Contacts.SingleOrDefault(m => m.Id == sysOperator.ContactId));
-            }
-
             var entity = await _context.Entities.FindAsync(id);
-            _context.Entities.Remove(entity);
+
+            entity.Active = false;
+            _context.Entry(entity).Property("Active").IsModified = true;
 
             await _context.SaveChangesAsync();
 

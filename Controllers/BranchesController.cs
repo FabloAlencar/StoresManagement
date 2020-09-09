@@ -245,8 +245,10 @@ namespace StoresManagement.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var branch = await _context.Branches.FindAsync(id);
-            _context.Branches.Remove(branch);
-            _context.Contacts.Remove(_context.Contacts.SingleOrDefault(m => m.Id == branch.ContactId));
+
+            branch.Active = false;
+            _context.Entry(branch).Property("Active").IsModified = true;
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
