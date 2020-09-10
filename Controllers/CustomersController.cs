@@ -71,7 +71,8 @@ namespace StoresManagement.Controllers
         {
             var customerList = _context.Customers
                 .Where(b => _entityIds.Contains(b.EntityId)
-            && (b.Name.Contains(term) || b.Surname.Contains(term)))
+                && b.Active == true
+                && (b.Name.Contains(term) || b.Surname.Contains(term)))
                               .Select(r => new
                               {
                                   id = r.Id,

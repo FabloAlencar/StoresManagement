@@ -44,6 +44,9 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Height)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Active)
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -74,6 +77,9 @@ else
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Height)
+                    </td>
+                    <td>
+                        @item.Active
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

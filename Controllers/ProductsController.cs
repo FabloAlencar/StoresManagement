@@ -76,6 +76,7 @@ namespace StoresManagement.Controllers
         {
             var productList = _context.Products
                 .Where(b => _entityIds.Contains(b.EntityId)
+                && b.Active == true
                 && b.QuantityInStock > 0
                 && (b.Name.Contains(term) || b.Brand.Contains(term)))
                               .Select(r => new

@@ -16,6 +16,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
             <th>See the branches of the entity: </th>
             <th>See the customers of the entity: </th>
             <th></th>
@@ -27,6 +30,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @item.Active.ToString()
                 </td>
                 <td>
                     <a asp-controller="Branches" asp-action="ListBranchesByEntity" asp-route-id="@item.Id">List branches</a>

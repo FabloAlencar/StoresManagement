@@ -19,6 +19,8 @@ namespace StoresManagement.ViewModels
 
         public int Id { get; set; }
 
+        public bool Active { get; set; }
+
         [Display(Name = "Branch Identification")]
         public string Identification { get; set; }
 

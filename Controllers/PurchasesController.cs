@@ -149,9 +149,10 @@ namespace StoresManagement.Controllers
         {
             var purchaseVM = new PurchaseFormViewModel
             {
-                Branches = _context.Branches.Where(m => _entityIds.Contains(m.EntityId)).ToList(),
-                Customers = _context.Customers.Where(m => _entityIds.Contains(m.EntityId)).ToList(),
-                Products = _context.Products.Where(m => _entityIds.Contains(m.EntityId)).ToList()
+                Branches = _context.Branches
+                .Where(m => m.Active == true
+                && _entityIds.Contains(m.EntityId))
+                .ToList()
             };
 
             return View(purchaseVM);

@@ -25,6 +25,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Address)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
             <th>See the purchases of the customer: </th>
             <th></th>
         </tr>
@@ -44,6 +47,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Contact.Address)
+                </td>
+                <td>
+                    @item.Active
                 </td>
                 <td>
                     <a asp-controller="Purchases" asp-action="ListPurchasesByCustumer" asp-route-id="@item.Id">List Purchases</a>

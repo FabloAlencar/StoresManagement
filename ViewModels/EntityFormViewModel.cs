@@ -7,6 +7,8 @@ namespace StoresManagement.ViewModels
     {
         public int Id { get; set; }
 
+        public bool Active { get; set; }
+
         [Display(Name = "Entity Name")]
         public string Name { get; set; }
     }
