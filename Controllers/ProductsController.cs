@@ -99,14 +99,14 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    productBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
-                    productProduct = r.Name + ", " + r.Brand,
-                    productQuantityInStock = r.QuantityInStock,
-                    productPrice = r.Price,
-                    productExpiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
-                    productWeight = r.Weight,
-                    productWidth = r.Width,
-                    productHeight = r.Height
+                    branch = r.Branch.Entity.Name + ", " + r.Branch.Name,
+                    product = r.Name + ", " + r.Brand,
+                    quantityInStock = r.QuantityInStock,
+                    price = r.Price,
+                    expiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
+                    weight = r.Weight,
+                    width = r.Width,
+                    height = r.Height
                 }).ToArray();
 
             var dataPage = new

@@ -56,11 +56,11 @@
                 placeholder: "There are no records",
                 columns: [
                     { field: "id", visible: false },
-                    { title: "Branch", field: "purchaseBranch", headerFilter: "input" },
-                    { title: "Customer", field: "purchaseCustomer",  headerFilter: "input" },
-                    { title: "Purchase Date", field: "purchaseDate", hozAlign: "center", sorter: "date", headerFilter: "input" },
+                    { title: "Branch", field: "branch", headerFilter: "input" },
+                    { title: "Customer", field: "customer",  headerFilter: "input" },
+                    { title: "Purchase Date", field: "date", hozAlign: "center", sorter: "date", headerFilter: "input" },
                     {
-                        title: "Discount", field: "purchaseDiscount",  formatter: "money", formatterParams: {
+                        title: "Discount", field: "discount",  formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",
@@ -69,7 +69,7 @@
                         }, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">="
                     },
                     {
-                        title: "Total", field: "purchaseTotal", formatter: "money", formatterParams: {
+                        title: "Total", field: "total", formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",

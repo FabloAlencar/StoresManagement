@@ -75,11 +75,11 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    purchaseBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
-                    purchaseCustomer = r.Customer.FullName,
-                    purchaseDate = Convert.ToDateTime(r.RegistrationDate).ToString("dd-MMM-yyyy"),
-                    purchaseDiscount = r.Discount,
-                    purchaseTotal = r.Total
+                    branch = r.Branch.Entity.Name + ", " + r.Branch.Name,
+                    customer = r.Customer.FullName,
+                    date = Convert.ToDateTime(r.RegistrationDate).ToString("dd-MMM-yyyy"),
+                    discount = r.Discount,
+                    total = r.Total
                 }).ToArray();
 
             var dataPage = new

@@ -5,17 +5,9 @@ pw: 123sS$
 Adicionar:
 
 - linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
-* a entidade pode criar outros usuarios 
-
-- add a limit of records per page 
-- add total to purchase/product index
+- add report for purchase/product 
+- add tabulator table to access
 - add hash to pw
-- add searching function to list of purchase/product/customer screen - done ?
-- table max height is auto on search and max 500px ... title is frozen
-- add active/inactive flag to the tabulator tables
-
-
-- usar roles da constante
 
 # Create a initScript for:
 * 4 roles:
@@ -31,5 +23,6 @@ pw=
 123sS$
 
 * 1 entity.
+
 
 

@@ -55,10 +55,10 @@
                 placeholder: "There are no records",
                 columns: [
                     { field: "id", visible: false},
-                    { title: "Branch", field: "productBranch",  headerFilter: "input" },
-                    { title: "Product", field: "productProduct",  headerFilter: "input" },
+                    { title: "Branch", field: "branch",  headerFilter: "input" },
+                    { title: "Product", field: "product",  headerFilter: "input" },
                     {
-                        title: "Price", field: "productPrice",  formatter: "money", formatterParams: {
+                        title: "Price", field: "price",  formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",
@@ -66,11 +66,11 @@
                             precision: false,
                         }, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">="
                     },
-                    { title: "Quantity In Stock", field: "productQuantityInStock",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Expiry Date", field: "productExpiryDate",hozAlign: "center", sorter: "date", headerFilter: "input" },
-                    { title: "Weight", field: "productWeight", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Width", field: "productWidth",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Height", field: "productHeight", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Quantity In Stock", field: "quantityInStock",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Expiry Date", field: "expiryDate",hozAlign: "center", sorter: "date", headerFilter: "input" },
+                    { title: "Weight", field: "weight", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Width", field: "width",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Height", field: "height", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Action", formatter: actionButtons, align: "center"},
                     ],
             });

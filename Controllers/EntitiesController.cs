@@ -37,7 +37,7 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    entityName = r.Name
+                    name = r.Name
                 }).ToArray();
 
             var dataPage = new

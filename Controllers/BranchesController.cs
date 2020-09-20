@@ -77,10 +77,11 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    branchEntity = r.Entity.Name,
-                    branchIdentification = r.Identification,
-                    branchName = r.Name,
-                    branchAddress = r.Contact.Address
+                    entity = r.Entity.Name,
+                    identification = r.Identification,
+                    name = r.Name,
+                    address = r.Contact.Address,
+                    active = r.Active
                 }).ToArray();
 
             var dataPage = new

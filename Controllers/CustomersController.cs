@@ -91,10 +91,10 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    customerEntity = r.Entity.Name,
-                    customerIdentification = r.Identification,
-                    customerFullName = r.FullName,
-                    customerAddress = r.Contact.Address
+                    entity = r.Entity.Name,
+                    identification = r.Identification,
+                    fFullName = r.FullName,
+                    address = r.Contact.Address
                 }).ToArray();
 
             var dataPage = new
