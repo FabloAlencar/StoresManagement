@@ -66,19 +66,6 @@ namespace StoresManagement.Controllers
             return entityIds;
         }
 
-        // GET: Purchases
-        public async Task<IActionResult> Index()
-        {
-            var purchases = await _context.Purchases
-                .Where(m => _entityIds.Contains(m.EntityId))
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .Include(b => b.Customer)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
-        }
-
         // GET: Purchases/ListPurchasesByBranch/5
         public async Task<IActionResult> ListPurchasesByBranch(int? id)
         {
@@ -115,11 +102,11 @@ namespace StoresManagement.Controllers
             return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
-        // GET: Purchases/GetPurchases
+        // GET: Purchases/ListAll
         [HttpGet]
-        public ActionResult GetPurchases()
+        public ActionResult ListAll()
         {
-            var productList = _context.Purchases
+            var list = _context.Purchases
                 .Where(b => _entityIds.Contains(b.EntityId))
                 .Select(r => new
                 {
@@ -134,10 +121,23 @@ namespace StoresManagement.Controllers
             var dataPage = new
             {
                 last_page = 0,
-                data = productList
+                data = list
             };
 
             return Json(dataPage);
+        }
+
+        // GET: Purchases
+        public async Task<IActionResult> Index()
+        {
+            var purchases = await _context.Purchases
+                .Where(m => _entityIds.Contains(m.EntityId))
+                .Include(b => b.Branch)
+                    .ThenInclude(b => b.Entity)
+                .Include(b => b.Customer)
+                .ToListAsync();
+
+            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
         // GET: Purchases/Details/5

@@ -99,11 +99,11 @@ namespace StoresManagement.Controllers
             return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
         }
 
-        // GET: Customers/GetCustomers
+        // GET: Customers/ListAll
         [HttpGet]
-        public ActionResult GetCustomers()
+        public ActionResult ListAll()
         {
-            var productList = _context.Customers
+            var list = _context.Customers
                 .Where(b => _entityIds.Contains(b.EntityId))
                 .Select(r => new
                 {
@@ -117,7 +117,7 @@ namespace StoresManagement.Controllers
             var dataPage = new
             {
                 last_page = 0,
-                data = productList
+                data = list
             };
 
             return Json(dataPage);

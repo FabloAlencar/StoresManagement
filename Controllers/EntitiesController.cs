@@ -29,6 +29,26 @@ namespace StoresManagement.Controllers
             _signInManager = signInManager;
         }
 
+        // GET: Entities/ListAll
+        [HttpGet]
+        public ActionResult ListAll()
+        {
+            var list = _context.Entities
+                .Select(r => new
+                {
+                    id = r.Id,
+                    entityName = r.Name
+                }).ToArray();
+
+            var dataPage = new
+            {
+                last_page = 0,
+                data = list
+            };
+
+            return Json(dataPage);
+        }
+
         // GET: Entities
         public async Task<IActionResult> Index()
         {

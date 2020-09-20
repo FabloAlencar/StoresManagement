@@ -90,11 +90,11 @@ namespace StoresManagement.Controllers
             return Json(productList);
         }
 
-        // GET: Products/GetProducts
+        // GET: Products/ListAll
         [HttpGet]
-        public ActionResult GetProducts()
+        public ActionResult ListAll()
         {
-            var productList = _context.Products
+            var list = _context.Products
                 .Where(b => _entityIds.Contains(b.EntityId))
                 .Select(r => new
                 {
@@ -112,7 +112,7 @@ namespace StoresManagement.Controllers
             var dataPage = new
             {
                 last_page = 0,
-                data = productList
+                data = list
             };
 
             return Json(dataPage);

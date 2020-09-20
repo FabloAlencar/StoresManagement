@@ -10,42 +10,57 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>
-            <th>See the branches of the entity: </th>
-            <th>See the customers of the entity: </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @item.Active.ToString()
-                </td>
-                <td>
-                    <a asp-controller="Branches" asp-action="ListBranchesByEntity" asp-route-id="@item.Id">List branches</a>
-                </td>
-                <td>
-                    <a asp-controller="Customers" asp-action="ListCustomersByEntity" asp-route-id="@item.Id">List customers</a>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+</head>
+
+<body>
+    <div class="form-group">
+        <div id="index-table"></div>
+    </div>
+</body>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        //custom formatter definition
+        var actionButtons = function (cell, formatterParams, onRendered) { //plain text value
+            let id = cell.getRow().getData().id;
+
+            return "<input type=\"submit\" value=\"Details\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"detailRecord(" + id + ")\"> <input type=\"submit\" value=\"Edit\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"editRecord(" + id + ")\"> <input type=\"submit\" value=\"Delete\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"deleteRecord(" + id + ")\"> ";
+        };
+
+        function detailRecord(id) {
+            window.location.href = '@Url.Action("Details", "Entities")/' + id;
         }
-    </tbody>
-</table>
+
+        function editRecord(id) {
+            window.location.href = '@Url.Action("Edit", "Entities")/' + id;
+        }
+
+        function deleteRecord(id) {
+            window.location.href = '@Url.Action("Delete", "Entities")/' + id;
+        }
+
+        $(document).ready(function () {
+
+            //Build Tabulator
+            var table = new Tabulator("#index-table", {
+                layout: "fitData",
+                ajaxURL: "/Entities/ListAll",
+                ajaxProgressiveLoad: "scroll",
+                placeholder: "There are no records",
+                columns: [
+                    { field: "id", visible: false },
+                    { title: "Entity", field: "entityName", headerFilter: "input" },
+                    { title: "Action", formatter: actionButtons, align: "center" },
+                ],
+            });
+
+        });
+    </script>
+}

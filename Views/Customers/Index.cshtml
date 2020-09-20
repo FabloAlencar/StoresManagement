@@ -51,14 +51,14 @@
             //Build Tabulator
             var table = new Tabulator("#index-table", {
                 layout: "fitData",
-                ajaxURL: "/Customers/GetCustomers",
+                ajaxURL: "/Customers/ListAll",
                 ajaxProgressiveLoad: "scroll",
                 placeholder: "There are no records",
                 columns: [
                     { field: "id", visible: false },
                     { title: "Entity", field: "customerEntity", headerFilter: "input" },
+                    { title: "Branch", field: "customerFullName", headerFilter: "input" },
                     { title: "Identification", field: "customerIdentification", headerFilter: "input" },
-                    { title: "Customer", field: "customerFullName", headerFilter: "input" },
                     { title: "Address", field: "customerAddress", headerFilter: "input" },
                     { title: "Action", formatter: actionButtons, align: "center" },
                 ],

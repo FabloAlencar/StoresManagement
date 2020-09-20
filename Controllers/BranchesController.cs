@@ -68,20 +68,6 @@ namespace StoresManagement.Controllers
             return entityIds;
         }
 
-        // GET: Branches
-        public async Task<IActionResult> Index()
-        {
-            var loggedUserId = _userManager.GetUserId(HttpContext.User);
-
-            var branches = await _context.Branches
-                .Where(m => _entityIds.Contains(m.EntityId))
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
-        }
-
         // GET: Branches/ListBranches/5
         public async Task<IActionResult> ListBranchesByEntity(int id)
         {
@@ -94,6 +80,44 @@ namespace StoresManagement.Controllers
                 .Where(m => m.EntityId == id)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
+                .ToListAsync();
+
+            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
+        }
+
+        // GET: Branches/ListAll
+        [HttpGet]
+        public ActionResult ListAll()
+        {
+            var list = _context.Branches
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Select(r => new
+                {
+                    id = r.Id,
+                    branchEntity = r.Entity.Name,
+                    branchIdentification = r.Identification,
+                    branchName = r.Name,
+                    branchAddress = r.Contact.Address
+                }).ToArray();
+
+            var dataPage = new
+            {
+                last_page = 0,
+                data = list
+            };
+
+            return Json(dataPage);
+        }
+
+        // GET: Branches
+        public async Task<IActionResult> Index()
+        {
+            var loggedUserId = _userManager.GetUserId(HttpContext.User);
+
+            var branches = await _context.Branches
+                .Where(m => _entityIds.Contains(m.EntityId))
+                .Include(b => b.Contact)
+                .Include(b => b.Entity)
                 .ToListAsync();
 
             return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
