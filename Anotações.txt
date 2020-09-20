@@ -1,13 +1,9 @@
-﻿us: manager@sm.com
-pw: 123sS$
-
-
-Adicionar:
-
-- linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
-- add report for purchase/product 
-- add tabulator table to access
-- add hash to pw
+﻿
+* 1 manager user:
+us= 
+manager@sm.com
+pw=
+123sS$
 
 # Create a initScript for:
 * 4 roles:
@@ -16,13 +12,12 @@ Adicionar:
 - Seller
 - Inactive
 
-* 1 manager user:
-us= 
-manager@sm.com
-pw=
-123sS$
+Adicionar:
 
-* 1 entity.
+- linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
+- add report for purchase/product 
+- add hash to pw
+
 
 
 

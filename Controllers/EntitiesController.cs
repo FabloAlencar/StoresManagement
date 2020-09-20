@@ -37,7 +37,8 @@ namespace StoresManagement.Controllers
                 .Select(r => new
                 {
                     id = r.Id,
-                    name = r.Name
+                    name = r.Name,
+                    active = r.Active
                 }).ToArray();
 
             var dataPage = new

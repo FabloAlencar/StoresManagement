@@ -27,16 +27,34 @@ namespace StoresManagement.Controllers
             _userManager = userManager;
         }
 
-        // GET: Administration
-        public async Task<IActionResult> Index()
+        // GET: Customers/ListAll
+        [HttpGet]
+        public ActionResult ListAll()
         {
-            var sysOperators = await _context.Operators
-                .Include(b => b.Entity)
-                .Include(b => b.User)
-                .Include(b => b.Role)
-                .ToListAsync();
+            var list = _context.Operators
+                .Select(r => new
+                {
+                    id = r.Id,
+                    entity = r.Entity.Name,
+                    userName = r.User.UserName,
+                    role = r.Role.Name,
+                    email = r.User.Email,
+                    phonenumber = r.User.PhoneNumber
+                }).ToArray();
 
-            return View(_mapper.Map<IEnumerable<OperatorFormViewModel>>(sysOperators));
+            var dataPage = new
+            {
+                last_page = 0,
+                data = list
+            };
+
+            return Json(dataPage);
+        }
+
+        // GET: Administration
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public IActionResult Register()
