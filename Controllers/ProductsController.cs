@@ -98,7 +98,7 @@ namespace StoresManagement.Controllers
                 .Where(b => _entityIds.Contains(b.EntityId))
                 .Select(r => new
                 {
-                    productId = r.Id,
+                    id = r.Id,
                     productBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
                     productProduct = r.Name + ", " + r.Brand,
                     productQuantityInStock = r.QuantityInStock,

@@ -18,7 +18,7 @@
 
 <body>
     <div class="form-group">
-        <div id="product-table" width=100></div>
+        <div id="index-table"></div>
     </div>
 </body>
 
@@ -28,9 +28,14 @@
     <script>
         //custom formatter definition
         var actionButtons = function (cell, formatterParams, onRendered) { //plain text value
-            let productId = cell.getRow().getData().productId;
-            return "<input type=\"submit\" value=\"Edit\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"editRecord(" + productId + ")\"> <input type=\"submit\" value=\"Delete\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"deleteRecord(" + productId + ")\"> ";
+            let id = cell.getRow().getData().id;
+
+            return "<input type=\"submit\" value=\"Details\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"detailRecord(" + id + ")\"> <input type=\"submit\" value=\"Edit\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"editRecord(" + id + ")\"> <input type=\"submit\" value=\"Delete\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"deleteRecord(" + id + ")\"> ";
         };
+
+        function detailRecord(id) {
+            window.location.href = '@Url.Action("Details", "Products")/' + id;
+        }
 
         function editRecord(id) {
             window.location.href = '@Url.Action("Edit", "Products")/' + id;
@@ -40,91 +45,15 @@
             window.location.href = '@Url.Action("Delete", "Products")/' + id;
         }
 
-        //custom max min header filter
-        var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
-
-            var end;
-
-            var container = document.createElement("span");
-
-            //create and style inputs
-            var start = document.createElement("input");
-            start.setAttribute("type", "number");
-            start.setAttribute("placeholder", "Min");
-            start.setAttribute("min", 0);
-            start.setAttribute("max", 100);
-            start.style.padding = "4px";
-            start.style.width = "50%";
-            start.style.boxSizing = "border-box";
-
-            start.value = cell.getValue();
-
-            function buildValues() {
-                success({
-                    start: start.value,
-                    end: end.value,
-                });
-            }
-
-            function keypress(e) {
-                if (e.keyCode == 13) {
-                    buildValues();
-                }
-
-                if (e.keyCode == 27) {
-                    cancel();
-                }
-            }
-
-            end = start.cloneNode();
-            end.setAttribute("placeholder", "Max");
-
-            start.addEventListener("change", buildValues);
-            start.addEventListener("blur", buildValues);
-            start.addEventListener("keydown", keypress);
-
-            end.addEventListener("change", buildValues);
-            end.addEventListener("blur", buildValues);
-            end.addEventListener("keydown", keypress);
-
-            container.appendChild(start);
-            container.appendChild(end);
-
-            return container;
-        }
-
-        //custom max min filter function
-        function minMaxFilterFunction(headerValue, rowValue, rowData, filterParams) {
-            //headerValue - the value of the header filter element
-            //rowValue - the value of the column in this row
-            //rowData - the data for the row being filtered
-            //filterParams - params object passed to the headerFilterFuncParams property
-
-            if (rowValue) {
-                if (headerValue.start != "") {
-                    if (headerValue.end != "") {
-                        return rowValue >= headerValue.start && rowValue <= headerValue.end;
-                    } else {
-                        return rowValue >= headerValue.start;
-                    }
-                } else {
-                    if (headerValue.end != "") {
-                        return rowValue <= headerValue.end;
-                    }
-                }
-            }
-
-            return true; //must return a boolean, true if it passes the filter.
-        }
         $(document).ready(function () {
 
             //Build Tabulator
-            var productTable = new Tabulator("#product-table", {
+            var table = new Tabulator("#index-table", {
                 ajaxURL: "/Products/GetProducts",
                 ajaxProgressiveLoad: "scroll",
                 placeholder: "There are no records",
                 columns: [
-                    { title: "ProductId", field: "productId", visible: false},
+                    { field: "id", visible: false},
                     { title: "Branch", field: "productBranch", width: 150, headerFilter: "input" },
                     { title: "Product", field: "productProduct", width: 150, headerFilter: "input" },
                     {
@@ -141,7 +70,7 @@
                     { title: "Weight", field: "productWeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Width", field: "productWidth", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Height", field: "productHeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Action", formatter: actionButtons,hozAlign: "center"},
+                    { title: "Action", formatter: actionButtons, align: "center"},
                     ],
             });
 

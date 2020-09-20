@@ -115,6 +115,31 @@ namespace StoresManagement.Controllers
             return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
         }
 
+        // GET: Purchases/GetPurchases
+        [HttpGet]
+        public ActionResult GetPurchases()
+        {
+            var productList = _context.Purchases
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Select(r => new
+                {
+                    id = r.Id,
+                    purchaseBranch = r.Branch.Entity.Name + ", " + r.Branch.Name,
+                    purchaseCustomer = r.Customer.FullName,
+                    purchaseDate = Convert.ToDateTime(r.RegistrationDate).ToString("dd-MMM-yyyy"),
+                    purchaseDiscount = r.Discount,
+                    purchaseTotal = r.Total
+                }).ToArray();
+
+            var dataPage = new
+            {
+                last_page = 0,
+                data = productList
+            };
+
+            return Json(dataPage);
+        }
+
         // GET: Purchases/Details/5
         public async Task<IActionResult> Details(int? id)
         {
