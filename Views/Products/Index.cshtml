@@ -26,6 +26,19 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+        //custom formatter definition
+        var actionButtons = function (cell, formatterParams, onRendered) { //plain text value
+            let productId = cell.getRow().getData().productId;
+            return "<input type=\"submit\" value=\"Edit\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"editRecord(" + productId + ")\"> <input type=\"submit\" value=\"Delete\" class=\"btn btn - primary\" style=\"color: black; border: 1px solid gray;\" / onclick=\"deleteRecord(" + productId + ")\"> ";
+        };
+
+        function editRecord(id) {
+            window.location.href = '@Url.Action("Edit", "Products")/' + id;
+        }
+
+        function deleteRecord(id) {
+            window.location.href = '@Url.Action("Delete", "Products")/' + id;
+        }
 
         //custom max min header filter
         var minMaxFilterEditor = function (cell, onRendered, success, cancel, editorParams) {
@@ -107,13 +120,11 @@
 
             //Build Tabulator
             var productTable = new Tabulator("#product-table", {
-                height: "311px",
-                layout: "fitColumns",
                 ajaxURL: "/Products/GetProducts",
                 ajaxProgressiveLoad: "scroll",
-                paginationSize: 2,
-                placeholder: "No Data Set",
+                placeholder: "There are no records",
                 columns: [
+                    { title: "ProductId", field: "productId", visible: false},
                     { title: "Branch", field: "productBranch", width: 150, headerFilter: "input" },
                     { title: "Product", field: "productProduct", width: 150, headerFilter: "input" },
                     {
@@ -130,7 +141,8 @@
                     { title: "Weight", field: "productWeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Width", field: "productWidth", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Height", field: "productHeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                ],
+                    { title: "Action", formatter: actionButtons,hozAlign: "center"},
+                    ],
             });
 
         });

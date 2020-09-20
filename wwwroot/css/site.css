@@ -78,7 +78,8 @@ input, label {
 }
 
 .form-group {
-    margin: 30px auto;
+    /*margin: 30px auto;*/
+    margin: initial;
     width: 450px;
 }
 
@@ -92,4 +93,10 @@ input, label {
 
 #AddressNumber {
     width: 15%;
+}
+
+div#product-table {
+    width: fit-content;
+    max-height: 500px;
+    overflow: auto;
 }

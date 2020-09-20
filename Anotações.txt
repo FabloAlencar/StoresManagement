@@ -11,21 +11,15 @@ Adicionar:
 - add total to purchase/product index
 - add hash to pw
 - add searching function to list of purchase/product/customer screen - done ?
-
-- test records removal (no records in table) 
-* Adicionar status para as classes - ativo/inativo (Entity/Branch/Client/Product)
-	' Status to view model (Active/Incative)
-	' Remove logic code from models ( branch / product / customer )
+- table max height is auto on search and max 500px ... title is frozen
 
 
-- adicionar validacao de email antes de inserir (duplicados)
-- produtos de outra branch estao disponiveis?
 - usar roles da constante
 
 # Create a initScript for:
 * 4 roles:
 - Manager
-- Administrator
+- Administrator	
 - Seller
 - Inactive
 
