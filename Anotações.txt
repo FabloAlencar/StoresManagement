@@ -13,6 +13,7 @@ Adicionar:
 - add searching function to list of purchase/product/customer screen - done ?
 - table max height is auto on search and max 500px ... title is frozen
 - add active/inactive flag to the tabulator tables
+- refactor: indexes views and controllers
 
 
 - usar roles da constante

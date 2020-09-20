@@ -49,15 +49,16 @@
 
             //Build Tabulator
             var table = new Tabulator("#index-table", {
+                layout: "fitData",
                 ajaxURL: "/Products/GetProducts",
                 ajaxProgressiveLoad: "scroll",
                 placeholder: "There are no records",
                 columns: [
                     { field: "id", visible: false},
-                    { title: "Branch", field: "productBranch", width: 150, headerFilter: "input" },
-                    { title: "Product", field: "productProduct", width: 150, headerFilter: "input" },
+                    { title: "Branch", field: "productBranch",  headerFilter: "input" },
+                    { title: "Product", field: "productProduct",  headerFilter: "input" },
                     {
-                        title: "Price", field: "productPrice", width: 100, formatter: "money", formatterParams: {
+                        title: "Price", field: "productPrice",  formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",
@@ -65,11 +66,11 @@
                             precision: false,
                         }, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">="
                     },
-                    { title: "Quantity In Stock", field: "productQuantityInStock", width: 150, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Expiry Date", field: "productExpiryDate", width: 150, hozAlign: "center", sorter: "date", headerFilter: "input" },
-                    { title: "Weight", field: "productWeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Width", field: "productWidth", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
-                    { title: "Height", field: "productHeight", width: 100, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Quantity In Stock", field: "productQuantityInStock",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Expiry Date", field: "productExpiryDate",hozAlign: "center", sorter: "date", headerFilter: "input" },
+                    { title: "Weight", field: "productWeight", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Width", field: "productWidth",  headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
+                    { title: "Height", field: "productHeight", headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">=" },
                     { title: "Action", formatter: actionButtons, align: "center"},
                     ],
             });

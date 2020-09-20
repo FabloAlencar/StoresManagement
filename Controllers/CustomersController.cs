@@ -82,18 +82,6 @@ namespace StoresManagement.Controllers
             return Json(customerList);
         }
 
-        // GET: Customers
-        public async Task<IActionResult> Index()
-        {
-            var customers = await _context.Customers
-                .Where(b => _entityIds.Contains(b.EntityId))
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
-        }
-
         // GET: Customers/ListCustomers/5
         public async Task<IActionResult> ListCustomersByEntity(int id)
         {
@@ -106,6 +94,42 @@ namespace StoresManagement.Controllers
                 .Where(m => m.EntityId == id)
                 .Include(b => b.Entity)
                 .Include(b => b.Contact)
+                .ToListAsync();
+
+            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
+        }
+
+        // GET: Customers/GetCustomers
+        [HttpGet]
+        public ActionResult GetCustomers()
+        {
+            var productList = _context.Customers
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Select(r => new
+                {
+                    id = r.Id,
+                    customerEntity = r.Entity.Name,
+                    customerIdentification = r.Identification,
+                    customerFullName = r.FullName,
+                    customerAddress = r.Contact.Address
+                }).ToArray();
+
+            var dataPage = new
+            {
+                last_page = 0,
+                data = productList
+            };
+
+            return Json(dataPage);
+        }
+
+        // GET: Customers
+        public async Task<IActionResult> Index()
+        {
+            var customers = await _context.Customers
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Include(b => b.Contact)
+                .Include(b => b.Entity)
                 .ToListAsync();
 
             return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));

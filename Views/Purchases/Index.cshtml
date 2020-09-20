@@ -50,16 +50,17 @@
 
             //Build Tabulator
             var table = new Tabulator("#index-table", {
+                layout: "fitData",
                 ajaxURL: "/Purchases/GetPurchases",
                 ajaxProgressiveLoad: "scroll",
                 placeholder: "There are no records",
                 columns: [
                     { field: "id", visible: false },
-                    { title: "Branch", field: "purchaseBranch", width: 150, headerFilter: "input" },
-                    { title: "Customer", field: "purchaseCustomer", width: 150, headerFilter: "input" },
-                    { title: "Purchase Date", field: "purchaseDate", width: 150, hozAlign: "center", sorter: "date", headerFilter: "input" },
+                    { title: "Branch", field: "purchaseBranch", headerFilter: "input" },
+                    { title: "Customer", field: "purchaseCustomer",  headerFilter: "input" },
+                    { title: "Purchase Date", field: "purchaseDate", hozAlign: "center", sorter: "date", headerFilter: "input" },
                     {
-                        title: "Discount", field: "purchaseDiscount", width: 100, formatter: "money", formatterParams: {
+                        title: "Discount", field: "purchaseDiscount",  formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",
@@ -68,7 +69,7 @@
                         }, headerFilter: "number", headerFilterPlaceholder: "at least...", headerFilterFunc: ">="
                     },
                     {
-                        title: "Total", field: "purchaseTotal", width: 100, formatter: "money", formatterParams: {
+                        title: "Total", field: "purchaseTotal", formatter: "money", formatterParams: {
                             decimal: ",",
                             thousand: ".",
                             symbol: "$",
