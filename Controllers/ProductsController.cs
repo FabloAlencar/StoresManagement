@@ -124,23 +124,6 @@ namespace StoresManagement.Controllers
             return View();
         }
 
-        // GET: Products/ListProductsByBranch/5
-        public async Task<IActionResult> ListProductsByBranch(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var products = await _context.Products
-                .Where(m => _entityIds.Contains(m.EntityId) && m.BranchId == id)
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<ProductFormViewModel>>(products));
-        }
-
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {

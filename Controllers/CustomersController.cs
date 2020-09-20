@@ -82,23 +82,6 @@ namespace StoresManagement.Controllers
             return Json(customerList);
         }
 
-        // GET: Customers/ListCustomers/5
-        public async Task<IActionResult> ListCustomersByEntity(int id)
-        {
-            if (!_entityIds.Contains(id))
-            {
-                return NotFound();
-            }
-
-            var customers = await _context.Customers
-                .Where(m => m.EntityId == id)
-                .Include(b => b.Entity)
-                .Include(b => b.Contact)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
-        }
-
         // GET: Customers/ListAll
         [HttpGet]
         public ActionResult ListAll()
@@ -124,15 +107,9 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var customers = await _context.Customers
-                .Where(b => _entityIds.Contains(b.EntityId))
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
+            return View();
         }
 
         // GET: Customers/Details/5

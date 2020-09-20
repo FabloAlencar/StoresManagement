@@ -50,11 +50,9 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Entities
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var entities = await _context.Entities.ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<EntityFormViewModel>>(entities));
+            return View();
         }
 
         // GET: Entities/Details/5

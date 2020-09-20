@@ -66,42 +66,6 @@ namespace StoresManagement.Controllers
             return entityIds;
         }
 
-        // GET: Purchases/ListPurchasesByBranch/5
-        public async Task<IActionResult> ListPurchasesByBranch(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var purchases = await _context.Purchases
-                .Where(m => _entityIds.Contains(m.EntityId) && m.BranchId == id)
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .Include(b => b.Customer)
-                .ToListAsync();
-
-            return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
-        }
-
-        // GET: Purchases/ListPurchasesByCustumer/5
-        public async Task<IActionResult> ListPurchasesByCustumer(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var purchases = await _context.Purchases
-                .Where(m => _entityIds.Contains(m.EntityId) && m.CustomerId == id)
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .Include(b => b.Customer)
-                .ToListAsync();
-
-            return View("ListPurchases", _mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
-        }
-
         // GET: Purchases/ListAll
         [HttpGet]
         public ActionResult ListAll()
@@ -128,16 +92,9 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Purchases
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var purchases = await _context.Purchases
-                .Where(m => _entityIds.Contains(m.EntityId))
-                .Include(b => b.Branch)
-                    .ThenInclude(b => b.Entity)
-                .Include(b => b.Customer)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<PurchaseFormViewModel>>(purchases));
+            return View();
         }
 
         // GET: Purchases/Details/5

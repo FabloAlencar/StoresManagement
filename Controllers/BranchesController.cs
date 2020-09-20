@@ -68,23 +68,6 @@ namespace StoresManagement.Controllers
             return entityIds;
         }
 
-        // GET: Branches/ListBranches/5
-        public async Task<IActionResult> ListBranchesByEntity(int id)
-        {
-            if (!_entityIds.Contains(id))
-            {
-                return NotFound();
-            }
-
-            var branches = await _context.Branches
-                .Where(m => m.EntityId == id)
-                .Include(b => b.Entity)
-                .Include(b => b.Contact)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
-        }
-
         // GET: Branches/ListAll
         [HttpGet]
         public ActionResult ListAll()
@@ -110,17 +93,9 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var loggedUserId = _userManager.GetUserId(HttpContext.User);
-
-            var branches = await _context.Branches
-                .Where(m => _entityIds.Contains(m.EntityId))
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
+            return View();
         }
 
         // GET: Branches/Details/5
