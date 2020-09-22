@@ -106,7 +106,8 @@ namespace StoresManagement.Controllers
                     expiryDate = Convert.ToDateTime(r.ExpiryDate).ToString("dd-MMM-yyyy"),
                     weight = r.Weight,
                     width = r.Width,
-                    height = r.Height
+                    height = r.Height,
+                    active = r.Active
                 }).ToArray();
 
             var dataPage = new

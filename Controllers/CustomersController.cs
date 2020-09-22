@@ -93,8 +93,9 @@ namespace StoresManagement.Controllers
                     id = r.Id,
                     entity = r.Entity.Name,
                     identification = r.Identification,
-                    fFullName = r.FullName,
-                    address = r.Contact.Address
+                    fullName = r.FullName,
+                    address = r.Contact.Address,
+                    active = r.Active
                 }).ToArray();
 
             var dataPage = new
