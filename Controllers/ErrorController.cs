@@ -13,7 +13,7 @@ namespace StoresManagement.Controllers
                     ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found";
                     break;
             }
-            return View("NotFound");
+            return View("HttpError");
         }
     }
 }

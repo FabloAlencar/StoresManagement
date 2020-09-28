@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +11,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [AuthorizeRoles(UserRoles.Manager)]
     public class EntitiesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +19,10 @@ namespace StoresManagement.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public EntitiesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public EntitiesController(ApplicationDbContext context,
+            IMapper mapper,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager)
         {
             _context = context;
             _mapper = mapper;
@@ -41,13 +42,11 @@ namespace StoresManagement.Controllers
                     active = r.Active
                 }).ToArray();
 
-            var dataPage = new
+            return Json(new
             {
                 last_page = 0,
                 data = list
-            };
-
-            return Json(dataPage);
+            });
         }
 
         // GET: Entities
@@ -149,7 +148,6 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Entities/Edit/5
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

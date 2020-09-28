@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,14 +11,16 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [Authorize(Roles = "Manager")]
+    [AuthorizeRoles(UserRoles.Manager)]
     public class AccessesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
-        public AccessesController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager)
+        public AccessesController(ApplicationDbContext context,
+            IMapper mapper,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
@@ -42,13 +42,11 @@ namespace StoresManagement.Controllers
                     phonenumber = r.User.PhoneNumber
                 }).ToArray();
 
-            var dataPage = new
+            return Json(new
             {
                 last_page = 0,
                 data = list
-            };
-
-            return Json(dataPage);
+            });
         }
 
         // GET: Administration
@@ -71,68 +69,66 @@ namespace StoresManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterFormViewModel registerVM)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = new IdentityUser
-                {
-                    UserName = registerVM.Email,
-                    Email = registerVM.Email,
-                    EmailConfirmed = true
-                };
+                registerVM.Entities = _context.Entities.ToList();
 
-                // adicionar entides
-                var result = await _userManager.CreateAsync(user, registerVM.Password);
-                if (!result.Succeeded)
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-                await _context.SaveChangesAsync();
-
-                // Adding role to the User
-                var sellerRole = await _context.Roles
-                .SingleOrDefaultAsync(m => m.Name == UserRoles.Seller);
-
-                var userRole = new IdentityUserRole<string>
-                {
-                    UserId = user.Id,
-                    RoleId = sellerRole.Id
-                };
-
-                _context.Add(userRole);
-
-                // Adding contact
-                var contact = new Contact
-                {
-                    EntityId = registerVM.EntityId,
-                    Email = registerVM.Email
-                };
-                _context.Add(contact);
-                await _context.SaveChangesAsync();
-
-                // Adding operator
-                var sysOperator = new Operator
-                {
-                    EntityId = registerVM.EntityId,
-                    UserId = user.Id,
-                    RoleId = sellerRole.Id,
-                    ContactId = contact.Id
-                };
-                _context.Add(sysOperator);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction("Index", "Accesses");
+                return View(registerVM);
             }
+            var user = new IdentityUser
+            {
+                UserName = registerVM.Email,
+                Email = registerVM.Email,
+                EmailConfirmed = true
+            };
 
-            registerVM.Entities = _context.Entities.ToList();
+            // adicionar entides
+            var result = await _userManager.CreateAsync(user, registerVM.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            await _context.SaveChangesAsync();
 
-            return View(registerVM);
+            // Adding role to the User
+            var sellerRole = await _context.Roles
+            .SingleOrDefaultAsync(m => m.Name == UserRoles.Seller);
+
+            var userRole = new IdentityUserRole<string>
+            {
+                UserId = user.Id,
+                RoleId = sellerRole.Id
+            };
+
+            _context.Add(userRole);
+
+            // Adding contact
+            var contact = new Contact
+            {
+                EntityId = registerVM.EntityId,
+                Email = registerVM.Email
+            };
+            _context.Add(contact);
+            await _context.SaveChangesAsync();
+
+            // Adding operator
+            var sysOperator = new Operator
+            {
+                EntityId = registerVM.EntityId,
+                UserId = user.Id,
+                RoleId = sellerRole.Id,
+                ContactId = contact.Id
+            };
+            _context.Add(sysOperator);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Administration/Edit/5
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -144,7 +140,7 @@ namespace StoresManagement.Controllers
                 .Include(b => b.Entity)
                 .Include(b => b.User)
                 .Include(b => b.Role)
-                .SingleOrDefaultAsync(m => m.Id == id); ;
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (sysOperator == null)
             {
@@ -163,7 +159,6 @@ namespace StoresManagement.Controllers
         // POST: Administration/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(int id, OperatorFormViewModel operatorVM)
         {
             if (id != operatorVM.Id)

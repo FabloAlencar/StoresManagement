@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +16,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [Authorize(Roles = "Manager,Administrator,Seller")]
+    [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator, UserRoles.Seller)]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,7 +27,12 @@ namespace StoresManagement.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly List<int> _entityIds = new List<int>();
 
-        public ProductsController(ApplicationDbContext context, IMapper mapper, IWebHostEnvironment hostEnvironment, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
+        public ProductsController(ApplicationDbContext context,
+            IMapper mapper,
+            IWebHostEnvironment hostEnvironment,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
@@ -36,10 +40,10 @@ namespace StoresManagement.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityIds = GetEntityId();
+            _entityIds = GetEntityIds();
         }
 
-        private List<int> GetEntityId()
+        private List<int> GetEntityIds()
         {
             var entityIds = new List<int>();
 
@@ -58,12 +62,7 @@ namespace StoresManagement.Controllers
 
                 if (userRole == UserRoles.Manager)
                 {
-                    var entityUsers = _context.Operators.Select(m => new { m.EntityId }).ToList();
-
-                    foreach (var user in entityUsers)
-                    {
-                        entityIds.Add(user.EntityId);
-                    }
+                    entityIds = _context.Operators.Select(m => m.EntityId).ToList();
                 }
             }
 
@@ -110,13 +109,11 @@ namespace StoresManagement.Controllers
                     active = r.Active
                 }).ToArray();
 
-            var dataPage = new
+            return Json(new
             {
                 last_page = 0,
                 data = list
-            };
-
-            return Json(dataPage);
+            });
         }
 
         // GET: Products
@@ -147,7 +144,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Create
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public IActionResult Create()
         {
             var productVM = new ProductFormViewModel
@@ -163,13 +160,13 @@ namespace StoresManagement.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Create(ProductFormViewModel productVM)
         {
             if (ModelState.IsValid)
             {
                 // Save image to wwwRootPath/image
-                await addImageTowwwRootPathAsync(productVM);
+                await AddImageFileAsync(productVM);
 
                 var branch = await _context.Branches
                     .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == productVM.BranchId);
@@ -189,7 +186,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Edit/5
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -219,7 +216,7 @@ namespace StoresManagement.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Edit(int id, ProductFormViewModel productVM)
         {
             if (id != productVM.Id)
@@ -237,8 +234,8 @@ namespace StoresManagement.Controllers
 
                     // Delete image from wwwRootPath/image && Save image to wwwRootPath/image
                     if (productVM.ImageFile != null)
-                        DeleteImageFromwwwRootPath(productVM.ImageName);
-                    await addImageTowwwRootPathAsync(productVM);
+                        DeleteImageFile(productVM.ImageName);
+                    await AddImageFileAsync(productVM);
 
                     var product = _mapper.Map<Product>(productVM);
 
@@ -265,7 +262,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Products/Delete/5
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -288,7 +285,7 @@ namespace StoresManagement.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -299,7 +296,7 @@ namespace StoresManagement.Controllers
             await _context.SaveChangesAsync();
 
             // Delete image from wwwRootPath/image
-            DeleteImageFromwwwRootPath(product.ImageName);
+            DeleteImageFile(product.ImageName);
 
             return RedirectToAction(nameof(Index));
         }
@@ -309,29 +306,30 @@ namespace StoresManagement.Controllers
             return await _context.Products.AnyAsync(e => e.Id == id);
         }
 
-        private async Task addImageTowwwRootPathAsync(ProductFormViewModel productVM)
+        private async Task AddImageFileAsync(ProductFormViewModel productVM)
         {
-            if (productVM.ImageFile != null)
+            if (productVM.ImageFile == null)
             {
-                string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
-                productVM.ImageName = productVM.Name.Replace(" ", "_") + productVM.Brand.Replace(" ", "_")
-                                    + DateTime.Now.ToString("_yyyymmddss_fff") + imageExtension;
-                string imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/image/", productVM.ImageName);
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await productVM.ImageFile.CopyToAsync(fileStream);
-                }
+                return;
             }
+
+            string imageExtension = Path.GetExtension(productVM.ImageFile.FileName);
+            productVM.ImageName = productVM.Name.Replace(" ", "_") + productVM.Brand.Replace(" ", "_")
+                                + DateTime.Now.ToString("_yyyymmddss_fff") + imageExtension;
+            string imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/image/", productVM.ImageName);
+            using var fileStream = new FileStream(imagePath, FileMode.Create);
+            await productVM.ImageFile.CopyToAsync(fileStream);
         }
 
-        private void DeleteImageFromwwwRootPath(string imageName)
+        private void DeleteImageFile(string imageName)
         {
-            if (imageName != null)
+            if (string.IsNullOrEmpty(imageName))
             {
-                var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", imageName);
-                if (System.IO.File.Exists(imagePath))
-                    System.IO.File.Delete(imagePath);
+                return;
             }
+            var imagePath = Path.Combine(_hostEnvironment.WebRootPath, "image", imageName);
+            if (System.IO.File.Exists(imagePath))
+                System.IO.File.Delete(imagePath);
         }
     }
 }

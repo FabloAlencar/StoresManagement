@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +13,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [Authorize(Roles = "Manager,Administrator,Seller")]
+    [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator, UserRoles.Seller)]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,17 +23,21 @@ namespace StoresManagement.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly List<int> _entityIds = new List<int>();
 
-        public CustomersController(ApplicationDbContext context, IMapper mapper, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IHttpContextAccessor httpContextAccessor)
+        public CustomersController(ApplicationDbContext context,
+            IMapper mapper,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityIds = GetEntityId();
+            _entityIds = GetEntityIds();
         }
 
-        private List<int> GetEntityId()
+        private List<int> GetEntityIds()
         {
             var entityIds = new List<int>();
 
@@ -53,12 +56,7 @@ namespace StoresManagement.Controllers
 
                 if (userRole == UserRoles.Manager)
                 {
-                    var entityUsers = _context.Operators.Select(m => new { m.EntityId }).ToList();
-
-                    foreach (var user in entityUsers)
-                    {
-                        entityIds.Add(user.EntityId);
-                    }
+                    entityIds = _context.Operators.Select(m => m.EntityId).ToList();
                 }
             }
 
@@ -98,13 +96,11 @@ namespace StoresManagement.Controllers
                     active = r.Active
                 }).ToArray();
 
-            var dataPage = new
+            return Json(new
             {
                 last_page = 0,
                 data = list
-            };
-
-            return Json(dataPage);
+            });
         }
 
         // GET: Customers
@@ -169,7 +165,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/Edit/5
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -199,7 +195,7 @@ namespace StoresManagement.Controllers
         // POST: Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Edit(int id, CustomerFormViewModel customerVM)
         {
             if (id != customerVM.Id)
@@ -238,7 +234,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Customers/Delete/5
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -261,7 +257,7 @@ namespace StoresManagement.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Manager,Administrator")]
+        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);

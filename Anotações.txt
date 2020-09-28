@@ -15,7 +15,7 @@ pw=
 Adicionar:
 
 - linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
-- add report for purchase/product 
+- add report for purchase/product/customer per entity
 - add hash to pw
 
 
