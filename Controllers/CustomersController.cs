@@ -19,48 +19,19 @@ namespace StoresManagement.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly List<int> _entityIds = new List<int>();
 
         public CustomersController(ApplicationDbContext context,
             IMapper mapper,
             UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
             IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
-            _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
-            _entityIds = GetEntityIds();
-        }
-
-        private List<int> GetEntityIds()
-        {
-            var entityIds = new List<int>();
-
-            var entityUser = _context.Operators.SingleOrDefault(m => m.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User));
-
-            if (entityUser != null)
-            {
-                entityIds.Add(entityUser.EntityId);
-            }
-            else
-            {
-                var userRole = (from t1 in _context.UserRoles
-                                from t2 in _context.Roles
-                                             .Where(o => t1.RoleId == o.Id && t1.UserId == _userManager.GetUserId(_httpContextAccessor.HttpContext.User))
-                                select t2.Name).First();
-
-                if (userRole == UserRoles.Manager)
-                {
-                    entityIds = _context.Operators.Select(m => m.EntityId).ToList();
-                }
-            }
-
-            return entityIds;
+            _entityIds = AuthorizeEntitiesAttribute.GetEntityIds(_context, _userManager, _httpContextAccessor);
         }
 
         // GET: Customers/Search

@@ -17,17 +17,14 @@ namespace StoresManagement.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
 
         public EntitiesController(ApplicationDbContext context,
             IMapper mapper,
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
-            _signInManager = signInManager;
         }
 
         // GET: Entities/ListAll

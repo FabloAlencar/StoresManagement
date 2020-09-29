@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace StoresManagement.Models
+namespace StoresManagement.Controllers
 {
-    public class AuthorizeRolesAttribute : AuthorizeAttribute
+    public sealed class AuthorizeRolesAttribute : AuthorizeAttribute
     {
         public AuthorizeRolesAttribute(params string[] roles)
         {
