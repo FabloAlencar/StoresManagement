@@ -113,7 +113,6 @@ namespace StoresManagement.Controllers
                     RoleId = administratorRole.Id
                 };
                 _context.Add(userRole);
-                await _context.SaveChangesAsync();
 
                 // Creating Entity
                 var entity = _mapper.Map<Entity>(registerFormVM.Entity);
@@ -224,6 +223,15 @@ namespace StoresManagement.Controllers
 
             entity.Active = false;
             _context.Entry(entity).Property("Active").IsModified = true;
+
+            var customers = await _context.Customers.Where(x => x.EntityId == id).ToListAsync();
+            customers.ForEach(x => { x.Active = false; });
+
+            var branches = await _context.Branches.Where(x => x.EntityId == id).ToListAsync();
+            branches.ForEach(x => { x.Active = false; });
+
+            var products = await _context.Products.Where(x => x.EntityId == id).ToListAsync();
+            products.ForEach(x => { x.Active = false; });
 
             await _context.SaveChangesAsync();
 
