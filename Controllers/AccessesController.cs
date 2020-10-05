@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [AuthorizeRoles(UserRoles.Manager)]
+    [Authorize(Policy = "Manager")]
     public class AccessesController : Controller
     {
         private readonly ApplicationDbContext _context;

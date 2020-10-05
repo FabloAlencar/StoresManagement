@@ -2,18 +2,18 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator, UserRoles.Seller)]
+    [Authorize(Policy = "Seller")]
     public class BranchesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -85,7 +85,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/Create
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public IActionResult Create()
         {
             var branchVM = new BranchFormViewModel
@@ -99,7 +99,7 @@ namespace StoresManagement.Controllers
         // POST: Branches/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Create(BranchFormViewModel branchVM)
         {
             if (ModelState.IsValid)
@@ -117,7 +117,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/Edit/5
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -145,7 +145,7 @@ namespace StoresManagement.Controllers
         // POST: Branches/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int id, BranchFormViewModel branchVM)
         {
             if (id != branchVM.Id)
@@ -182,7 +182,7 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/Delete/5
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -205,7 +205,7 @@ namespace StoresManagement.Controllers
         // POST: Branches/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator)]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var branch = await _context.Branches.FindAsync(id);

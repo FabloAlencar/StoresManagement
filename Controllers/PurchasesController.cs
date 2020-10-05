@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StoresManagement.Constants;
 using StoresManagement.Data;
 using StoresManagement.Models;
 using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
-    [AuthorizeRoles(UserRoles.Manager, UserRoles.Administrator, UserRoles.Seller)]
+    [Authorize(Policy = "Seller")]
     public class PurchasesController : Controller
     {
         private readonly ApplicationDbContext _context;
