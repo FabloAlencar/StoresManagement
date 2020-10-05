@@ -1,4 +1,5 @@
-﻿using StoresManagement.Models;
+﻿using Microsoft.AspNetCore.Http;
+using StoresManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,8 +23,12 @@ namespace StoresManagement.ViewModels
 
         public int Id { get; set; }
 
+        public bool Active { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         public string Brand { get; set; }
 
         [Display(Name = "Product")]
@@ -46,6 +51,11 @@ namespace StoresManagement.ViewModels
         public string BranchTitle { get; set; }
 
         [Display(Name = "Expiry Date")]
-        public string ExpiryDay => String.Format("{0:dd/MM/yyyy}", ExpiryDate);
+        public string ExpiryDay => string.Format("{0:dd/MM/yyyy}", ExpiryDate);
+
+        public string ImageName { get; set; }
+
+        [Display(Name = "Image File")]
+        public IFormFile ImageFile { get; set; }
     }
 }

@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -10,22 +13,35 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    [Authorize(Policy = "Seller")]
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly List<int> _entityIds = new List<int>();
 
-        public CustomersController(ApplicationDbContext context, IMapper mapper)
+        public CustomersController(ApplicationDbContext context,
+            IMapper mapper,
+            UserManager<IdentityUser> userManager,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
+            _entityIds = AuthorizeEntitiesAttribute.GetEntityIds(_context, _userManager, _httpContextAccessor);
         }
 
         // GET: Customers/Search
         [HttpGet]
         public ActionResult Search(string term)
         {
-            var customerList = _context.Customers.Where(r => r.Name.Contains(term) || r.Surname.Contains(term))
+            var customerList = _context.Customers
+                .Where(b => _entityIds.Contains(b.EntityId)
+                && b.Active == true
+                && (b.Name.Contains(term) || b.Surname.Contains(term)))
                               .Select(r => new
                               {
                                   id = r.Id,
@@ -35,32 +51,33 @@ namespace StoresManagement.Controllers
             return Json(customerList);
         }
 
-        // GET: Customers
-        public async Task<IActionResult> Index()
+        // GET: Customers/ListAll
+        [HttpGet]
+        public ActionResult ListAll()
         {
-            var customers = await _context.Customers
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
+            var list = _context.Customers
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Select(r => new
+                {
+                    id = r.Id,
+                    entity = r.Entity.Name,
+                    identification = r.Identification,
+                    fullName = r.FullName,
+                    address = r.Contact.Address,
+                    active = r.Active
+                }).ToArray();
 
-            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
+            return Json(new
+            {
+                last_page = 0,
+                data = list
+            });
         }
 
-        // GET: Customers/ListCustomers/5
-        public async Task<IActionResult> ListCustomers(int? id)
+        // GET: Customers
+        public IActionResult Index()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customers = await _context.Customers
-                .Include(b => b.Entity)
-                .Include(b => b.Contact)
-                .Where(m => m.EntityId == id)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<CustomerFormViewModel>>(customers));
+            return View();
         }
 
         // GET: Customers/Details/5
@@ -74,7 +91,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (customer == null)
             {
@@ -89,7 +106,9 @@ namespace StoresManagement.Controllers
         {
             var customerVM = new CustomerFormViewModel
             {
-                Entities = _context.Entities.ToList()
+                Entities = _context.Entities
+                .Where(m => _entityIds.Contains(m.Id))
+                .ToList()
             };
 
             return View(customerVM);
@@ -103,17 +122,21 @@ namespace StoresManagement.Controllers
             if (ModelState.IsValid)
             {
                 var customer = _mapper.Map<Customer>(customerVM);
+                customer.Contact.EntityId = customer.EntityId;
 
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            customerVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities
+                .Where(m => _entityIds.Contains(m.Id))
+                .ToList();
 
             return View(customerVM);
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -124,7 +147,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (customer == null)
             {
@@ -133,7 +156,9 @@ namespace StoresManagement.Controllers
 
             var customerVM = _mapper.Map<CustomerFormViewModel>(customer);
 
-            customerVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities
+                .Where(m => _entityIds.Contains(m.Id))
+                .ToList();
 
             return View(customerVM);
         }
@@ -141,6 +166,7 @@ namespace StoresManagement.Controllers
         // POST: Customers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int id, CustomerFormViewModel customerVM)
         {
             if (id != customerVM.Id)
@@ -171,12 +197,15 @@ namespace StoresManagement.Controllers
                     }
                 }
             }
-            customerVM.Entities = _context.Entities.ToList();
+            customerVM.Entities = _context.Entities
+                .Where(m => _entityIds.Contains(m.Id))
+                .ToList();
 
             return View(customerVM);
         }
 
         // GET: Customers/Delete/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -187,7 +216,7 @@ namespace StoresManagement.Controllers
             var customer = await _context.Customers
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
             if (customer == null)
             {
                 return NotFound();
@@ -199,10 +228,14 @@ namespace StoresManagement.Controllers
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+
+            customer.Active = false;
+            _context.Entry(customer).Property("Active").IsModified = true;
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StoresManagement.Data;
@@ -10,43 +13,54 @@ using StoresManagement.ViewModels;
 
 namespace StoresManagement.Controllers
 {
+    [Authorize(Policy = "Seller")]
     public class BranchesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly List<int> _entityIds = new List<int>();
 
-        public BranchesController(ApplicationDbContext context, IMapper mapper)
+        public BranchesController(ApplicationDbContext context,
+            IMapper mapper,
+            UserManager<IdentityUser> userManager,
+            IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
+            _entityIds = AuthorizeEntitiesAttribute.GetEntityIds(_context, _userManager, _httpContextAccessor);
+        }
+
+        // GET: Branches/ListAll
+        [HttpGet]
+        public ActionResult ListAll()
+        {
+            var list = _context.Branches
+                .Where(b => _entityIds.Contains(b.EntityId))
+                .Select(r => new
+                {
+                    id = r.Id,
+                    entity = r.Entity.Name,
+                    identification = r.Identification,
+                    name = r.Name,
+                    address = r.Contact.Address,
+                    active = r.Active
+                }).ToArray();
+
+            return Json(new
+            {
+                last_page = 0,
+                data = list
+            });
         }
 
         // GET: Branches
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var branches = await _context.Branches
-                .Include(b => b.Contact)
-                .Include(b => b.Entity)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
-        }
-
-        // GET: Branches/ListBranches/5
-        public async Task<IActionResult> ListBranches(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var branches = await _context.Branches
-                .Include(b => b.Entity)
-                .Include(b => b.Contact)
-                .Where(m => m.EntityId == id)
-                .ToListAsync();
-
-            return View(_mapper.Map<IEnumerable<BranchFormViewModel>>(branches));
+            return View();
         }
 
         // GET: Branches/Details/5
@@ -60,7 +74,7 @@ namespace StoresManagement.Controllers
             var branch = await _context.Branches
                 .Include(b => b.Contact)
                 .Include(b => b.Entity)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => _entityIds.Contains(m.EntityId) && m.Id == id);
 
             if (branch == null)
             {
@@ -71,11 +85,12 @@ namespace StoresManagement.Controllers
         }
 
         // GET: Branches/Create
+        [Authorize(Policy = "Administrator")]
         public IActionResult Create()
         {
             var branchVM = new BranchFormViewModel
             {
-                Entities = _context.Entities.ToList()
+                Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList()
             };
 
             return View(branchVM);
@@ -84,22 +99,25 @@ namespace StoresManagement.Controllers
         // POST: Branches/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Create(BranchFormViewModel branchVM)
         {
             if (ModelState.IsValid)
             {
                 var branch = _mapper.Map<Branch>(branchVM);
+                branch.Contact.EntityId = branch.EntityId;
 
                 _context.Add(branch);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }
 
         // GET: Branches/Edit/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,7 +137,7 @@ namespace StoresManagement.Controllers
 
             var branchVM = _mapper.Map<BranchFormViewModel>(branch);
 
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }
@@ -127,6 +145,7 @@ namespace StoresManagement.Controllers
         // POST: Branches/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Edit(int id, BranchFormViewModel branchVM)
         {
             if (id != branchVM.Id)
@@ -157,12 +176,13 @@ namespace StoresManagement.Controllers
                     }
                 }
             }
-            branchVM.Entities = _context.Entities.ToList();
+            branchVM.Entities = _context.Entities.Where(b => _entityIds.Contains(b.Id)).ToList();
 
             return View(branchVM);
         }
 
         // GET: Branches/Delete/5
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -185,10 +205,14 @@ namespace StoresManagement.Controllers
         // POST: Branches/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrator")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var branch = await _context.Branches.FindAsync(id);
-            _context.Branches.Remove(branch);
+
+            branch.Active = false;
+            _context.Entry(branch).Property("Active").IsModified = true;
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

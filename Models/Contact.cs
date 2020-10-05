@@ -38,6 +38,8 @@ namespace StoresManagement.Models
 
         public virtual Customer Customer { get; set; }
 
+        public virtual Operator Operators { get; set; }
+
         public string Address
         {
             get { return AddressStreet + ", " + AddressCity + ", " + AddressState; }

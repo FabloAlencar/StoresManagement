@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Branch.Name)
@@ -59,6 +59,20 @@
                 <span asp-validation-for="Height" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" accept="image/*" onchange="loadFile(event)" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                @if (Model.ImageName != null)
+                {
+                    <img id="previewImage" src="@("~/image/"+ Model.ImageName)" asp-append-version="true" width="250" height="250" />
+                }
+                else
+                {
+                    <img id="previewImage" asp-append-version="true" width="250" height="250" />
+                }
+            </div>
+            <input type="hidden" asp-for="ImageName" />
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -71,4 +85,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        let previewImage = document.getElementById('previewImage');
+
+        let loadFile = function (event) {
+            previewImage.src = URL.createObjectURL(event.target.files[0]);
+            previewImage.onload = function () {
+                URL.revokeObjectURL(previewImage.src) // free memory
+            }
+        };
+    </script>
 }

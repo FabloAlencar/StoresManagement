@@ -226,6 +226,11 @@ namespace StoresManagement.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<int>("ContactId")
                         .HasColumnType("int");
 
@@ -297,6 +302,11 @@ namespace StoresManagement.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<int>("ContactId")
                         .HasColumnType("int");
 
@@ -329,6 +339,11 @@ namespace StoresManagement.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -337,12 +352,50 @@ namespace StoresManagement.Data.Migrations
                     b.ToTable("Entities");
                 });
 
+            modelBuilder.Entity("StoresManagement.Models.Operator", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId")
+                        .IsUnique();
+
+                    b.HasIndex("EntityId");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Operators");
+                });
+
             modelBuilder.Entity("StoresManagement.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
@@ -358,6 +411,9 @@ namespace StoresManagement.Data.Migrations
 
                     b.Property<decimal?>("Height")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ImageName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -434,7 +490,7 @@ namespace StoresManagement.Data.Migrations
                     b.Property<decimal>("ProductCurrentPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductQuantity")
@@ -536,6 +592,29 @@ namespace StoresManagement.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("StoresManagement.Models.Operator", b =>
+                {
+                    b.HasOne("StoresManagement.Models.Contact", "Contact")
+                        .WithOne("Operators")
+                        .HasForeignKey("StoresManagement.Models.Operator", "ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StoresManagement.Models.Entity", "Entity")
+                        .WithMany("Operators")
+                        .HasForeignKey("EntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("StoresManagement.Models.Product", b =>
                 {
                     b.HasOne("StoresManagement.Models.Branch", "Branch")
@@ -549,13 +628,12 @@ namespace StoresManagement.Data.Migrations
                 {
                     b.HasOne("StoresManagement.Models.Branch", "Branch")
                         .WithMany("Purchases")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("StoresManagement.Models.Customer", "Customer")
                         .WithMany("Purchases")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("StoresManagement.Models.PurchaseItem", b =>
@@ -563,8 +641,7 @@ namespace StoresManagement.Data.Migrations
                     b.HasOne("StoresManagement.Models.Product", "Product")
                         .WithMany("PurchaseItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("StoresManagement.Models.Purchase", "Purchase")
                         .WithMany("PurchaseItems")

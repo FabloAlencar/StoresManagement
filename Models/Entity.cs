@@ -8,14 +8,19 @@ namespace StoresManagement.Models
         {
             Branches = new HashSet<Branch>();
             Customers = new HashSet<Customer>();
+            Operators = new HashSet<Operator>();
         }
 
         public int Id { get; set; }
+
+        public bool Active { get; set; }
 
         public string Name { get; set; }
 
         public virtual ICollection<Branch> Branches { get; set; }
 
         public virtual ICollection<Customer> Customers { get; set; }
+
+        public virtual ICollection<Operator> Operators { get; set; }
     }
 }

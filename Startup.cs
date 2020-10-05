@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
+using StoresManagement.Constants;
 
 namespace StoresManagement
 {
@@ -27,10 +28,26 @@ namespace StoresManagement
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
+
             services.AddRazorPages();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Seller", policy =>
+                policy.RequireRole(UserRoles.Manager, UserRoles.Administrator, UserRoles.Seller));
+
+                options.AddPolicy("Administrator", policy =>
+                policy.RequireRole(UserRoles.Manager, UserRoles.Administrator));
+
+                options.AddPolicy("Manager", policy =>
+                policy.RequireRole(UserRoles.Manager));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +57,7 @@ namespace StoresManagement
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
             else
             {

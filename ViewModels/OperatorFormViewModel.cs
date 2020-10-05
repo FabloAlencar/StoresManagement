@@ -1,0 +1,34 @@
+﻿using Microsoft.AspNetCore.Identity;
+using StoresManagement.Models;
+using System.Collections.Generic;
+
+namespace StoresManagement.ViewModels
+{
+    public class OperatorFormViewModel
+    {
+        public OperatorFormViewModel()
+        {
+            Roles = new List<IdentityRole>();
+        }
+
+        public IEnumerable<IdentityRole> Roles { get; set; }
+
+        public int EntityId { get; set; }
+
+        public virtual Entity Entity { get; set; }
+
+        public int Id { get; set; }
+
+        public string UserId { get; set; }
+
+        public virtual IdentityUser User { get; set; }
+
+        public string RoleId { get; set; }
+
+        public virtual IdentityRole Role { get; set; }
+
+        public int ContactId { get; set; }
+
+        public virtual Contact Contact { get; set; }
+    }
+}

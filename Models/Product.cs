@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StoresManagement.Models
 {
@@ -17,6 +18,8 @@ namespace StoresManagement.Models
         public virtual Branch Branch { get; set; }
 
         public int Id { get; set; }
+
+        public bool Active { get; set; }
 
         public string Name { get; set; }
 
@@ -40,5 +43,7 @@ namespace StoresManagement.Models
         {
             get { return Name + ", " + Brand; }
         }
+
+        public string ImageName { get; set; }
     }
 }

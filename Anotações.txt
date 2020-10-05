@@ -1,8 +1,23 @@
 ﻿
+* 1 manager user:
+us= 
+manager@sm.com
+pw=
+123sS$
 
+# Create a initScript for:
+* 4 roles:
+- Manager
+- Administrator	
+- Seller
+- Inactive
 
 Adicionar:
 
-- linkar usuario master a determinada entidade:
-* a entidade pode criar outros usuarios 
+- linkar usuario master a determinada entidade (Section 8: Authentication and Authorization):
+- add report for purchase/product/customer per entity
+- add hash to pw
+
+
+
 
